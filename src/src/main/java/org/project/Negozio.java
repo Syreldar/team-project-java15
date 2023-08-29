@@ -5,11 +5,10 @@ public class Negozio {
     private double venditeTotali;
     private String proprietario;
     private String categoriaPiuVenduta;
-    private static final int minCapacity = 0;
-    private static final int maxCapacity = 2000;
-    private static int numberOfShops;
-
-    private static void keepTrackOfShopNumber() {numberOfShops ++;}
+    private static final int minCapacita = 0;
+    private static final int maxCapacita = 2000;
+    private static int numeroDiNegoziTotale;
+    private static void tracciaNumeroDiNegozi() {numeroDiNegoziTotale ++;}
 
     public Negozio(String nome, double venditeTotali, String categoriaPiuVenduta){
         this.nome = nome;
@@ -29,3 +28,4 @@ public class Negozio {
         return venditeTotali;
     }
 }
+
