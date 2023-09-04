@@ -55,6 +55,7 @@ public class Customer {
 
     @Override
     public String toString() {
-        return  String.format("Cliente %s %s %f", this.firstName, this.lastName, this.balance);
+        return String.format("Customer [FirstName: %s, LastName: %s, Balance: %.2f]",
+                this.firstName, this.lastName, this.balance);
     }
 }

@@ -30,4 +30,15 @@ public class Chart {
         filteredShops.sort((n1, n2) -> Double.compare(n2.getTotalGains(), n1.getTotalGains()));
         return filteredShops;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Chart [\n");
+        for (Shop shop : shops) {
+            sb.append("  ").append(shop.toString()).append(",\n");
+        }
+        sb.append("]");
+        return sb.toString();
+    }
 }

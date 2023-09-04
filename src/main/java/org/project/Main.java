@@ -9,40 +9,40 @@ public class Main
 
         List<Shop> shopsList = Arrays.asList(
                 new Shop("Carlos", "NegozioA", List.of(
-                        new Product("Electronics", "Computer", 10),
-                        new Product("Cleaning", "Detergent", 10),
-                        new Product("Health", "Medicine", 10),
-                        new Product("Food", "Apple", 10)
+                        new Product(Category.ELECTRONICS, "Computer", 10),
+                        new Product(Category.CLEANING, "Detergent", 10),
+                        new Product(Category.HEALTH, "Medicine", 10),
+                        new Product(Category.FOOD, "Apple", 10)
                 )),
                 new Shop("Carlos", "NegozioB", List.of(
-                        new Product("Electronics", "Computer", 10),
-                        new Product("Cleaning", "Detergent", 10),
-                        new Product("Health", "Medicine", 10),
-                        new Product("Food", "Apple", 10)
+                        new Product(Category.ELECTRONICS, "Computer", 10),
+                        new Product(Category.CLEANING, "Detergent", 10),
+                        new Product(Category.HEALTH, "Medicine", 10),
+                        new Product(Category.FOOD, "Apple", 10)
                 )),
                 new Shop("Carlos", "NegozioC", List.of(
-                        new Product("Electronics", "Computer", 10),
-                        new Product("Cleaning", "Detergent", 10),
-                        new Product("Health", "Medicine", 10),
-                        new Product("Food", "Apple", 10)
+                        new Product(Category.ELECTRONICS, "Computer", 10),
+                        new Product(Category.CLEANING, "Detergent", 10),
+                        new Product(Category.HEALTH, "Medicine", 10),
+                        new Product(Category.FOOD, "Apple", 10)
                 )),
                 new Shop("Carlos", "NegozioD", List.of(
-                        new Product("Electronics", "Computer", 10),
-                        new Product("Cleaning", "Detergent", 10),
-                        new Product("Health", "Medicine", 10),
-                        new Product("Food", "Apple", 10)
+                        new Product(Category.ELECTRONICS, "Computer", 10),
+                        new Product(Category.CLEANING, "Detergent", 10),
+                        new Product(Category.HEALTH, "Medicine", 10),
+                        new Product(Category.FOOD, "Apple", 10)
                 )),
                 new Shop("Carlos", "NegozioE",List.of(
-                        new Product("Electronics", "Computer", 10),
-                        new Product("Cleaning", "Detergent", 10),
-                        new Product("Health", "Medicine", 10),
-                        new Product("Food", "Apple", 10)
+                        new Product(Category.ELECTRONICS, "Computer", 10),
+                        new Product(Category.CLEANING, "Detergent", 10),
+                        new Product(Category.HEALTH, "Medicine", 10),
+                        new Product(Category.FOOD, "Apple", 10)
                 )),
                 new Shop("Carlos", "NegozioF", List.of(
-                        new Product("Electronics", "Computer", 10),
-                        new Product("Cleaning", "Detergent", 10),
-                        new Product("Health", "Medicine", 10),
-                        new Product("Food", "Apple", 10)
+                        new Product(Category.ELECTRONICS, "Computer", 10),
+                        new Product(Category.CLEANING, "Detergent", 10),
+                        new Product(Category.HEALTH, "Medicine", 10),
+                        new Product(Category.FOOD, "Apple", 10)
                 ))
         );
 

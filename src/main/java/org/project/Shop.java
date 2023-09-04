@@ -1,6 +1,7 @@
 package org.project;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Shop {
@@ -84,5 +85,10 @@ public class Shop {
         }
         return mostSold;
     }
-}
 
+    @Override
+    public String toString() {
+        return String.format("Shop [Owner: %s, Name: %s, TotalGains: %.2f, MostSoldCategory: %s]",
+                this.owner, this.name, this.totalGains, getMostSoldCategory());
+    }
+}
