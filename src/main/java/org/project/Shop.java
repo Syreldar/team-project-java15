@@ -8,7 +8,6 @@ public class Shop {
     private String name;
     private double totalGains;
     List<Product> products;
-
     private Map<Category, Integer> categorySales;
 
     public Shop(String owner, String name, List<Product> products) {
@@ -18,38 +17,31 @@ public class Shop {
         this.categorySales = new HashMap<>();
     }
 
-    public String getOwner()
-    {
+    public String getOwner() {
         return this.owner;
     }
 
-    public void setOwner(String owner)
-    {
+    public void setOwner(String owner) {
         this.owner = owner;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return this.name;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public double getTotalGains()
-    {
+    public double getTotalGains() {
         return this.totalGains;
     }
 
-    public void setTotalGains(double totalGains)
-    {
+    public void setTotalGains(double totalGains) {
         this.totalGains = totalGains;
     }
 
-    public void addGains(double currentGains)
-    {
+    public void addGains(double currentGains) {
         this.totalGains += currentGains;
     }
 
