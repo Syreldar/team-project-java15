@@ -4,35 +4,62 @@ import java.util.*;
 
 public class Main
 {
-    public static void main(String[] args)
-    {
-        Classifica classifica = new Classifica();
+    public static void main(String[] args) {
+        Chart chart = new Chart();
 
-        List<Negozio> negoziList = Arrays.asList(
-                new Negozio("A", 250.0, "Cibo"),
-                new Negozio("B", 1500.0, "Elettronica"),
-                new Negozio("C", 750.0, "Abbigliamento"),
-                new Negozio("D", 1250.0, "Elettronica"),
-                new Negozio("E", 500.0, "Cibo"),
-                new Negozio("F", 1000.0, "Abbigliamento")
+        List<Shop> shopsList = Arrays.asList(
+                new Shop("Carlos", "NegozioA", List.of(
+                        new Product("Electronics", "Computer", 10),
+                        new Product("Cleaning", "Detergent", 10),
+                        new Product("Health", "Medicine", 10),
+                        new Product("Food", "Apple", 10)
+                )),
+                new Shop("Carlos", "NegozioB", List.of(
+                        new Product("Electronics", "Computer", 10),
+                        new Product("Cleaning", "Detergent", 10),
+                        new Product("Health", "Medicine", 10),
+                        new Product("Food", "Apple", 10)
+                )),
+                new Shop("Carlos", "NegozioC", List.of(
+                        new Product("Electronics", "Computer", 10),
+                        new Product("Cleaning", "Detergent", 10),
+                        new Product("Health", "Medicine", 10),
+                        new Product("Food", "Apple", 10)
+                )),
+                new Shop("Carlos", "NegozioD", List.of(
+                        new Product("Electronics", "Computer", 10),
+                        new Product("Cleaning", "Detergent", 10),
+                        new Product("Health", "Medicine", 10),
+                        new Product("Food", "Apple", 10)
+                )),
+                new Shop("Carlos", "NegozioE",List.of(
+                        new Product("Electronics", "Computer", 10),
+                        new Product("Cleaning", "Detergent", 10),
+                        new Product("Health", "Medicine", 10),
+                        new Product("Food", "Apple", 10)
+                )),
+                new Shop("Carlos", "NegozioF", List.of(
+                        new Product("Electronics", "Computer", 10),
+                        new Product("Cleaning", "Detergent", 10),
+                        new Product("Health", "Medicine", 10),
+                        new Product("Food", "Apple", 10)
+                ))
         );
 
-        for (Negozio negozio : negoziList)
-            classifica.aggiungiNegozio(negozio);
+        shopsList.forEach(chart::addShop);
 
         System.out.println("Classifica per vendite:");
-        for (Negozio negozio : classifica.getNegoziPerVendite())
-            System.out.printf("%s - %.2f\n", negozio.getNome(), negozio.getVenditeTotali());
+        for (Shop shop : chart.getShopsByGains())
+            System.out.printf("%s - %.2f\n", shop.getName(), shop.getTotalGains());
 
-        Set<String> categorieUniche = new HashSet<>();
-        for (Negozio negozio : negoziList)
-            categorieUniche.add(negozio.getCategoriaPiuVenduta());
+        Set<Category> uniqueCategories = new HashSet<>();
+        for (Shop shop : shopsList)
+            uniqueCategories.add(shop.getMostSoldCategory());
 
-        for (String categoria : categorieUniche)
+        for (Category category : uniqueCategories)
         {
-            System.out.printf("\nClassifica dei negozi di %s:\n", categoria);
-            for (Negozio negozio : classifica.getNegoziPerCategoria(categoria))
-                System.out.printf("%s - %.2f\n", negozio.getNome(), negozio.getVenditeTotali());
+            for (Shop shop : chart.getShopsByCategory(category))
+                System.out.printf("%s - %.2f\n", shop.getName(), shop.getTotalGains());
         }
     }
 }
