@@ -1,14 +1,18 @@
-package org.example;
+package org.project;
+
 
 public class Cliente {
+
     private String firstName;
     private String lastName;
-    private double saldo;
 
-    public Cliente(String firstName, String lastName, double saldo) {
+    private double balance;
+
+    public Cliente(String firstName, String lastName, double balance) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.saldo = saldo;
+        this.balance = balance;
+
     }
 
     public String getFirstName() {
@@ -19,9 +23,11 @@ public class Cliente {
         return lastName;
     }
 
-    public double getSaldo() {
-        return saldo;
+    public double getBalance() {
+        return balance;
     }
+
+
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -31,20 +37,48 @@ public class Cliente {
         this.lastName = lastName;
     }
 
-    public void setSaldo(double saldo) {
-        this.saldo = saldo;
+    public void setBalance(double balance) {
+        this.balance = balance;
     }
+
+
 
     // metodo acquista dove il cliente può acquistare a seconda del saldo disponibile con relativo importo rimanente dopo l'acquisto
-    public void acquista(double importo) {
-        if (importo > 0 && importo <= saldo) {
-            saldo -= importo;
-            System.out.println("Acquisto di " + importo + " effettuato con successo. Saldo attuale: " + saldo);
-        } else if (importo <= 0) {
-            System.out.println("L'importo dell'acquisto deve essere maggiore di zero.");
-        } else {
-            System.out.println("Saldo insufficiente per l'acquisto. Saldo attuale: " + saldo);
+    public void buyProduct(Shop shop, Product product) {
+        double price = product.getPrice();
+        if (balance < price) {
+            System.out.println("Saldo insufficiente per l'acquisto. Saldo attuale: " + balance);
+            return;
         }
+
+        // Verifica se il prodotto esiste nel negozio
+        if (!shop.containsProduct(product)) {
+            System.out.println("Il prodotto non è disponibile nel negozio.");
+            return;
+
+        }
+        balance -= products.getPrice();
+        shop.sellProduct(product, price);
+        System.out.printf("Acquisto di %s presso il negozio %s effettuato con successo. Saldo attuale: %f. %n",
+                product.getName(), shop.getName(), balance);
+
     }
 
+
+    @Override
+    public String toString() {
+        return  String.format("Cliente %s %s %f", firstName, lastName, balance);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
