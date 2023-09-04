@@ -1,99 +1,63 @@
-package org.example;
-
-
+package org.project;
 
 public class Cliente {
 
-    private String nome;
-    private String cognome;
+    private String firstName;
+    private String lastName;
+    private double balance;
 
-    private double saldo;
-    private Negozio negozio;
-    private Product prodotti;
-
-    public Cliente(String nome, String cognome, double saldo) {
-        this.nome = nome;
-        this.cognome = cognome;
-        this.saldo = saldo;
-
+    public Cliente(String firstName, String lastName, double balance) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.balance = balance;
     }
 
-    public String getNome() {
-        return nome;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getCognome() {
-        return cognome;
+    public String getLastName() {
+        return lastName;
     }
 
-    public double getSaldo() {
-        return saldo;
+    public double getBalance() {
+        return balance;
     }
 
-    public Negozio getNegozio() {
-        return negozio;
+     public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public Product getProdotti() {
-        return prodotti;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setBalance(double balance) {
+        this.balance = balance;
     }
 
-    public void setCognome(String cognome) {
-        this.cognome = cognome;
-    }
-
-    public void setSaldo(double saldo) {
-        this.saldo = saldo;
-    }
-
-    public void setNegozio(Negozio negozio) {
-        this.negozio = negozio;
-    }
-
-    public void setProdotti(Product prodotti) {
-        this.prodotti = prodotti;
-    }
-
-    // metodo acquista dove il cliente può acquistare a seconda del saldo disponibile con relativo importo rimanente dopo l'acquisto
-    public void acquistaProdotto(Negozio negozio, Product prodotto) {
-        double price = prodotto.getPrice();
-        if (saldo < price) {
-            System.out.println("Saldo insufficiente per l'acquisto. Saldo attuale: " + saldo);
+     // metodo acquista dove il cliente può acquistare a seconda del saldo disponibile con relativo importo rimanente dopo l'acquisto
+    public void buyProduct(Shop shop, Product product) {
+        double price = product.getPrice();
+        if (balance < price) {
+            System.out.println("Saldo insufficiente per l'acquisto. Saldo attuale: " + balance);
             return;
         }
 
         // Verifica se il prodotto esiste nel negozio
-        if (!negozio.contieneProdotto(prodotto)) {
+        if (!shop.containsProduct(product)) {
             System.out.println("Il prodotto non è disponibile nel negozio.");
             return;
 
         }
-        saldo -= prodotti.getPrice();
-        negozio.vendiProdotto(prodotto, price);
+        balance -= products.getPrice();
+        shop.sellProduct(product, price);
         System.out.printf("Acquisto di %s presso il negozio %s effettuato con successo. Saldo attuale: %f. %n",
-                prodotto.getName(), negozio.getName(), saldo);
+                product.getName(), shop.getName(), balance);
 
     }
-
-
-    @Override
+        @Override
     public String toString() {
-        return  String.format("Cliente %s %s %f", nome, cognome, saldo);
+        return  String.format("Cliente %s %s %f", firstName, lastName, balance);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
