@@ -1,10 +1,10 @@
 package org.project;
 
 public class Negozio {
-    private String nome;
-    private double venditeTotali;
+    private final String nome;
+    private final double venditeTotali;
     private String proprietario;
-    private String categoriaPiuVenduta;
+    private final String categoriaPiuVenduta;
     private static final int minCapacita = 0;
     private static final int maxCapacita = 2000;
     private static int numeroDiNegoziTotale;
