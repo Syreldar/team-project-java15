@@ -5,14 +5,12 @@ public class Cliente {
 
     private String firstName;
     private String lastName;
-
     private double balance;
 
     public Cliente(String firstName, String lastName, double balance) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.balance = balance;
-
     }
 
     public String getFirstName() {
@@ -27,8 +25,6 @@ public class Cliente {
         return balance;
     }
 
-
-
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -41,9 +37,7 @@ public class Cliente {
         this.balance = balance;
     }
 
-
-
-    // metodo acquista dove il cliente può acquistare a seconda del saldo disponibile con relativo importo rimanente dopo l'acquisto
+// metodo acquista dove il cliente può acquistare a seconda del saldo disponibile con relativo importo rimanente dopo l'acquisto
     public void buyProduct(Shop shop, Product product) {
         double price = product.getPrice();
         if (balance < price) {
@@ -64,21 +58,8 @@ public class Cliente {
 
     }
 
-
     @Override
     public String toString() {
         return  String.format("Cliente %s %s %f", firstName, lastName, balance);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
