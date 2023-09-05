@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package org.project;
 
 import java.math.BigDecimal;
@@ -27,6 +28,16 @@ public class Product {
 
     public String getName() {
         return this.name;
+=======
+public class Product {
+
+    String name;
+    String manufacturer;
+    double price;
+
+    public String getName() {
+        return name;
+>>>>>>> 933e715 (added class Database and class Product)
     }
 
     public void setName(String name) {
@@ -34,13 +45,18 @@ public class Product {
     }
 
     public String getManufacturer() {
+<<<<<<< HEAD
         return this.manufacturer;
+=======
+        return manufacturer;
+>>>>>>> 933e715 (added class Database and class Product)
     }
 
     public void setManufacturer(String manufacturer) {
         this.manufacturer = manufacturer;
     }
 
+<<<<<<< HEAD
     public BigDecimal getPrice() {
         return this.price;
     }
@@ -84,4 +100,13 @@ public class Product {
     public int hashCode() {
         return Objects.hash(name);
     }
+=======
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+>>>>>>> 933e715 (added class Database and class Product)
 }
