@@ -1,8 +1,27 @@
+package org.project;
+
+import org.project.Category;
+
 public class Product {
 
     String name;
     String manufacturer;
     double price;
+    String category;
+
+    public Product(String category, String name, double price) {
+        this.name = name;
+        this.price = price;
+        this.category = category;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
     public String getName() {
         return name;
