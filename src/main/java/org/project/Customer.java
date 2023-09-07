@@ -52,7 +52,32 @@ public class Customer {
         System.out.printf("Purchase of %s from shop %s successful. Current balance: %.2f%n",
                 product.getName(), shop.getName(), this.balance);
     }
+    
+    public void viewHistoryChart(Chart chart) {
+        // itera attraverso la lista degli ordini completati nel Chart
+        for (Shop shop : chart.getShopByGains()) {
+            System.out.println("Negozio: " + shop.getName());
 
+            // Ottieni la lista degli ordini completati dal negozio
+            List<Order> completedOrders = shop.getCompletedOrders();
+
+            if (completedOrders.isEmpty()) {
+                System.out.println("Nessun ordine completato.");
+                return;
+            }
+            if (completedOrders.size() > 1) {
+                System.out.println("Ordini completati:");
+                return;
+
+                // Itera attraverso la lista degli ordini completati e visualizza le informazioni di ciascun ordine
+                for (Order order : completedOrders) {
+                    System.out.println("- Negozio: " + shop.getName());
+                    System.out.println("- Data dell'ordine: " + order.getOrderDate());
+                    System.out.println("- Importo dell'ordine: " + order.getPrice());
+                }
+            }
+        }
+    }
     @Override
     public String toString() {
         return String.format("Customer [FirstName: %s, LastName: %s, Balance: %.2f]",
