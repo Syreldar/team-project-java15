@@ -9,7 +9,6 @@ public class Product {
     private BigDecimal price;
     private int quantity;
     private Category category;
-
     private BigDecimal discount;
 
     public Product(Category category, String name, double price, int quantity) {
