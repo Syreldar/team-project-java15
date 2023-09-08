@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 package org.project;
 
 import java.math.BigDecimal;
@@ -11,11 +10,18 @@ public class Product {
     private int quantity;
     private Category category;
 
+    private BigDecimal discount;
+
     public Product(Category category, String name, double price, int quantity) {
         this.category = category;
         this.name = name;
         this.price = BigDecimal.valueOf(price);
         this.quantity = quantity;
+    }
+
+    public Product(Category category, String name, double price, int quantity, BigDecimal discount) {
+        this(category, name, price, quantity);
+        this.discount = discount;
     }
 
     public Category getCategory() {
@@ -28,16 +34,6 @@ public class Product {
 
     public String getName() {
         return this.name;
-=======
-public class Product {
-
-    String name;
-    String manufacturer;
-    double price;
-
-    public String getName() {
-        return name;
->>>>>>> 933e715 (added class Database and class Product)
     }
 
     public void setName(String name) {
@@ -45,20 +41,15 @@ public class Product {
     }
 
     public String getManufacturer() {
-<<<<<<< HEAD
         return this.manufacturer;
-=======
-        return manufacturer;
->>>>>>> 933e715 (added class Database and class Product)
     }
 
     public void setManufacturer(String manufacturer) {
         this.manufacturer = manufacturer;
     }
 
-<<<<<<< HEAD
     public BigDecimal getPrice() {
-        return this.price;
+        return applyDiscount();
     }
 
     public void setPrice(BigDecimal price) {
@@ -73,6 +64,14 @@ public class Product {
         this.quantity = quantity;
     }
 
+    public BigDecimal getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(BigDecimal discount) {
+        this.discount = discount;
+    }
+
     public void reduceQuantity(Integer amount) {
         if (amount == null || amount <= 0) {
             this.quantity -= 1;
@@ -83,6 +82,10 @@ public class Product {
 
     public void reduceQuantity() {
         this.quantity -= 1;
+    }
+
+    public BigDecimal applyDiscount() {
+        return this.price.subtract(this.price.multiply(this.discount));
     }
 
     @Override
@@ -100,13 +103,4 @@ public class Product {
     public int hashCode() {
         return Objects.hash(name);
     }
-=======
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
->>>>>>> 933e715 (added class Database and class Product)
 }

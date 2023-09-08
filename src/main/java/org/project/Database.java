@@ -1,16 +1,11 @@
-<<<<<<< HEAD
+
 package org.project;
-=======
 
-
-import org.project.Customer;
-import org.project.Shop;
->>>>>>> 933e715 (added class Database and class Product)
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-<<<<<<< HEAD
+
 
 public class Database {
     private final List<Shop> shops;
@@ -42,26 +37,5 @@ public class Database {
                 .filter(shop -> shop.getName().equals(name))
                 .findFirst()
                 .orElse(null);
-=======
-import java.util.Map;
-public class Database {
-    List<Shop> shops;
-    List<Customer> customers;
-    HashMap<Shop, List<Product>>sales;
-    public void addSales(Shop sellerShop, Product product) {
-        if(!sales.containsKey(sellerShop)) {
-            sales.put(sellerShop, new ArrayList<Product>());
-        }
-        sales.get(sellerShop).add(product);
-    }
-    public Database(){
-        this.shops = new ArrayList<Shop>();
-    }
-    public void addShop(Shop shop) {
-        shops.add(shop);
-    }
-    public void addCustomer(Customer customer) {
-        customers.add(customer);
->>>>>>> 933e715 (added class Database and class Product)
     }
 }
