@@ -1,13 +1,8 @@
-package org.porject;
-
-import org.project.Customer;
-import org.project.Shop;
-import org.project.Product;
+package org.project;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Database {
     List<Shop> shops;

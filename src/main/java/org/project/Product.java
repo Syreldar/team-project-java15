@@ -1,7 +1,5 @@
 package org.project;
 
-import org.project.Category;
-
 public class Product {
 
     String name;
