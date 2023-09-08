@@ -1,6 +1,7 @@
 package org.project;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Chart {
@@ -11,31 +12,37 @@ public class Chart {
     }
 
     public void addShop(Shop shop) {
-        shops.add(shop);
+        this.shops.add(shop);
+        System.out.printf("Chart: Shop %s by %s added!%n", shop.getName(), shop.getOwnerName());
+    }
+
+    public List<Shop> getShopsBySells() {
+        this.shops.sort((shop1, shop2) -> Double.compare(shop2.getTotalSales(), shop1.getTotalSales()));
+        return Collections.unmodifiableList(this.shops);
     }
 
     public List<Shop> getShopsByGains() {
-        shops.sort((n1, n2) -> Double.compare(n2.getTotalGains(), n1.getTotalGains()));
-        return new ArrayList<>(shops);
+        this.shops.sort((n1, n2) -> n2.getTotalGains().compareTo(n1.getTotalGains()));
+        return Collections.unmodifiableList(this.shops);
     }
 
     public List<Shop> getShopsByCategory(Category category) {
         List<Shop> filteredShops = new ArrayList<>();
-        for (Shop shop : shops) {
+        for (Shop shop : this.shops) {
             if (category.equals(shop.getMostSoldCategory())) {
                 filteredShops.add(shop);
             }
         }
 
-        filteredShops.sort((n1, n2) -> Double.compare(n2.getTotalGains(), n1.getTotalGains()));
-        return filteredShops;
+        filteredShops.sort((n1, n2) -> n2.getTotalGains().compareTo(n1.getTotalGains()));
+        return Collections.unmodifiableList(filteredShops);
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Chart [\n");
-        for (Shop shop : shops) {
+        for (Shop shop : this.shops) {
             sb.append("  ").append(shop.toString()).append(",\n");
         }
         sb.append("]");

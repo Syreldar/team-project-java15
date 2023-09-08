@@ -4,6 +4,6 @@ public enum Category {
     ELECTRONICS,
     CLEANING,
     HEALTH,
-    FOOD;
+    FOOD,
 
 }

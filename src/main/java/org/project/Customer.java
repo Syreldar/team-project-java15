@@ -1,61 +1,94 @@
 package org.project;
 
+import java.math.BigDecimal;
+
 public class Customer {
     private String firstName;
     private String lastName;
-    private double balance;
+    private BigDecimal balance;
+    private final Database database;
 
-    public Customer(String firstName, String lastName, double balance) {
+    public Customer(Database database, String firstName, String lastName, double balance) {
+        this.database = database;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.balance = balance;
+        this.balance = BigDecimal.valueOf(balance);
+    }
+
+    public void withdraw(BigDecimal amount) {
+        this.balance = this.balance.subtract(amount);
+    }
+
+    public void deposit(BigDecimal amount) {
+        this.balance = this.balance.add(amount);
+    }
+
+    public void buyProduct(String shopName, String productName, Integer quantity) {
+        Shop shop = this.database.findShopByName(shopName);
+        if (shop == null) {
+            System.out.printf("%s: Shop not found.%n", this.getFullName());
+            return;
+        }
+
+        Product product = shop.findProductByName(productName);
+        if (product == null) {
+            System.out.printf("%s: Shop found, but Product not found.%n", this.getFullName());
+            return;
+        }
+
+        quantity = (quantity == null || quantity <= 0) ? 1 : quantity;
+
+        int productQuantity = product.getQuantity();
+        if (productQuantity < quantity) {
+            System.out.printf("%s: The shop doesn't have enough units of %s.%n- Requested: %d;%n- Available: %d;%n", this.getFullName(), productName, quantity, productQuantity);
+            return;
+        }
+
+        BigDecimal totalPrice = product.getPrice().multiply(BigDecimal.valueOf(quantity));
+        if (this.balance.compareTo(totalPrice) < 0) {
+            System.out.printf("%s: I don't have enough money.%n- Remaining: %.2f;%n- Needed: %.2f;%n", this.firstName, this.balance, totalPrice);
+            return;
+        }
+
+        this.withdraw(totalPrice);
+        shop.sellProduct(this, product, quantity);
+    }
+
+    public void buyProduct(String shopName, String productName) {
+        buyProduct(shopName, productName, null);
     }
 
     public String getFirstName() {
         return this.firstName;
     }
 
-    public String getLastName() {
-        return this.lastName;
-    }
-
-    public double getBalance() {
-        return this.balance;
-    }
-
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return this.lastName;
     }
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
-    public void setBalance(double balance) {
-        this.balance = balance;
+    public String getFullName() {
+        return String.format("%s %s", this.firstName, this.lastName);
     }
 
-    public void buyProduct(Shop shop, Product product) {
-        double price = product.getPrice();
-        if (this.balance < price) {
-            System.out.printf("Insufficient balance to purchase. Current balance: %.2f%n", this.balance);
-            return;
-        }
+    public BigDecimal getBalance() {
+        return this.balance;
+    }
 
-        if (!shop.containsProduct(product)) {
-            System.out.println("The product is not available in the shop.");
-            return;
-        }
-
-        this.balance -= price;
-        shop.sellProduct(product, price);
-        System.out.printf("Purchase of %s from shop %s successful. Current balance: %.2f%n",
-                product.getName(), shop.getName(), this.balance);
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 
     @Override
     public String toString() {
-        return String.format("Customer [FirstName: %s, LastName: %s, Balance: %.2f]",
-                this.firstName, this.lastName, this.balance);
+        return String.format("Customer [FullName: %s, Balance: %.2f]",
+                this.getFullName(), this.balance);
     }
 }
