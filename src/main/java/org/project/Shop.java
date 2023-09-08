@@ -124,8 +124,9 @@ public class Shop implements Storable {
     }
 
     @Override
-    public void register(Database database) {
+    public void register(Database database, Chart chart) {
         database.addShop(this);
+        chart.addShop(this);
     }
 
     @Override

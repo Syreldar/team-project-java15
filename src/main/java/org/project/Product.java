@@ -89,8 +89,9 @@ public class Product implements Storable {
     }
 
     @Override
-    public void register(Database database) {
+    public void register(Database database, Chart chart) {
         database.addProduct(this);
+        chart.addProduct(this);
     }
 
     @Override

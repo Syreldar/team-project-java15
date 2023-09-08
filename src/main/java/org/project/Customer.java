@@ -108,8 +108,9 @@ public class Customer implements Storable {
     }
 
     @Override
-    public void register(Database database) {
+    public void register(Database database, Chart chart) {
         database.addCustomer(this);
+        chart.addCustomer(this);
     }
 
     @Override

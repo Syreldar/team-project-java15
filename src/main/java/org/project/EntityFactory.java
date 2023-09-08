@@ -12,43 +12,37 @@ public class EntityFactory {
     }
 
     public Product createProduct(Product product) {
-        product.register(database);
-        this.chart.addProduct(product);
+        product.register(database, chart);
         return product;
     }
 
     public List<Product> createProducts(List<Product> productList) {
         for (Product product : productList) {
-            product.register(database);
-            this.chart.addProduct(product);
+            product.register(database, chart);
         }
         return productList;
     }
 
     public Shop createShop(Shop shop) {
-        shop.register(database);
-        this.chart.addShop(shop);
+        shop.register(database, chart);
         return shop;
     }
 
     public List<Shop> createShops(List<Shop> shopsList) {
         for (Shop shop : shopsList) {
-            shop.register(database);
-            this.chart.addShop(shop);
+            shop.register(database, chart);
         }
         return shopsList;
     }
 
     public Customer createCustomer(Customer customer) {
-        customer.register(database);
-        this.chart.addCustomer(customer);
+        customer.register(database, chart);
         return customer;
     }
 
     public List<Customer> createCustomers(List<Customer> customersList) {
         for (Customer customer : customersList) {
-            customer.register(database);
-            this.chart.addCustomer(customer);
+            customer.register(database, chart);
         }
         return customersList;
     }
