@@ -1,29 +1,32 @@
 package org.project;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Shop {
-    private String owner;
     private String name;
-    private double totalGains;
-    List<Product> products;
-    private Map<Category, Integer> categorySales;
+    private String ownerName;
+    private BigDecimal totalGains = BigDecimal.ZERO;
+    private final List<Product> products;
+    private final Map<Category, Integer> categorySales;
+    private int totalSales = 0;
 
-    public Shop(String owner, String name, List<Product> products) {
-        this.owner = owner;
+    public Shop(String name, String ownerName, List<Product> products) {
         this.name = name;
-        this.products = products;
+        this.ownerName = ownerName;
+        this.products = new ArrayList<>(products);
         this.categorySales = new HashMap<>();
     }
 
-    public String getOwner() {
-        return this.owner;
+    public String getOwnerName() {
+        return this.ownerName;
     }
 
     public void setOwner(String owner) {
-        this.owner = owner;
+        this.ownerName = owner;
     }
 
     public String getName() {
@@ -34,16 +37,24 @@ public class Shop {
         this.name = name;
     }
 
-    public double getTotalGains() {
+    public BigDecimal getTotalGains() {
         return this.totalGains;
     }
 
-    public void setTotalGains(double totalGains) {
+    public void setTotalGains(BigDecimal totalGains) {
         this.totalGains = totalGains;
     }
 
-    public void addGains(double currentGains) {
-        this.totalGains += currentGains;
+    public int getTotalSales() {
+        return this.totalSales;
+    }
+
+    public void incrementTotalSales() {
+        this.totalSales++;
+    }
+
+    public void addGains(BigDecimal currentGains) {
+        this.totalGains = this.totalGains.add(currentGains);
     }
 
     public boolean containsProduct(Product product) {
@@ -55,29 +66,34 @@ public class Shop {
         return false;
     }
 
-    public void sellProduct(Product product, double price) {
+    public void sellProduct(Customer customer, Product product, int quantity) {
         // Handle financial transaction and inventory
-        handleTransaction(product, price);
+        this.handleTransaction(product, quantity);
 
         // Update the sales statistics
-        updateSalesStatistics(product);
+        this.updateSalesStatistics(product);
+
+        // Increment total sales
+        this.incrementTotalSales();
+
+        System.out.printf("%s: Sold %d unit%s of %s to customer %s. Remaining units: %d;%n", this.name, quantity, quantity > 1 ? "s" : "", product.getName(), customer.getFullName(), product.getQuantity());
     }
 
-    private void handleTransaction(Product product, double price) {
-        this.products.remove(product);
-        addGains(price);
+    private void handleTransaction(Product product, int quantity) {
+        product.reduceQuantity(quantity);
+        this.addGains(product.getPrice().multiply(new BigDecimal(quantity)));
     }
 
     private void updateSalesStatistics(Product product) {
         Category productCategory = product.getCategory();
-        int currentSales = categorySales.getOrDefault(productCategory, 0);
-        categorySales.put(productCategory, currentSales + 1);
+        int currentSales = this.categorySales.getOrDefault(productCategory, 0);
+        this.categorySales.put(productCategory, currentSales + 1);
     }
 
     public Category getMostSoldCategory() {
         int maxSales = -1;
         Category mostSold = null;
-        for (Map.Entry<Category, Integer> entry : categorySales.entrySet()) {
+        for (Map.Entry<Category, Integer> entry : this.categorySales.entrySet()) {
             if (entry.getValue() > maxSales) {
                 maxSales = entry.getValue();
                 mostSold = entry.getKey();
@@ -86,9 +102,18 @@ public class Shop {
         return mostSold;
     }
 
+    public Product findProductByName(String name) {
+        for (Product product : this.products) {
+            if (product.getName().equals(name)) {
+                return product;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
-        return String.format("Shop [Owner: %s, Name: %s, TotalGains: %.2f, MostSoldCategory: %s]",
-                this.owner, this.name, this.totalGains, getMostSoldCategory());
+        return String.format("Shop [Name: %s, OwnerName: %s, TotalGains: %.2f, MostSoldCategory: %s]",
+                this.name, this.ownerName, this.totalGains, getMostSoldCategory());
     }
 }

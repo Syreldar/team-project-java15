@@ -5,26 +5,34 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Database {
-    List<Shop> shops;
-    List<Customer> customers;
-    HashMap<Shop, List<Product>> sales;
+    private final List<Shop> shops;
+    private final List<Customer> customers;
+    private final HashMap<Shop, List<Product>> sales;
 
     public Database() {
-        this.shops = new ArrayList<Shop>();
+        this.shops = new ArrayList<>();
+        this.customers = new ArrayList<>();
+        this.sales = new HashMap<>();
     }
 
     public void addShop(Shop shop) {
-        shops.add(shop);
+        this.shops.add(shop);
+        System.out.printf("Database: Shop %s by %s added!%n", shop.getName(), shop.getOwnerName());
     }
 
     public void addCustomer(Customer customer) {
-        customers.add(customer);
+        this.customers.add(customer);
+        System.out.printf("Database: Customer %s added!%n", customer.getFullName());
     }
 
     public void addSales(Shop sellerShop, Product product) {
-        if (!sales.containsKey(sellerShop)) {
-            sales.put(sellerShop, new ArrayList<Product>());
-        }
-        sales.get(sellerShop).add(product);
+        this.sales.computeIfAbsent(sellerShop, k -> new ArrayList<>()).add(product);
+    }
+
+    public Shop findShopByName(String name) {
+        return this.shops.stream()
+                .filter(shop -> shop.getName().equals(name))
+                .findFirst()
+                .orElse(null);
     }
 }
