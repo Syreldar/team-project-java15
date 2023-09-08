@@ -7,19 +7,19 @@ public class Product {
     String name;
     String manufacturer;
     double price;
-    String category;
+    Category category;
 
-    public Product(String category, String name, double price) {
+    public Product(Category category, String name, double price) {
         this.name = name;
         this.price = price;
         this.category = category;
     }
 
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 
