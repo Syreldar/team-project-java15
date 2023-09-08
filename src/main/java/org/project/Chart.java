@@ -12,6 +12,10 @@ public class Chart {
     }
 
     public void addShop(Shop shop) {
+        if (shop == null) {
+            throw new IllegalArgumentException("The shop cannot be null");
+        }
+
         this.shops.add(shop);
         System.out.printf("Chart: Shop %s by %s added!%n", shop.getName(), shop.getOwnerName());
     }
@@ -27,6 +31,10 @@ public class Chart {
     }
 
     public List<Shop> getShopsByCategory(Category category) {
+        if (category == null) {
+            throw new IllegalArgumentException("The category cannot be null");
+        }
+
         List<Shop> filteredShops = new ArrayList<>();
         for (Shop shop : this.shops) {
             if (category.equals(shop.getMostSoldCategory())) {

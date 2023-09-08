@@ -67,6 +67,18 @@ public class Shop {
     }
 
     public void sellProduct(Customer customer, Product product, int quantity) {
+        if (customer == null) {
+            throw new IllegalArgumentException("The customer cannot be null");
+        }
+
+        if (product == null) {
+            throw new IllegalArgumentException("The product cannot be null");
+        }
+
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("The quantity cannot be <= 0");
+        }
+
         // Handle financial transaction and inventory
         this.handleTransaction(product, quantity);
 
@@ -114,6 +126,6 @@ public class Shop {
     @Override
     public String toString() {
         return String.format("Shop [Name: %s, OwnerName: %s, TotalGains: %.2f, MostSoldCategory: %s]",
-                this.name, this.ownerName, this.totalGains, getMostSoldCategory());
+                this.name, this.ownerName, this.totalGains, getMostSoldCategory() != null ? getMostSoldCategory() : "None");
     }
 }

@@ -16,16 +16,32 @@ public class Database {
     }
 
     public void addShop(Shop shop) {
+        if (shop == null) {
+            throw new IllegalArgumentException("The shop cannot be null");
+        }
+
         this.shops.add(shop);
         System.out.printf("Database: Shop %s by %s added!%n", shop.getName(), shop.getOwnerName());
     }
 
     public void addCustomer(Customer customer) {
+        if (customer == null) {
+            throw new IllegalArgumentException("The customer cannot be null");
+        }
+
         this.customers.add(customer);
         System.out.printf("Database: Customer %s added!%n", customer.getFullName());
     }
 
     public void addSales(Shop sellerShop, Product product) {
+        if (sellerShop == null) {
+            throw new IllegalArgumentException("The shop cannot be null");
+        }
+
+        if (product == null) {
+            throw new IllegalArgumentException("The product cannot be null");
+        }
+
         this.sales.computeIfAbsent(sellerShop, k -> new ArrayList<>()).add(product);
     }
 

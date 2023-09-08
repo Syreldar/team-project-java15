@@ -9,6 +9,13 @@ public class Customer {
     private final Database database;
 
     public Customer(Database database, String firstName, String lastName, double balance) {
+        if (database == null || firstName == null || lastName == null) {
+            throw new IllegalArgumentException("The database, firstName and lastName arguments cannot be null");
+        }
+        if (balance < 0) {
+            throw new IllegalArgumentException("The initial balance cannot be negative");
+        }
+
         this.database = database;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -16,14 +23,28 @@ public class Customer {
     }
 
     public void withdraw(BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("The amount to withdraw must be positive");
+        }
         this.balance = this.balance.subtract(amount);
     }
 
     public void deposit(BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("The amount to deposit must be positive");
+        }
         this.balance = this.balance.add(amount);
     }
 
     public void buyProduct(String shopName, String productName, Integer quantity) {
+        if (shopName == null) {
+            throw new IllegalArgumentException("The name of the Shop cannot be null");
+        }
+
+        if (productName == null) {
+            throw new IllegalArgumentException("The name of the Product cannot be null");
+        }
+
         Shop shop = this.database.findShopByName(shopName);
         if (shop == null) {
             System.out.printf("%s: Shop not found.%n", this.getFullName());

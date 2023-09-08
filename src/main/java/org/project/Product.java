@@ -11,6 +11,19 @@ public class Product {
     private Category category;
 
     public Product(Category category, String name, double price, int quantity) {
+        if (category == null) {
+            throw new IllegalArgumentException("The category cannot be null");
+        }
+        if (name == null) {
+            throw new IllegalArgumentException("The name of the product cannot be null");
+        }
+        if (price < 0) {
+            throw new IllegalArgumentException("The price must be >= 0");
+        }
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("The quantity must be > 0");
+        }
+
         this.category = category;
         this.name = name;
         this.price = BigDecimal.valueOf(price);
@@ -46,6 +59,9 @@ public class Product {
     }
 
     public void setPrice(BigDecimal price) {
+        if (price.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("You can't set a negative price");
+        }
         this.price = price;
     }
 
@@ -54,6 +70,9 @@ public class Product {
     }
 
     public void setQuantity(int quantity) {
+        if (quantity < 0) {
+            throw new IllegalArgumentException("You can't set a negative quantity");
+        }
         this.quantity = quantity;
     }
 
