@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Shop {
+public class Shop implements Storable {
     private String name;
     private String ownerName;
     private BigDecimal totalGains = BigDecimal.ZERO;
@@ -121,6 +121,11 @@ public class Shop {
             }
         }
         return null;
+    }
+
+    @Override
+    public void register(Database database) {
+        database.addShop(this);
     }
 
     @Override

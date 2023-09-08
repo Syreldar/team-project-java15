@@ -2,7 +2,7 @@ package org.project;
 
 import java.math.BigDecimal;
 
-public class Customer {
+public class Customer implements Storable {
     private String firstName;
     private String lastName;
     private BigDecimal balance;
@@ -36,11 +36,10 @@ public class Customer {
         this.balance = this.balance.add(amount);
     }
 
-    public void buyProduct(String shopName, String productName, Integer quantity) {
+    public Product buyProduct(String shopName, String productName, Integer quantity) {
         if (shopName == null) {
             throw new IllegalArgumentException("The name of the Shop cannot be null");
         }
-
         if (productName == null) {
             throw new IllegalArgumentException("The name of the Product cannot be null");
         }
@@ -48,13 +47,13 @@ public class Customer {
         Shop shop = this.database.findShopByName(shopName);
         if (shop == null) {
             System.out.printf("%s: Shop not found.%n", this.getFullName());
-            return;
+            return null;
         }
 
         Product product = shop.findProductByName(productName);
         if (product == null) {
             System.out.printf("%s: Shop found, but Product not found.%n", this.getFullName());
-            return;
+            return null;
         }
 
         quantity = (quantity == null || quantity <= 0) ? 1 : quantity;
@@ -62,21 +61,22 @@ public class Customer {
         int productQuantity = product.getQuantity();
         if (productQuantity < quantity) {
             System.out.printf("%s: The shop doesn't have enough units of %s.%n- Requested: %d;%n- Available: %d;%n", this.getFullName(), productName, quantity, productQuantity);
-            return;
+            return null;
         }
 
         BigDecimal totalPrice = product.getPrice().multiply(BigDecimal.valueOf(quantity));
         if (this.balance.compareTo(totalPrice) < 0) {
             System.out.printf("%s: I don't have enough money.%n- Remaining: %.2f;%n- Needed: %.2f;%n", this.firstName, this.balance, totalPrice);
-            return;
+            return null;
         }
 
         this.withdraw(totalPrice);
         shop.sellProduct(this, product, quantity);
+        return product;
     }
 
-    public void buyProduct(String shopName, String productName) {
-        buyProduct(shopName, productName, null);
+    public Product buyProduct(String shopName, String productName) {
+        return buyProduct(shopName, productName, null);
     }
 
     public String getFirstName() {
@@ -105,6 +105,11 @@ public class Customer {
 
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
+    }
+
+    @Override
+    public void register(Database database) {
+        database.addCustomer(this);
     }
 
     @Override

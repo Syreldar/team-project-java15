@@ -5,14 +5,22 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Database {
+    private final List<Product> products;
     private final List<Shop> shops;
     private final List<Customer> customers;
-    private final HashMap<Shop, List<Product>> sales;
 
     public Database() {
+        this.products = new ArrayList<>();
         this.shops = new ArrayList<>();
         this.customers = new ArrayList<>();
-        this.sales = new HashMap<>();
+    }
+
+    public void addProduct(Product product) {
+        if (product == null) {
+            throw new IllegalArgumentException("The product cannot be null");
+        }
+
+        products.add(product);
     }
 
     public void addShop(Shop shop) {
@@ -31,18 +39,6 @@ public class Database {
 
         this.customers.add(customer);
         System.out.printf("Database: Customer %s added!%n", customer.getFullName());
-    }
-
-    public void addSales(Shop sellerShop, Product product) {
-        if (sellerShop == null) {
-            throw new IllegalArgumentException("The shop cannot be null");
-        }
-
-        if (product == null) {
-            throw new IllegalArgumentException("The product cannot be null");
-        }
-
-        this.sales.computeIfAbsent(sellerShop, k -> new ArrayList<>()).add(product);
     }
 
     public Shop findShopByName(String name) {

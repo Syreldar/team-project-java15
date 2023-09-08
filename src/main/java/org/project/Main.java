@@ -5,10 +5,11 @@ import java.util.*;
 public class Main
 {
     public static void main(String[] args) {
-        Chart chart = new Chart();
         Database database = new Database();
+        Chart chart = new Chart();
+        EntityFactory factory = new EntityFactory(database, chart);
 
-        List<Shop> shopsList = Arrays.asList(
+        List<Shop> shopsList = factory.createShops(Arrays.asList(
                 new Shop("ShopA", "Carlo", List.of(
                         new Product(Category.ELECTRONICS, "Computer", 500, 7),
                         new Product(Category.CLEANING, "Detergent", 10,21),
@@ -24,14 +25,11 @@ public class Main
                         new Product(Category.HEALTH, "Medicine", 11, 82),
                         new Product(Category.FOOD, "Pear", 2.50,253)
                 ))
-        );
-        shopsList.forEach(chart::addShop);
-        shopsList.forEach(database::addShop);
+        ));
 
-        Customer customer = new Customer(database, "Enrico", "Drago", 100);
-        database.addCustomer(customer);
-
-        customer.buyProduct("NegozioA", "Apple");
+        Customer customer = factory.createCustomer(new Customer(database,"Enrico", "Drago", 100));
+        Product boughtProduct = customer.buyProduct("ShopA", "Apple");
+        // Save to variable in preparation for Review system.
 
         System.out.println("\nChart by sales:");
         for (Shop shop : chart.getShopsBySells())

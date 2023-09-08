@@ -6,9 +6,13 @@ import java.util.List;
 
 public class Chart {
     private final List<Shop> shops;
+    private final List<Product> products;
+    private final List<Customer> customers;
 
     public Chart() {
         this.shops = new ArrayList<>();
+        this.products = new ArrayList<>();
+        this.customers = new ArrayList<>();
     }
 
     public void addShop(Shop shop) {
@@ -18,6 +22,24 @@ public class Chart {
 
         this.shops.add(shop);
         System.out.printf("Chart: Shop %s by %s added!%n", shop.getName(), shop.getOwnerName());
+    }
+
+    public void addProduct(Product product) {
+        if (product == null) {
+            throw new IllegalArgumentException("The product cannot be null");
+        }
+
+        this.products.add(product);
+        System.out.printf("Chart: Product %s added!%n", product.getName());
+    }
+
+    public void addCustomer(Customer customer) {
+        if (customer == null) {
+            throw new IllegalArgumentException("The customer cannot be null");
+        }
+
+        this.customers.add(customer);
+        System.out.printf("Chart: Customer %s added!%n", customer.getFullName());
     }
 
     public List<Shop> getShopsBySells() {

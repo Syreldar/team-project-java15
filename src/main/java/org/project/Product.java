@@ -3,7 +3,7 @@ package org.project;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class Product {
+public class Product implements Storable {
     private String name;
     private String manufacturer;
     private BigDecimal price;
@@ -86,6 +86,11 @@ public class Product {
 
     public void reduceQuantity() {
         this.quantity -= 1;
+    }
+
+    @Override
+    public void register(Database database) {
+        database.addProduct(this);
     }
 
     @Override
