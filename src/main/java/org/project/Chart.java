@@ -8,11 +8,13 @@ public class Chart {
     private final List<Shop> shops;
     private final List<Product> products;
     private final List<Customer> customers;
+    private final List<Review> reviews;
 
     public Chart() {
         this.shops = new ArrayList<>();
         this.products = new ArrayList<>();
         this.customers = new ArrayList<>();
+        this.reviews = new ArrayList<>();
     }
 
     public void addShop(Shop shop) {
@@ -40,6 +42,15 @@ public class Chart {
 
         this.customers.add(customer);
         System.out.printf("Chart: Customer %s added!%n", customer.getFullName());
+    }
+
+    public void addReview(Review review) {
+        if (review == null) {
+            throw new IllegalArgumentException("The review cannot be null");
+        }
+
+        this.reviews.add(review);
+        System.out.printf("Chart: Review (%s, %.2f) added!%n", review.getComment(), review.getRating());
     }
 
     public List<Shop> getShopsBySells() {
