@@ -29,7 +29,7 @@ public class Customer implements Storable {
         Product product = shop.findProductByName(productName);
         if (product != null && !wishList.contains(product)) {
             wishList.add(product);
-        }g
+        }
     }
     public void removeFromWishList(Product product) {
         if (product != null) {
