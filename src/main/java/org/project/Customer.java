@@ -1,12 +1,15 @@
 package org.project;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Customer implements Storable {
     private String firstName;
     private String lastName;
     private BigDecimal balance;
     private final Database database;
+    private List<Product> wishList;
 
     public Customer(Database database, String firstName, String lastName, double balance) {
         if (database == null || firstName == null || lastName == null) {
@@ -20,8 +23,19 @@ public class Customer implements Storable {
         this.firstName = firstName;
         this.lastName = lastName;
         this.balance = BigDecimal.valueOf(balance);
+        this.wishList= new ArrayList<>();
     }
-
+    public void addToWishList(Shop shop, String productName) {
+        Product product = shop.findProductByName(productName);
+        if (product != null && !wishList.contains(product)) {
+            wishList.add(product);
+        }g
+    }
+    public void removeFromWishList(Product product) {
+        if (product != null) {
+            wishList.remove(product);
+        }
+    }
     public void withdraw(BigDecimal amount) {
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("The amount to withdraw must be positive");
