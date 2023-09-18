@@ -1,7 +1,6 @@
 package org.project;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Database {
@@ -46,5 +45,13 @@ public class Database {
                 .filter(shop -> shop.getName().equals(name))
                 .findFirst()
                 .orElse(null);
+    }
+
+    public List<Product> getAllAvailableProducts() {
+        List<Product> allAvailableProducts = new ArrayList<>();
+        for (Shop shop : shops) {
+            allAvailableProducts.addAll(shop.getProducts());
+        }
+        return allAvailableProducts;
     }
 }

@@ -109,4 +109,11 @@ public class Product implements Storable {
     public int hashCode() {
         return Objects.hash(name);
     }
+
+    @Override
+    public String toString() {
+        return String.format("Products [Name: %s, Manufacturer: %s, Price: %.2f, Quantity: %d, Category %s]%n",
+                this.name, this.manufacturer, this.price, this.quantity, this.category);
+    }
 }
+

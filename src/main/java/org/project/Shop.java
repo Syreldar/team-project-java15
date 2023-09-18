@@ -66,6 +66,10 @@ public class Shop implements Storable {
         return false;
     }
 
+    public List<Product> getProducts() {
+        return products;
+    }
+
     public void sellProduct(Customer customer, Product product, int quantity) {
         if (customer == null) {
             throw new IllegalArgumentException("The customer cannot be null");
