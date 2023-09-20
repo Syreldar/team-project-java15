@@ -72,7 +72,7 @@ public class Customer implements Storable {
 
         quantity = (quantity == null || quantity <= 0) ? 1 : quantity;
 
-        int productQuantity = product.getQuantity();
+        int productQuantity = product.getCurrentQuantity();
         if (productQuantity < quantity) {
             System.out.printf("%s: The shop doesn't have enough units of %s.%n- Requested: %d;%n- Available: %d;%n", this.getFullName(), productName, quantity, productQuantity);
             return null;
@@ -81,6 +81,39 @@ public class Customer implements Storable {
         BigDecimal totalPrice = product.getPrice().multiply(BigDecimal.valueOf(quantity));
         if (this.balance.compareTo(totalPrice) < 0) {
             System.out.printf("%s: I don't have enough money.%n- Remaining: %.2f;%n- Needed: %.2f;%n", this.firstName, this.balance, totalPrice);
+            return null;
+        }
+
+        this.withdraw(totalPrice);
+        shop.sellProduct(this, product, quantity);
+        return product;
+    }
+
+    public Product buyProduct(Shop shop, String productName, Integer quantity) {
+        if (shop == null) {
+            throw new IllegalArgumentException("The Shop cannot be null");
+        }
+        if (productName == null) {
+            throw new IllegalArgumentException("The name of the Product cannot be null");
+        }
+
+        Product product = shop.findProductByName(productName);
+        if (product == null) {
+            System.out.printf("%s: Shop found, but Product not found.%n", this.getFullName());
+            return null;
+        }
+
+        quantity = (quantity == null || quantity <= 0) ? 1 : quantity;
+
+        int productQuantity = product.getCurrentQuantity();
+        if (productQuantity < quantity) {
+            System.out.printf("%s: The shop doesn't have enough units of %s.%n- Requested: %d;%n- Available: %d;%n", this.getFullName(), productName, quantity, productQuantity);
+            return null;
+        }
+
+        BigDecimal totalPrice = product.getPrice().multiply(BigDecimal.valueOf(quantity));
+        if (this.balance.compareTo(totalPrice) < 0) {
+            System.out.printf("%s: I don't have enough money.%n- Remaining: %.2f$;%n- Needed: %.2f$;%n", this.getFullName(), this.balance, totalPrice);
             return null;
         }
 
@@ -119,6 +152,18 @@ public class Customer implements Storable {
 
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
+    }
+
+    public void reviewProduct(Product product, float rating, String comment) {
+        Review review = new Review(this, rating, comment);
+        database.registerReview(product);
+        product.addReview(review);
+    }
+
+    public void reviewShop(Shop shop, float rating, String comment) {
+        Review review = new Review(this, rating, comment);
+        database.registerReview(shop);
+        shop.addReview(review);
     }
 
     @Override
