@@ -2,6 +2,7 @@ package org.project;
 
 import java.util.List;
 import java.util.Scanner;
+import java.math.BigDecimal;
 
 public class Main {
     public static void main(String[] args) {
@@ -11,19 +12,19 @@ public class Main {
 
         factory.createShops(List.of(
                 new Shop("ShopA", "Carlo", List.of(
-                        new Product(Category.ELECTRONICS, "Computer", 500, 7),
-                        new Product(Category.CLEANING, "Detergent", 10, 21),
-                        new Product(Category.FOOD, "Apple", 2.20, 231)
+                        new Product(Category.ELECTRONICS, "Computer", 500, 7,new BigDecimal(0)),
+                        new Product(Category.CLEANING, "Detergent", 10, 21,new BigDecimal(0)),
+                        new Product(Category.FOOD, "Apple", 2.20, 231,new BigDecimal(0))
                 )),
                 new Shop("ShopB", "Para", List.of(
-                        new Product(Category.ELECTRONICS, "Computer", 550, 6),
-                        new Product(Category.HEALTH, "Medicine", 10, 78),
-                        new Product(Category.FOOD, "Banana", 2.10, 194)
+                        new Product(Category.ELECTRONICS, "Computer", 550, 6,new BigDecimal(0)),
+                        new Product(Category.HEALTH, "Medicine", 10, 78,new BigDecimal(0)),
+                        new Product(Category.FOOD, "Banana", 2.10, 194,new BigDecimal(0))
                 )),
                 new Shop("ShopC", "Malo", List.of(
-                        new Product(Category.CLEANING, "Detergent", 12, 24),
-                        new Product(Category.HEALTH, "Medicine", 11, 82),
-                        new Product(Category.FOOD, "Pear", 2.50, 253)
+                        new Product(Category.CLEANING, "Detergent", 12, 24,new BigDecimal(0)),
+                        new Product(Category.HEALTH, "Medicine", 11, 82,new BigDecimal(0)),
+                        new Product(Category.FOOD, "Pear", 2.50, 253,new BigDecimal(0))
                 ))
         ));
 
