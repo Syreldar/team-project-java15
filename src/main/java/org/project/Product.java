@@ -9,18 +9,25 @@ public class Product {
     private BigDecimal price;
     private int quantity;
     private Category category;
-    private BigDecimal discount;
 
     public Product(Category category, String name, double price, int quantity) {
+        if (category == null) {
+            throw new IllegalArgumentException("The category cannot be null");
+        }
+        if (name == null) {
+            throw new IllegalArgumentException("The name of the product cannot be null");
+        }
+        if (price < 0) {
+            throw new IllegalArgumentException("The price must be >= 0");
+        }
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("The quantity must be > 0");
+        }
+
         this.category = category;
         this.name = name;
         this.price = BigDecimal.valueOf(price);
         this.quantity = quantity;
-    }
-
-    public Product(Category category, String name, double price, int quantity, BigDecimal discount) {
-        this(category, name, price, quantity);
-        this.discount = discount;
     }
 
     public Category getCategory() {
@@ -48,10 +55,13 @@ public class Product {
     }
 
     public BigDecimal getPrice() {
-        return applyDiscount();
+        return this.price;
     }
 
     public void setPrice(BigDecimal price) {
+        if (price.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("You can't set a negative price");
+        }
         this.price = price;
     }
 
@@ -60,15 +70,10 @@ public class Product {
     }
 
     public void setQuantity(int quantity) {
+        if (quantity < 0) {
+            throw new IllegalArgumentException("You can't set a negative quantity");
+        }
         this.quantity = quantity;
-    }
-
-    public BigDecimal getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(BigDecimal discount) {
-        this.discount = discount;
     }
 
     public void reduceQuantity(Integer amount) {
@@ -81,10 +86,6 @@ public class Product {
 
     public void reduceQuantity() {
         this.quantity -= 1;
-    }
-
-    public BigDecimal applyDiscount() {
-        return this.price.subtract(this.price.multiply(this.discount));
     }
 
     @Override
