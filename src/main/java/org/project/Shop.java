@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.OptionalDouble;
 
 public class Shop implements Storable {
     private String name;
@@ -13,12 +14,14 @@ public class Shop implements Storable {
     private final List<Product> products;
     private final Map<Category, Integer> categorySales;
     private int totalSales = 0;
+    private final List<Review> reviews;
 
     public Shop(String name, String ownerName, List<Product> products) {
         this.name = name;
         this.ownerName = ownerName;
         this.products = new ArrayList<>(products);
         this.categorySales = new HashMap<>();
+        this.reviews = new ArrayList<>();
     }
 
     public String getOwnerName() {
@@ -58,12 +61,12 @@ public class Shop implements Storable {
     }
 
     public boolean containsProduct(Product product) {
-        for (Product p : this.products) {
-            if (p.equals(product)) {
-                return true;
-            }
-        }
-        return false;
+        return products.stream().anyMatch(p -> p.equals(product));
+    }
+
+    public boolean containsProduct(String productName) {
+        return products.stream()
+                .anyMatch(product -> product.getName().equalsIgnoreCase(productName));
     }
 
     public List<Product> getProducts() {
@@ -74,11 +77,9 @@ public class Shop implements Storable {
         if (customer == null) {
             throw new IllegalArgumentException("The customer cannot be null");
         }
-
         if (product == null) {
             throw new IllegalArgumentException("The product cannot be null");
         }
-
         if (quantity <= 0) {
             throw new IllegalArgumentException("The quantity cannot be <= 0");
         }
@@ -92,7 +93,7 @@ public class Shop implements Storable {
         // Increment total sales
         this.incrementTotalSales();
 
-        System.out.printf("%s: Sold %d unit%s of %s to customer %s. Remaining units: %d;%n", this.name, quantity, quantity > 1 ? "s" : "", product.getName(), customer.getFullName(), product.getQuantity());
+        System.out.printf("%s: Sold %d unit%s of %s to customer %s. Remaining units: %d;%n", this.name, quantity, quantity > 1 ? "s" : "", product.getName(), customer.getFullName(), product.getCurrentQuantity());
     }
 
     private void handleTransaction(Product product, int quantity) {
@@ -125,6 +126,34 @@ public class Shop implements Storable {
             }
         }
         return null;
+    }
+
+    public void addReview(Review review) {
+        reviews.add(review);
+    }
+
+    public int getReviewCount() {
+        return reviews.size();
+    }
+
+    public double getReviewsAverage() {
+        OptionalDouble average = reviews.stream().mapToDouble(Review::getRating).average();
+        return average.orElse(0.0);
+    }
+
+    public Product getMostSoldProduct() {
+        Product mostSoldProduct = null;
+        int maxSoldAmount = 0;
+
+        for (Product product : products) {
+            int soldAmount = product.getSoldAmount();
+            if (soldAmount > maxSoldAmount) {
+                maxSoldAmount = soldAmount;
+                mostSoldProduct = product;
+            }
+        }
+
+        return mostSoldProduct;
     }
 
     @Override

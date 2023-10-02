@@ -1,14 +1,19 @@
 package org.project;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.OptionalDouble;
 
 public class Product implements Storable {
+    private Category category;
     private String name;
     private String manufacturer;
     private BigDecimal price;
-    private int quantity;
-    private Category category;
+    private int initialQuantity;
+    private int currentQuantity;
+    private final List<Review> reviews;
 
     public Product(Category category, String name, double price, int quantity) {
         if (category == null) {
@@ -26,8 +31,10 @@ public class Product implements Storable {
 
         this.category = category;
         this.name = name;
+        this.manufacturer = null;
         this.price = BigDecimal.valueOf(price);
-        this.quantity = quantity;
+        this.currentQuantity = quantity;
+        this.reviews = new ArrayList<>();
     }
 
     public Category getCategory() {
@@ -65,27 +72,44 @@ public class Product implements Storable {
         this.price = price;
     }
 
-    public int getQuantity() {
-        return this.quantity;
+    public int getCurrentQuantity() {
+        return this.currentQuantity;
     }
 
-    public void setQuantity(int quantity) {
-        if (quantity < 0) {
+    public void setCurrentQuantity(int currentQuantity) {
+        if (currentQuantity < 0) {
             throw new IllegalArgumentException("You can't set a negative quantity");
         }
-        this.quantity = quantity;
+        this.currentQuantity = currentQuantity;
     }
 
     public void reduceQuantity(Integer amount) {
         if (amount == null || amount <= 0) {
-            this.quantity -= 1;
+            this.currentQuantity -= 1;
         } else {
-            this.quantity = Math.max(0, this.quantity - amount);
+            this.currentQuantity = Math.max(0, this.currentQuantity - amount);
         }
     }
 
+    public int getSoldAmount() {
+        return this.initialQuantity - this.currentQuantity;
+    }
+
     public void reduceQuantity() {
-        this.quantity -= 1;
+        this.currentQuantity -= 1;
+    }
+
+    public void addReview(Review review) {
+        reviews.add(review);
+    }
+
+    public int getReviewCount() {
+        return reviews.size();
+    }
+
+    public double getReviewsAverage() {
+        OptionalDouble average = reviews.stream().mapToDouble(Review::getRating).average();
+        return average.orElse(0.0);
     }
 
     @Override
@@ -96,10 +120,12 @@ public class Product implements Storable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
-        if (o == null || getClass() != o.getClass())
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
+        }
 
         Product product = (Product) o;
         return Objects.equals(name, product.name);
