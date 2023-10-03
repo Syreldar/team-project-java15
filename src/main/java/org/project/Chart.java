@@ -22,7 +22,7 @@ public class Chart {
     }
 
     public List<Shop> getShopsByGains() {
-        this.shops.sort((n1, n2) -> n2.getTotalGains().compareTo(n1.getTotalGains()));
+        this.shops.sort((n1, n2) -> Double.compare(n2.getTotalGains(), n1.getTotalGains()));
         return Collections.unmodifiableList(this.shops);
     }
 
@@ -34,7 +34,7 @@ public class Chart {
             }
         }
 
-        filteredShops.sort((n1, n2) -> n2.getTotalGains().compareTo(n1.getTotalGains()));
+        filteredShops.sort((n1, n2) -> Double.compare(n2.getTotalGains(), n1.getTotalGains()));
         return Collections.unmodifiableList(filteredShops);
     }
 

@@ -1,26 +1,24 @@
 package org.project;
 
-import java.math.BigDecimal;
-
 public class Customer {
     private String firstName;
     private String lastName;
-    private BigDecimal balance;
+    private double balance;
     private final Database database;
 
     public Customer(Database database, String firstName, String lastName, double balance) {
         this.database = database;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.balance = BigDecimal.valueOf(balance);
+        this.balance = balance;
     }
 
-    public void withdraw(BigDecimal amount) {
-        this.balance = this.balance.subtract(amount);
+    public void withdraw(double amount) {
+        this.balance -= amount;
     }
 
-    public void deposit(BigDecimal amount) {
-        this.balance = this.balance.add(amount);
+    public void deposit(double amount) {
+        this.balance += amount;
     }
 
     public void buyProduct(String shopName, String productName, Integer quantity) {
@@ -44,8 +42,8 @@ public class Customer {
             return;
         }
 
-        BigDecimal totalPrice = product.getPrice().multiply(BigDecimal.valueOf(quantity));
-        if (this.balance.compareTo(totalPrice) < 0) {
+        double totalPrice = product.getPrice() * quantity;
+        if (this.balance <= totalPrice) {
             System.out.printf("%s: I don't have enough money.%n- Remaining: %.2f;%n- Needed: %.2f;%n", this.firstName, this.balance, totalPrice);
             return;
         }
@@ -78,11 +76,11 @@ public class Customer {
         return String.format("%s %s", this.firstName, this.lastName);
     }
 
-    public BigDecimal getBalance() {
+    public double getBalance() {
         return this.balance;
     }
 
-    public void setBalance(BigDecimal balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 

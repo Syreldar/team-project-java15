@@ -18,6 +18,21 @@ public class Database {
         this.sales = new HashMap<>();
     }
 
+    public List<Shop> getShops()
+    {
+        return this.shops;
+    }
+
+    public List<Customer> getCustomers()
+    {
+        return this.customers;
+    }
+
+    public HashMap<Shop, List<Product>> getSales()
+    {
+        return this.sales;
+    }
+
     public void addShop(Shop shop) {
         this.shops.add(shop);
         System.out.printf("Database: Shop %s by %s added!%n", shop.getName(), shop.getOwnerName());

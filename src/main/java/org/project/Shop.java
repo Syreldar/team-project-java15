@@ -1,6 +1,5 @@
 package org.project;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +8,7 @@ import java.util.Map;
 public class Shop {
     private String name;
     private String ownerName;
-    private BigDecimal totalGains = BigDecimal.ZERO;
+    private double totalGains = 0.0;
     private final List<Product> products;
     private final Map<Category, Integer> categorySales;
     private int totalSales = 0;
@@ -29,6 +28,26 @@ public class Shop {
         this.ownerName = owner;
     }
 
+    public void setOwnerName(String ownerName)
+    {
+        this.ownerName = ownerName;
+    }
+
+    public List<Product> getProducts()
+    {
+        return this.products;
+    }
+
+    public Map<Category, Integer> getCategorySales()
+    {
+        return this.categorySales;
+    }
+
+    public void setTotalSales(int totalSales)
+    {
+        this.totalSales = totalSales;
+    }
+
     public String getName() {
         return this.name;
     }
@@ -37,11 +56,11 @@ public class Shop {
         this.name = name;
     }
 
-    public BigDecimal getTotalGains() {
+    public double getTotalGains() {
         return this.totalGains;
     }
 
-    public void setTotalGains(BigDecimal totalGains) {
+    public void setTotalGains(double totalGains) {
         this.totalGains = totalGains;
     }
 
@@ -53,8 +72,8 @@ public class Shop {
         this.totalSales++;
     }
 
-    public void addGains(BigDecimal currentGains) {
-        this.totalGains = this.totalGains.add(currentGains);
+    public void addGains(double currentGains) {
+        this.totalGains += currentGains;
     }
 
     public boolean containsProduct(Product product) {
@@ -64,6 +83,10 @@ public class Shop {
             }
         }
         return false;
+    }
+
+    public void addProduct(Product product) {
+        this.products.add(product);
     }
 
     public void sellProduct(Customer customer, Product product, int quantity) {
@@ -81,7 +104,7 @@ public class Shop {
 
     private void handleTransaction(Product product, int quantity) {
         product.reduceQuantity(quantity);
-        this.addGains(product.getPrice().multiply(new BigDecimal(quantity)));
+        this.addGains(product.getPrice() * quantity);
     }
 
     private void updateSalesStatistics(Product product) {
@@ -100,6 +123,15 @@ public class Shop {
             }
         }
         return mostSold;
+    }
+
+    public void setProductDiscountByName(String productName, float discountPercent) {
+        for (Product product : products) {
+            if (product.getName().equals(productName)) {
+                product.setDiscountPercent(discountPercent);
+                break;
+            }
+        }
     }
 
     public Product findProductByName(String name) {

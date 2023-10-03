@@ -1,26 +1,26 @@
 package org.project;
 
-import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Product {
     private String name;
     private String manufacturer;
-    private BigDecimal price;
+    private double price;
     private int quantity;
     private Category category;
-    private BigDecimal discount;
+    private float discountPercent;
 
     public Product(Category category, String name, double price, int quantity) {
         this.category = category;
         this.name = name;
-        this.price = BigDecimal.valueOf(price);
+        this.price = price;
         this.quantity = quantity;
+        this.discountPercent = 0.0f;
     }
 
-    public Product(Category category, String name, double price, int quantity, BigDecimal discount) {
+    public Product(Category category, String name, double price, int quantity, float discount) {
         this(category, name, price, quantity);
-        this.discount = discount;
+        this.discountPercent = discount;
     }
 
     public Category getCategory() {
@@ -47,11 +47,13 @@ public class Product {
         this.manufacturer = manufacturer;
     }
 
-    public BigDecimal getPrice() {
-        return applyDiscount();
+    public double getPrice() {
+        double discount = this.discountPercent / 100;
+        double discountedPrice = this.price * discount;
+        return this.price -= discountedPrice;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -63,12 +65,16 @@ public class Product {
         this.quantity = quantity;
     }
 
-    public BigDecimal getDiscount() {
-        return discount;
+    public float getDiscountPercent() {
+        return this.discountPercent;
     }
 
-    public void setDiscount(BigDecimal discount) {
-        this.discount = discount;
+    public void setDiscountPercent(float discountPercent) {
+        if (discountPercent >= 0.0f && discountPercent <= 100.0) {
+            this.discountPercent = discountPercent;
+        } else {
+            throw new IllegalArgumentException("Invalid discount percentage. Must be between 0 and 100.");
+        }
     }
 
     public void reduceQuantity(Integer amount) {
@@ -83,16 +89,14 @@ public class Product {
         this.quantity -= 1;
     }
 
-    public BigDecimal applyDiscount() {
-        return this.price.subtract(this.price.multiply(this.discount));
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
-        if (o == null || getClass() != o.getClass())
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
+        }
 
         Product product = (Product) o;
         return Objects.equals(name, product.name);
