@@ -7,12 +7,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Database {
-    private final List<Product> products;
-    private final List<Shop> shops;
-    private final List<Customer> customers;
-    private final List<Review> reviews;
-    private final Map<Product, Integer> productReviewCount = new HashMap<>();
-    private final Map<Shop, Integer> shopReviewCount = new HashMap<>();
+    private List<Product> products;
+    private List<Shop> shops;
+    private List<Customer> customers;
+    private List<Review> reviews;
+    private Map<Product, Integer> productReviewCount = new HashMap<>();
+    private Map<Shop, Integer> shopReviewCount = new HashMap<>();
 
     public Database() {
         this.products = new ArrayList<>();
@@ -25,11 +25,14 @@ public class Database {
         return products;
     }
 
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+
     public void addProduct(Product product) {
         if (product == null) {
-            throw new IllegalArgumentException("The product cannot be null");
+            throw new IllegalArgumentException("Product cannot be null");
         }
-
         products.add(product);
     }
 
@@ -37,84 +40,69 @@ public class Database {
         return shops;
     }
 
+    public void setShops(List<Shop> shops) {
+        this.shops = shops;
+    }
+
     public void addShop(Shop shop) {
         if (shop == null) {
-            throw new IllegalArgumentException("The shop cannot be null");
+            throw new IllegalArgumentException("Shop cannot be null");
         }
-
-        this.shops.add(shop);
-        System.out.printf("Database: Shop %s by %s added!%n", shop.getName(), shop.getOwnerName());
+        shops.add(shop);
     }
 
     public List<Customer> getCustomers() {
         return customers;
     }
 
+    public void setCustomers(List<Customer> customers) {
+        this.customers = customers;
+    }
+
     public void addCustomer(Customer customer) {
         if (customer == null) {
-            throw new IllegalArgumentException("The customer cannot be null");
+            throw new IllegalArgumentException("Customer cannot be null");
         }
-
-        this.customers.add(customer);
-        System.out.printf("Database: Customer %s added!%n", customer.getFullName());
+        customers.add(customer);
     }
 
     public List<Review> getReviews() {
         return reviews;
     }
 
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public void addReview(Review review) {
+        if (review == null) {
+            throw new IllegalArgumentException("Review cannot be null");
+        }
+        reviews.add(review);
+    }
+
     public Map<Product, Integer> getProductReviewCount() {
         return productReviewCount;
+    }
+
+    public void setProductReviewCount(Map<Product, Integer> productReviewCount) {
+        this.productReviewCount = productReviewCount;
     }
 
     public Map<Shop, Integer> getShopReviewCount() {
         return shopReviewCount;
     }
 
-    public void addReview(Review review) {
-        if (review == null) {
-            throw new IllegalArgumentException("The review cannot be null");
-        }
-
-        this.reviews.add(review);
-        System.out.printf("Chart: Review (%s, %d) added!%n", review.getComment(), review.getRating());
+    public void setShopReviewCount(Map<Shop, Integer> shopReviewCount) {
+        this.shopReviewCount = shopReviewCount;
     }
 
-    public List<Review> getReviewsForShop(Shop shop) {
-        List<Review> shopReviews = new ArrayList<>();
-        for (Review review : reviews) {
-            if (review instanceof ShopReview shopReview) {
-                if (shopReview.getReviewedShop().equals(shop)) {
-                    shopReviews.add(shopReview);
-                }
-            }
-        }
-        return shopReviews;
+    public Product findProductByName(String name) {
+        return products.stream().filter(p -> p.getName().equals(name)).findFirst().orElse(null);
     }
 
-    public Product findProductByName(String productName) {
-        return this.products.stream()
-                .filter(product -> product.getName().equalsIgnoreCase(productName))
-                .findFirst()
-                .orElse(null);
-    }
-
-    public Shop findShopByName(String shopName) {
-        return this.shops.stream()
-                .filter(shop -> shop.getName().equals(shopName))
-                .findFirst()
-                .orElse(null);
-    }
-
-    public List<Customer> findCustomersByName(String firstName, String lastName) {
-        List<Customer> matchingCustomers = new ArrayList<>();
-        for (Customer customer : this.customers) {
-            if (customer.getFirstName().equalsIgnoreCase(firstName) &&
-                    customer.getLastName().equalsIgnoreCase(lastName)) {
-                matchingCustomers.add(customer);
-            }
-        }
-        return matchingCustomers;
+    public Shop findShopByName(String name) {
+        return shops.stream().filter(s -> s.getName().equals(name)).findFirst().orElse(null);
     }
 
     public void registerReview(Product product) {
@@ -126,18 +114,44 @@ public class Database {
     }
 
     public Product getMostReviewedProduct() {
-        return productReviewCount.entrySet()
-                .stream()
+        return productReviewCount.entrySet().stream()
                 .max(Map.Entry.comparingByValue())
                 .map(Map.Entry::getKey)
                 .orElse(null);
     }
 
     public Shop getMostReviewedShop() {
-        return shopReviewCount.entrySet()
-                .stream()
+        return shopReviewCount.entrySet().stream()
                 .max(Map.Entry.comparingByValue())
                 .map(Map.Entry::getKey)
                 .orElse(null);
+    }
+
+    public List<Review> getReviewsForShop(String shopName) {
+        return reviews.stream()
+                .filter(review -> review instanceof ShopReview)
+                .map(review -> (ShopReview) review)
+                .filter(shopReview -> shopReview.getReviewedShop().getName().equalsIgnoreCase(shopName))
+                .collect(Collectors.toList());
+    }
+
+    public List<Review> getReviewsForShop(Shop shop) {
+        return reviews.stream()
+                .filter(review -> review instanceof ShopReview)
+                .map(review -> (ShopReview) review)
+                .filter(shopReview -> shopReview.getReviewedShop().equals(shop))
+                .collect(Collectors.toList());
+    }
+
+    public List<Customer> findCustomersByName(String name) {
+        return customers.stream()
+                .filter(customer -> customer.getFullName().equalsIgnoreCase(name))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Database [product: %s, shops: %s, customers: %s, reviews: %s]",
+                products, shops, customers, reviews);
     }
 }
