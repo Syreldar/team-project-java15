@@ -7,7 +7,7 @@ public class Customer implements Storable {
     private String firstName;
     private String lastName;
     private double balance;
-    private final Database database;
+    private Database database = null;
     private List<Product> wishList;
 
     public Customer(Database database, String firstName, String lastName, double balance) {
@@ -17,7 +17,22 @@ public class Customer implements Storable {
         if (balance < 0) {
             throw new IllegalArgumentException("Balance cannot be negative");
         }
+
         this.database = database;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.balance = balance;
+        this.wishList = new ArrayList<>();
+    }
+
+    public Customer(String firstName, String lastName, double balance) {
+        if (firstName == null || lastName == null) {
+            throw new IllegalArgumentException("Database, firstName and lastName arguments cannot be null");
+        }
+        if (balance < 0) {
+            throw new IllegalArgumentException("Balance cannot be negative");
+        }
+
         this.firstName = firstName;
         this.lastName = lastName;
         this.balance = balance;
@@ -35,20 +50,6 @@ public class Customer implements Storable {
         if (product != null) {
             wishList.remove(product);
         }
-    }
-
-    public void withdraw(double amount) {
-        if (amount <= 0) {
-            throw new IllegalArgumentException("Amount to withdraw must be positive");
-        }
-        this.balance -= amount;
-    }
-
-    public void deposit(double amount) {
-        if (amount <= 0) {
-            throw new IllegalArgumentException("Amount to deposit must be positive");
-        }
-        this.balance += amount;
     }
 
     public Product buyProduct(String shopName, String productName, Integer quantity) {
@@ -85,7 +86,7 @@ public class Customer implements Storable {
             return null;
         }
 
-        withdraw(totalPrice);
+        subtractFromBalance(totalPrice);
         shop.sellProduct(this, product, quantity);
         return product;
     }
@@ -123,6 +124,21 @@ public class Customer implements Storable {
             throw new IllegalArgumentException("Balance cannot be negative");
         }
         this.balance = balance;
+    }
+
+    public void addToBalance(double balance) {
+        this.balance += balance;
+    }
+
+    public boolean subtractFromBalance(double balance) {
+        if (balance < 0) {
+            throw new IllegalArgumentException("Balance cannot be negative");
+        }
+        if (this.balance >= balance) {
+            this.balance -= balance;
+            return true;
+        }
+        return false;
     }
 
     public void reviewProduct(Product product, float rating, String comment) {
