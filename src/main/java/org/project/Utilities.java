@@ -1,6 +1,5 @@
 package org.project;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Scanner;
 
@@ -84,13 +83,10 @@ public class Utilities
     }
 
     public static void makePurchase(Database database, Scanner scanner) {
-        System.out.print("Enter customer's first name: ");
-        String customerFirstName = scanner.nextLine();
+        System.out.print("Enter customer's full name: ");
+        String customerFullName = scanner.nextLine();
 
-        System.out.print("Enter customer's last name: ");
-        String customerLastName = scanner.nextLine();
-
-        List<Customer> matchingCustomers = database.findCustomersByName(customerFirstName, customerLastName);
+        List<Customer> matchingCustomers = database.findCustomersByName(customerFullName);
         if (matchingCustomers.isEmpty()) {
             System.out.println("Customer not found.");
             return;
@@ -131,7 +127,7 @@ public class Utilities
         System.out.println("Purchase successful!");
         System.out.printf("Product: %s;%n", purchasedProduct.getName());
         System.out.printf("Quantity: %d;%n", quantity);
-        System.out.printf("Total Cost: %.2f$;%n", purchasedProduct.getPrice().multiply(BigDecimal.valueOf(quantity)));
+        System.out.printf("Total Cost: %.2f$;%n", purchasedProduct.getPrice() * quantity);
         System.out.println("------------------------------");
         askContinueOrExitProgram();
     }
@@ -179,13 +175,10 @@ public class Utilities
     }
 
     public static void leaveReview(Database database, Scanner scanner) {
-        System.out.print("Enter customer's first name: ");
-        String reviewerFirstName = scanner.nextLine();
+        System.out.print("Enter customer's full name: ");
+        String reviewerFullName = scanner.nextLine();
 
-        System.out.print("Enter customer's last name: ");
-        String reviewerLastName = scanner.nextLine();
-
-        List<Customer> matchingReviewers = database.findCustomersByName(reviewerFirstName, reviewerLastName);
+        List<Customer> matchingReviewers = database.findCustomersByName(reviewerFullName);
         if (matchingReviewers.isEmpty()) {
             System.out.println("Reviewer not found.");
             return;

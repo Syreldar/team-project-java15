@@ -2,7 +2,9 @@ package org.project;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Chart {
     private final List<Shop> shops;
@@ -17,12 +19,28 @@ public class Chart {
         this.reviews = new ArrayList<>();
     }
 
+    public List<Shop> getShops() {
+        return Collections.unmodifiableList(shops);
+    }
+
+    public List<Product> getProducts() {
+        return Collections.unmodifiableList(products);
+    }
+
+    public List<Customer> getCustomers() {
+        return Collections.unmodifiableList(customers);
+    }
+
+    public List<Review> getReviews() {
+        return Collections.unmodifiableList(reviews);
+    }
+
     public void addShop(Shop shop) {
         if (shop == null) {
             throw new IllegalArgumentException("The shop cannot be null");
         }
 
-        this.shops.add(shop);
+        shops.add(shop);
         System.out.printf("Chart: Shop %s by %s added!%n", shop.getName(), shop.getOwnerName());
     }
 
@@ -31,7 +49,7 @@ public class Chart {
             throw new IllegalArgumentException("The product cannot be null");
         }
 
-        this.products.add(product);
+        products.add(product);
         System.out.printf("Chart: Product %s added!%n", product.getName());
     }
 
@@ -40,7 +58,7 @@ public class Chart {
             throw new IllegalArgumentException("The customer cannot be null");
         }
 
-        this.customers.add(customer);
+        customers.add(customer);
         System.out.printf("Chart: Customer %s added!%n", customer.getFullName());
     }
 
@@ -49,42 +67,36 @@ public class Chart {
             throw new IllegalArgumentException("The review cannot be null");
         }
 
-        this.reviews.add(review);
+        reviews.add(review);
         System.out.printf("Chart: Review (%s, %.2f) added!%n", review.getComment(), review.getRating());
     }
 
     public List<Shop> getShopsBySells() {
-        this.shops.sort((shop1, shop2) -> Double.compare(shop2.getTotalSales(), shop1.getTotalSales()));
-        return Collections.unmodifiableList(this.shops);
+        shops.sort((shop1, shop2) -> Double.compare(shop2.getTotalSales(), shop1.getTotalSales()));
+        return Collections.unmodifiableList(shops);
     }
 
     public List<Shop> getShopsByGains() {
-        this.shops.sort((n1, n2) -> n2.getTotalGains().compareTo(n1.getTotalGains()));
-        return Collections.unmodifiableList(this.shops);
+        shops.sort((n1, n2) -> Double.compare(n2.getTotalGains(), n1.getTotalGains()));
+        return Collections.unmodifiableList(shops);
     }
 
     public List<Shop> getShopsByCategory(Category category) {
         if (category == null) {
             throw new IllegalArgumentException("The category cannot be null");
         }
-
-        List<Shop> filteredShops = new ArrayList<>();
-        for (Shop shop : this.shops) {
-            if (category.equals(shop.getMostSoldCategory())) {
-                filteredShops.add(shop);
-            }
-        }
-
-        filteredShops.sort((n1, n2) -> n2.getTotalGains().compareTo(n1.getTotalGains()));
-        return Collections.unmodifiableList(filteredShops);
+        return shops.stream()
+                .filter(s -> category.equals(s.getMostSoldCategory()))
+                .sorted(Comparator.comparingDouble(Shop::getTotalGains).reversed())
+                .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Chart [\n");
-        for (Shop shop : this.shops) {
-            sb.append("  ").append(shop.toString()).append(",\n");
+        for (Shop s : shops) {
+            sb.append("  ").append(s).append(",\n");
         }
         sb.append("]");
         return sb.toString();
