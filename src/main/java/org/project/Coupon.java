@@ -1,7 +1,6 @@
 package org.project;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 public class Coupon {
     private String code;
