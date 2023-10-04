@@ -85,6 +85,14 @@ public class Product implements Storable {
         this.currentQuantity = currentQuantity;
     }
 
+    public BigDecimal applyDiscount(String couponCode) {
+        BigDecimal discountedPrice = price;
+        if (couponCode != null && !couponCode.isEmpty()) {
+            discountedPrice = CouponManager.applyCoupon(discountedPrice, couponCode);
+        }
+        return discountedPrice;
+    }
+
     public void reduceQuantity(Integer amount) {
         if (amount == null || amount <= 0) {
             this.currentQuantity -= 1;
@@ -92,6 +100,7 @@ public class Product implements Storable {
             this.currentQuantity = Math.max(0, this.currentQuantity - amount);
         }
     }
+
     public BigDecimal getDiscount() {
         return discount;
     }
@@ -120,6 +129,7 @@ public class Product implements Storable {
         OptionalDouble average = reviews.stream().mapToDouble(Review::getRating).average();
         return average.orElse(0.0);
     }
+
     public BigDecimal applyDiscount() {
         return this.price.subtract(this.price.multiply(this.discount));
     }
