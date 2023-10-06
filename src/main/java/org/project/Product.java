@@ -88,10 +88,10 @@ public class Product implements Storable {
 
     public void reduceQuantity(Integer amount) {
         if (amount == null || amount <= 0) {
-            this.currentQuantity -= 1;
-        } else {
-            this.currentQuantity = Math.max(0, this.currentQuantity - amount);
+            throw new IllegalArgumentException("The amount cannot be null or <= 0");
         }
+
+        this.currentQuantity = Math.max(0, this.currentQuantity - amount);
     }
 
     public int getSoldAmount() {

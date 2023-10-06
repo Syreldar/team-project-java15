@@ -64,7 +64,7 @@ public class Shop implements Storable {
                 .anyMatch(product -> product.getName().equalsIgnoreCase(productName));
     }
 
-    public void sellProduct(Customer customer, Product product, int quantity) {
+    public boolean sellProduct(Customer customer, Product product, int quantity) {
         if (customer == null) {
             throw new IllegalArgumentException("The customer cannot be null");
         }
@@ -74,6 +74,9 @@ public class Shop implements Storable {
         if (quantity <= 0) {
             throw new IllegalArgumentException("The quantity cannot be <= 0");
         }
+        if (quantity > product.getCurrentQuantity()) {
+            throw new IllegalArgumentException("The quantity cannot be over the product's quantity");
+        }
 
         handleTransaction(product, quantity);
         updateSalesStatistics(product);
@@ -82,6 +85,7 @@ public class Shop implements Storable {
         System.out.printf("%s: Sold %d unit%s of %s to customer %s. Remaining units: %d;%n",
                 this.name, quantity, quantity > 1 ? "s" : "", product.getName(), customer.getFullName(),
                 product.getCurrentQuantity());
+        return true;
     }
 
     private void handleTransaction(Product product, int quantity) {
