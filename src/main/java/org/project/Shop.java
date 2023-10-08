@@ -145,4 +145,7 @@ public class Shop implements Storable {
                 this.name, this.ownerName, this.totalGains,
                 getMostSoldCategory() != null ? getMostSoldCategory() : "None");
     }
+    public List<Product> getProducts() {
+        return products;
+    }
 }

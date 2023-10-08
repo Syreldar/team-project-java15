@@ -154,4 +154,11 @@ public class Database {
         return String.format("Database [product: %s, shops: %s, customers: %s, reviews: %s]",
                 products, shops, customers, reviews);
     }
+    public List<Product> getAllAvailableProducts() {
+        List<Product> allAvailableProducts = new ArrayList<>();
+        for (Shop shop : shops) {
+            allAvailableProducts.addAll(shop.getProducts());
+        }
+        return allAvailableProducts;
+    }
 }
