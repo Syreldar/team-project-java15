@@ -5,5 +5,5 @@ public enum Category {
     CLEANING,
     HEALTH,
     FOOD,
-
+    CLOTHING
 }

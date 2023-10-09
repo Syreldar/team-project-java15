@@ -1,22 +1,21 @@
 package org.project;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.OptionalDouble;
+import java.util.Objects;
 
 public class Product implements Storable {
     private Category category;
     private String name;
     private String manufacturer;
-    private BigDecimal price;
-    private BigDecimal discount;
-    private int initialQuantity;
+    private double price;
+    private final int initialQuantity;
     private int currentQuantity;
     private final List<Review> reviews;
 
-    public Product(Category category, String name, double price, int quantity, BigDecimal discount) {
+    public Product(Category category, String name, double price, int initialQuantity) {
+
         if (category == null) {
             throw new IllegalArgumentException("The category cannot be null");
         }
@@ -26,15 +25,15 @@ public class Product implements Storable {
         if (price < 0) {
             throw new IllegalArgumentException("The price must be >= 0");
         }
-        if (quantity <= 0) {
+        if (initialQuantity <= 0) {
             throw new IllegalArgumentException("The quantity must be > 0");
         }
 
         this.category = category;
         this.name = name;
         this.manufacturer = null;
-        this.price = BigDecimal.valueOf(price);
-        this.currentQuantity = quantity;
+        this.price = price;
+        this.initialQuantity = this.currentQuantity = initialQuantity;
         this.reviews = new ArrayList<>();
         this.discount = discount;
     }
@@ -63,15 +62,19 @@ public class Product implements Storable {
         this.manufacturer = manufacturer;
     }
 
-    public BigDecimal getPrice() {
+    public double getPrice() {
         return this.price;
     }
 
-    public void setPrice(BigDecimal price) {
-        if (price.compareTo(BigDecimal.ZERO) < 0) {
+    public void setPrice(double price) {
+        if (price < 0) {
             throw new IllegalArgumentException("You can't set a negative price");
         }
         this.price = price;
+    }
+
+    public int getInitialQuantity() {
+        return initialQuantity;
     }
 
     public int getCurrentQuantity() {
@@ -95,10 +98,10 @@ public class Product implements Storable {
 
     public void reduceQuantity(Integer amount) {
         if (amount == null || amount <= 0) {
-            this.currentQuantity -= 1;
-        } else {
-            this.currentQuantity = Math.max(0, this.currentQuantity - amount);
+            throw new IllegalArgumentException("The amount cannot be null or <= 0");
         }
+
+        this.currentQuantity = Math.max(0, this.currentQuantity - amount);
     }
 
     public BigDecimal getDiscount() {
@@ -115,6 +118,10 @@ public class Product implements Storable {
 
     public void reduceQuantity() {
         this.currentQuantity -= 1;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
     }
 
     public void addReview(Review review) {
@@ -156,5 +163,11 @@ public class Product implements Storable {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Product [Name: %s, Category: %s, Price: %.2f, Quantity: %d]",
+                this.name, this.category, this.price, this.currentQuantity);
     }
 }

@@ -1,16 +1,11 @@
 package org.project;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.OptionalDouble;
+import java.util.*;
 
 public class Shop implements Storable {
     private String name;
     private String ownerName;
-    private BigDecimal totalGains = BigDecimal.ZERO;
+    private double totalGains = 0.0;
     private final List<Product> products;
     private final Map<Category, Integer> categorySales;
     private int totalSales = 0;
@@ -24,40 +19,40 @@ public class Shop implements Storable {
         this.reviews = new ArrayList<>();
     }
 
-    public String getOwnerName() {
-        return this.ownerName;
-    }
-
-    public void setOwner(String owner) {
-        this.ownerName = owner;
-    }
-
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public BigDecimal getTotalGains() {
-        return this.totalGains;
+    public String getOwnerName() {
+        return ownerName;
     }
 
-    public void setTotalGains(BigDecimal totalGains) {
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
+    }
+
+    public double getTotalGains() {
+        return totalGains;
+    }
+
+    public void setTotalGains(double totalGains) {
         this.totalGains = totalGains;
     }
 
     public int getTotalSales() {
-        return this.totalSales;
+        return totalSales;
     }
 
     public void incrementTotalSales() {
-        this.totalSales++;
+        totalSales++;
     }
 
-    public void addGains(BigDecimal currentGains) {
-        this.totalGains = this.totalGains.add(currentGains);
+    public void addGains(double gains) {
+        totalGains += gains;
     }
 
     public boolean containsProduct(Product product) {
@@ -69,7 +64,7 @@ public class Shop implements Storable {
                 .anyMatch(product -> product.getName().equalsIgnoreCase(productName));
     }
 
-    public void sellProduct(Customer customer, Product product, int quantity) {
+    public boolean sellProduct(Customer customer, Product product, int quantity) {
         if (customer == null) {
             throw new IllegalArgumentException("The customer cannot be null");
         }
@@ -79,22 +74,23 @@ public class Shop implements Storable {
         if (quantity <= 0) {
             throw new IllegalArgumentException("The quantity cannot be <= 0");
         }
+        if (quantity > product.getCurrentQuantity()) {
+            throw new IllegalArgumentException("The quantity cannot be over the product's quantity");
+        }
 
-        // Handle financial transaction and inventory
-        this.handleTransaction(product, quantity);
+        handleTransaction(product, quantity);
+        updateSalesStatistics(product);
+        incrementTotalSales();
 
-        // Update the sales statistics
-        this.updateSalesStatistics(product);
-
-        // Increment total sales
-        this.incrementTotalSales();
-
-        System.out.printf("%s: Sold %d unit%s of %s to customer %s. Remaining units: %d;%n", this.name, quantity, quantity > 1 ? "s" : "", product.getName(), customer.getFullName(), product.getCurrentQuantity());
+        System.out.printf("%s: Sold %d unit%s of %s to customer %s. Remaining units: %d;%n",
+                this.name, quantity, quantity > 1 ? "s" : "", product.getName(), customer.getFullName(),
+                product.getCurrentQuantity());
+        return true;
     }
 
     private void handleTransaction(Product product, int quantity) {
         product.reduceQuantity(quantity);
-        this.addGains(product.getPrice().multiply(new BigDecimal(quantity)));
+        this.totalGains += product.getPrice() * quantity;
     }
 
     private void updateSalesStatistics(Product product) {
@@ -104,24 +100,18 @@ public class Shop implements Storable {
     }
 
     public Category getMostSoldCategory() {
-        int maxSales = -1;
-        Category mostSold = null;
-        for (Map.Entry<Category, Integer> entry : this.categorySales.entrySet()) {
-            if (entry.getValue() > maxSales) {
-                maxSales = entry.getValue();
-                mostSold = entry.getKey();
-            }
-        }
-        return mostSold;
+        return categorySales.entrySet()
+                .stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse(null);
     }
 
     public Product findProductByName(String name) {
-        for (Product product : this.products) {
-            if (product.getName().equals(name)) {
-                return product;
-            }
-        }
-        return null;
+        return products.stream()
+                .filter(product -> product.getName().equals(name))
+                .findFirst()
+                .orElse(null);
     }
 
     public void addReview(Review review) {
@@ -138,18 +128,9 @@ public class Shop implements Storable {
     }
 
     public Product getMostSoldProduct() {
-        Product mostSoldProduct = null;
-        int maxSoldAmount = 0;
-
-        for (Product product : products) {
-            int soldAmount = product.getSoldAmount();
-            if (soldAmount > maxSoldAmount) {
-                maxSoldAmount = soldAmount;
-                mostSoldProduct = product;
-            }
-        }
-
-        return mostSoldProduct;
+        return products.stream()
+                .max(Comparator.comparingInt(Product::getSoldAmount))
+                .orElse(null);
     }
 
     @Override
@@ -161,6 +142,10 @@ public class Shop implements Storable {
     @Override
     public String toString() {
         return String.format("Shop [Name: %s, OwnerName: %s, TotalGains: %.2f, MostSoldCategory: %s]",
-                this.name, this.ownerName, this.totalGains, getMostSoldCategory() != null ? getMostSoldCategory() : "None");
+                this.name, this.ownerName, this.totalGains,
+                getMostSoldCategory() != null ? getMostSoldCategory() : "None");
+    }
+    public List<Product> getProducts() {
+        return products;
     }
 }
