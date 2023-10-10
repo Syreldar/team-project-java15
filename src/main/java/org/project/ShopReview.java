@@ -8,6 +8,12 @@ public class ShopReview extends Review {
         this.reviewedShop = reviewedShop;
     }
 
+    @Override
+    public void register(Database database, Chart chart) {
+        database.registerShopReview(this);
+        chart.addShopReview(this);
+    }
+
     public Shop getReviewedShop() {
         return reviewedShop;
     }

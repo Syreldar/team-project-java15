@@ -9,7 +9,7 @@ public class Shop implements Storable {
     private final List<Product> products;
     private final Map<Category, Integer> categorySales;
     private int totalSales = 0;
-    private final List<Review> reviews;
+    private final List<ShopReview> reviews;
 
     public Shop(String name, String ownerName, List<Product> products) {
         this.name = name;
@@ -114,7 +114,11 @@ public class Shop implements Storable {
                 .orElse(null);
     }
 
-    public void addReview(Review review) {
+    public List<ShopReview> getReviews() {
+        return reviews;
+    }
+
+    public void addReview(ShopReview review) {
         reviews.add(review);
     }
 
@@ -135,7 +139,7 @@ public class Shop implements Storable {
 
     @Override
     public void register(Database database, Chart chart) {
-        database.addShop(this);
+        database.registerShop(this);
         chart.addShop(this);
     }
 

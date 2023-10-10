@@ -1,6 +1,6 @@
 package org.project;
 
-public class Review implements Storable {
+public abstract class Review implements Storable {
     private final Customer reviewer;
     private final float rating;
     private final String comment;
@@ -21,12 +21,6 @@ public class Review implements Storable {
 
     public String getComment() {
         return comment;
-    }
-
-    @Override
-    public void register(Database database, Chart chart) {
-        database.addReview(this);
-        chart.addReview(this);
     }
 
     @Override
