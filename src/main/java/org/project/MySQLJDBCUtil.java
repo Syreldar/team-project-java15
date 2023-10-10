@@ -10,7 +10,7 @@ import java.util.Properties;
 public class MySQLJDBCUtil {
 
     public static Connection getConnection() throws SQLException, IOException {
-        
+
         Properties pros = new Properties();
         try (FileInputStream f = new FileInputStream("db.properties")) {
 
@@ -23,7 +23,7 @@ public class MySQLJDBCUtil {
             String user = pros.getProperty("user");
             String password = pros.getProperty("password");
 
-            //Verifico se url, user o psw sono null
+        //Verifico se url, user o psw sono null
         if (url == null || user == null || password == null) {
             throw new SQLException("The db.properties are not completed");
         }
