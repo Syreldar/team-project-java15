@@ -62,13 +62,22 @@ public class Chart {
         System.out.printf("Chart: Customer %s added!%n", customer.getFullName());
     }
 
-    public void addReview(Review review) {
+    public void addShopReview(ShopReview review) {
         if (review == null) {
-            throw new IllegalArgumentException("The review cannot be null");
+            throw new IllegalArgumentException("The Shop Review cannot be null");
         }
 
         reviews.add(review);
-        System.out.printf("Chart: Review (%s, %.2f) added!%n", review.getComment(), review.getRating());
+        System.out.printf("Chart: Shop Review (%s, %.2f) added!%n", review.getComment(), review.getRating());
+    }
+
+    public void addProductReview(ProductReview review) {
+        if (review == null) {
+            throw new IllegalArgumentException("The Product Review cannot be null");
+        }
+
+        reviews.add(review);
+        System.out.printf("Chart: Product Review (%s, %.2f) added!%n", review.getComment(), review.getRating());
     }
 
     public List<Shop> getShopsBySells() {

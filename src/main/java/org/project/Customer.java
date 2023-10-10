@@ -7,27 +7,11 @@ public class Customer implements Storable {
     private String firstName;
     private String lastName;
     private double balance;
-    private Database database = null;
     private List<Product> wishList;
-
-    public Customer(Database database, String firstName, String lastName, double balance) {
-        if (database == null || firstName == null || lastName == null) {
-            throw new IllegalArgumentException("Database, firstName and lastName arguments cannot be null");
-        }
-        if (balance < 0) {
-            throw new IllegalArgumentException("Balance cannot be negative");
-        }
-
-        this.database = database;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.balance = balance;
-        this.wishList = new ArrayList<>();
-    }
 
     public Customer(String firstName, String lastName, double balance) {
         if (firstName == null || lastName == null) {
-            throw new IllegalArgumentException("Database, firstName and lastName arguments cannot be null");
+            throw new IllegalArgumentException("firstName and lastName arguments cannot be null");
         }
         if (balance < 0) {
             throw new IllegalArgumentException("Balance cannot be negative");
@@ -52,7 +36,7 @@ public class Customer implements Storable {
         }
     }
 
-    public Product buyProduct(String shopName, String productName, Integer quantity) {
+    public Product buyProduct(Database database, String shopName, String productName, Integer quantity) {
         return buyProduct(database.findShopByName(shopName), productName, quantity);
     }
 
@@ -91,8 +75,12 @@ public class Customer implements Storable {
         return product;
     }
 
-    public Product buyProduct(String shopName, String productName) {
-        return buyProduct(shopName, productName, null);
+    public Product buyProduct(Database database, String shopName, String productName) {
+        return buyProduct(database, shopName, productName, null);
+    }
+
+    public Product buyProduct(Shop shop, String productName) {
+        return buyProduct(shop, productName, null);
     }
 
     public String getFirstName() {
@@ -141,20 +129,16 @@ public class Customer implements Storable {
         return false;
     }
 
-    public void reviewProduct(Product product, float rating, String comment) {
-        Review review = new Review(this, rating, comment);
-        database.registerReview(product);
-        product.addReview(review);
-    }
-
-    public void reviewShop(Shop shop, float rating, String comment) {
-        Review review = new Review(this, rating, comment);
-        database.registerReview(shop);
+    public void reviewShop(Database database, Shop shop, float rating, String comment) {
+        ShopReview review = new ShopReview(shop, this, rating, comment);
+        database.registerShopReview(review);
         shop.addReview(review);
     }
 
-    public Database getDatabase() {
-        return database;
+    public void reviewProduct(Database database, Product product, float rating, String comment) {
+        ProductReview review = new ProductReview(product, this, rating, comment);
+        database.registerProductReview(review);
+        product.addReview(review);
     }
 
     public List<Product> getWishList() {
@@ -167,7 +151,7 @@ public class Customer implements Storable {
 
     @Override
     public void register(Database database, Chart chart) {
-        database.addCustomer(this);
+        database.registerCustomer(this);
         chart.addCustomer(this);
     }
 

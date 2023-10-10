@@ -12,7 +12,7 @@ public class Product implements Storable {
     private double price;
     private final int initialQuantity;
     private int currentQuantity;
-    private final List<Review> reviews;
+    private final List<ProductReview> reviews;
 
     public Product(Category category, String name, double price, int initialQuantity) {
         if (category == null) {
@@ -102,11 +102,11 @@ public class Product implements Storable {
         this.currentQuantity -= 1;
     }
 
-    public List<Review> getReviews() {
+    public List<ProductReview> getReviews() {
         return reviews;
     }
 
-    public void addReview(Review review) {
+    public void addReview(ProductReview review) {
         reviews.add(review);
     }
 
@@ -121,7 +121,7 @@ public class Product implements Storable {
 
     @Override
     public void register(Database database, Chart chart) {
-        database.addProduct(this);
+        database.registerProduct(this);
         chart.addProduct(this);
     }
 
