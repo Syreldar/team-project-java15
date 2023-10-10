@@ -50,3 +50,7 @@ CREATE TABLE Customers (
     last_name VARCHAR(50),
     balance DECIMAL(10, 2)
 );
+INSERT INTO Customers (first_name, last_name, balance)
+VALUES 
+    ('Enrico', 'Drago', 24.52),
+    ('Enrico', 'Drago', 12.71);
