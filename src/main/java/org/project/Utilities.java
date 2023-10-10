@@ -16,6 +16,9 @@ public class Utilities
         if (answer.equalsIgnoreCase("n")) {
             System.out.println(GOODBYE_MESSAGE);
             System.exit(0);
+        } else if (!answer.equalsIgnoreCase("y")) {
+            System.out.println("Invalid Input. Program Aborted.");
+            System.exit(1);
         }
     }
 
