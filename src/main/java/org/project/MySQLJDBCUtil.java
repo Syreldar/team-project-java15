@@ -14,17 +14,14 @@ public class MySQLJDBCUtil {
         Properties pros = new Properties();
         try (FileInputStream f = new FileInputStream("db.properties")) {
 
-            // load the properties file
             pros.load(f);
         } catch (IOException e) {
-            //per un contesto più ampio
+             //per un contesto più ampio
             throw new IOException("Impossible to load db.properties");
         }
-
-        // assign db parameters
-        String url = pros.getProperty("url");
-        String user = pros.getProperty("user");
-        String password = pros.getProperty("password");
+            String url = pros.getProperty("url");
+            String user = pros.getProperty("user");
+            String password = pros.getProperty("password");
 
         //Verifico se url, user o psw sono null
         if (url == null || user == null || password == null) {
