@@ -9,25 +9,28 @@ import java.util.Properties;
 
 public class MySQLJDBCUtil {
 
-    public static Connection getConnection() throws SQLException {
-        Connection conn = null;
+    public static Connection getConnection() throws SQLException, IOException {
 
+        Properties pros = new Properties();
         try (FileInputStream f = new FileInputStream("db.properties")) {
 
             // load the properties file
-            Properties pros = new Properties();
             pros.load(f);
-
-            // assign db parameters
-            String url = pros.getProperty("url");
-            String user = pros.getProperty("user");
-            String password = pros.getProperty("password");
-
-            // create a connection to the database
-            conn = DriverManager.getConnection(url, user, password);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            //per un contesto più ampio
+            throw new IOException("Impossible to load db.properties");
         }
-        return conn;
+
+        // assign db parameters
+        String url = pros.getProperty("url");
+        String user = pros.getProperty("user");
+        String password = pros.getProperty("password");
+
+        //Verifico se url, user o psw sono null
+        if (url == null || user == null || password == null) {
+            throw new SQLException("The db.properties are not completed");
+        }
+        //crea la connessione
+        return DriverManager.getConnection(url, user, password);
     }
 }
