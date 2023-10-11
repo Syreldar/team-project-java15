@@ -124,6 +124,11 @@ public class Product implements Storable {
         database.registerProduct(this);
         chart.addProduct(this);
     }
+    public void applyDiscount(Coupon coupon) {
+        double discountValue = price * coupon.getDiscountAmount();
+        this.price = this.price - discountValue;
+    }
+
 
     @Override
     public boolean equals(Object o) {
