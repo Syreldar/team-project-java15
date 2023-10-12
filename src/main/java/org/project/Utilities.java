@@ -125,7 +125,22 @@ public class Utilities
         System.out.print("Enter quantity: ");
         int quantity = Integer.parseInt(scanner.nextLine());
 
-        Product purchasedProduct = purchasingCustomer.buyProduct(purchaseShop, productName, quantity);
+        System.out.print("Any coupon aviable?: y/n ");
+        String couponChoice = scanner.nextLine();
+        Coupon coupon = null;
+        if (couponChoice.equalsIgnoreCase("y")) {
+            System.out.println("Enter Coupon's code:");
+            String couponCode = scanner.nextLine(); // controllare che l'utente abbia messo il coupon funzionante;
+            coupon = database.getCoupon(couponCode);
+            if (coupon == null) {
+                System.out.println("Coupon is not valid.");
+            }
+        }
+
+        Product purchasedProduct = null;
+        if (coupon!= null){ purchasedProduct = purchasingCustomer.buyProduct(purchaseShop, productName, quantity, coupon);}
+        else
+            purchasedProduct = purchasingCustomer.buyProduct(purchaseShop, productName, quantity);
         if (purchasedProduct == null) {
             System.out.println("Purchase failed.");
             return;

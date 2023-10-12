@@ -10,6 +10,7 @@ public class Database {
     private List<Customer> customers;
     private List<ShopReview> shopReviews;
     private List<ProductReview> productReviews;
+    private List<Coupon> coupons;
 
     public Database() {
         this.products = new ArrayList<>();
@@ -17,6 +18,7 @@ public class Database {
         this.customers = new ArrayList<>();
         this.shopReviews = new ArrayList<>();
         this.productReviews = new ArrayList<>();
+        this.coupons = new ArrayList<>();
     }
 
     public List<Product> getProducts() {
@@ -57,6 +59,13 @@ public class Database {
 
     public void setProductReviews(List<ProductReview> productReviews){
         this.productReviews = productReviews;
+    }
+    public List<Coupon> getCoupons() {
+        return coupons;
+    }
+
+    public void setCoupons(List<Coupon> coupons) {
+        this.coupons = coupons;
     }
 
     public void registerProduct(Product product) {
@@ -132,6 +141,10 @@ public class Database {
         return customers.stream()
                 .filter(c -> c.getFullName().equalsIgnoreCase(name))
                 .collect(Collectors.toList());
+    }
+
+    public Coupon getCoupon(String code) {
+        return coupons.stream().filter(c -> c.getCode().equalsIgnoreCase(code)).findFirst().get();
     }
 
     @Override
