@@ -1,4 +1,8 @@
-package org.project;
+package org.project.utils;
+
+import org.project.database.Database;
+import org.project.factory.EntityFactory;
+import org.project.models.*;
 
 import java.util.List;
 import java.util.Scanner;

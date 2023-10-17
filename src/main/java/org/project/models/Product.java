@@ -1,4 +1,8 @@
-package org.project;
+package org.project.models;
+
+import org.project.database.Database;
+import org.project.charts.Chart;
+import org.project.interfaces.Storable;
 
 import java.util.ArrayList;
 import java.util.List;

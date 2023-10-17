@@ -1,5 +1,14 @@
 package org.project;
 
+import org.project.database.Database;
+import org.project.charts.Chart;
+import org.project.factory.EntityFactory;
+import org.project.models.Category;
+import org.project.models.Customer;
+import org.project.models.Product;
+import org.project.models.Shop;
+import org.project.utils.Utilities;
+
 import java.util.List;
 
 public class Main {

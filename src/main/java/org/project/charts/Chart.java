@@ -1,4 +1,6 @@
-package org.project;
+package org.project.charts;
+
+import org.project.models.*;
 
 import java.util.ArrayList;
 import java.util.Collections;

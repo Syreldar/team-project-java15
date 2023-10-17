@@ -1,4 +1,4 @@
-package org.project;
+package org.project.models;
 
 public enum Category {
     ELECTRONICS,
