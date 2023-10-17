@@ -10,7 +10,7 @@ import java.util.stream.IntStream;
 
 public class Utilities
 {
-    public static final String GOODBYE_MESSAGE = "Thank you for using the Shopping App! Bye!";
+    public static final String GOODBYE_MESSAGE = "Thank you for using Team 1's Shopping App project! Bye!";
 
     private static void askContinueOrExitProgram(Scanner scanner)
     {
