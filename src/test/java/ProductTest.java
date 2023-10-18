@@ -1,7 +1,8 @@
-package org.project;
-
 import org.junit.Before;
 import org.junit.Test;
+import org.project.models.Category;
+import org.project.models.Product;
+
 import static org.junit.Assert.*;
 
 public class ProductTest {

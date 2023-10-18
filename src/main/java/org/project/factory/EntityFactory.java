@@ -1,4 +1,10 @@
-package org.project;
+package org.project.factory;
+
+import org.project.database.Database;
+import org.project.charts.Chart;
+import org.project.models.Customer;
+import org.project.models.Product;
+import org.project.models.Shop;
 
 import java.util.List;
 

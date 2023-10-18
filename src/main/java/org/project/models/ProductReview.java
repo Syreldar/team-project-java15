@@ -1,4 +1,7 @@
-package org.project;
+package org.project.models;
+
+import org.project.database.Database;
+import org.project.charts.Chart;
 
 public class ProductReview extends Review {
     private final Product reviewedProduct;

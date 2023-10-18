@@ -1,4 +1,6 @@
-package org.project;
+package org.project.models;
+
+import org.project.interfaces.Storable;
 
 public abstract class Review implements Storable {
     private final Customer reviewer;

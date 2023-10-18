@@ -1,4 +1,8 @@
-package org.project;
+package org.project.models;
+
+import org.project.database.Database;
+import org.project.charts.Chart;
+import org.project.interfaces.Storable;
 
 import java.util.*;
 
@@ -53,6 +57,10 @@ public class Shop implements Storable {
 
     public void addGains(double gains) {
         totalGains += gains;
+    }
+
+    public List<Product> getProducts() {
+        return products;
     }
 
     public boolean containsProduct(Product product) {
@@ -148,8 +156,5 @@ public class Shop implements Storable {
         return String.format("Shop [Name: %s, OwnerName: %s, TotalGains: %.2f, MostSoldCategory: %s]",
                 this.name, this.ownerName, this.totalGains,
                 getMostSoldCategory() != null ? getMostSoldCategory() : "None");
-    }
-    public List<Product> getProducts() {
-        return products;
     }
 }

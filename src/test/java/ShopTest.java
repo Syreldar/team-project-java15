@@ -1,7 +1,10 @@
-package org.project;
-
 import org.junit.Before;
 import org.junit.Test;
+import org.project.models.Category;
+import org.project.models.Customer;
+import org.project.models.Product;
+import org.project.models.Shop;
+
 import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
