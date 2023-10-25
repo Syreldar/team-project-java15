@@ -2,8 +2,6 @@ import static org.junit.Assert.*;
 import org.junit.*;
 import org.project.models.*;
 
-import java.util.ArrayList;
-
 public class ReviewTest {
     private Customer customer;
 
@@ -14,7 +12,7 @@ public class ReviewTest {
 
     @Test
     public void testShopReview() {
-        Shop shop = new Shop("MyShop", "Owner", new ArrayList<>());
+        Shop shop = new Shop("MyShop", "Owner");
         ShopReview shopReview = new ShopReview(shop, customer, 4.5f, "Great shop!");
         assertEquals(customer, shopReview.getReviewer());
         assertEquals(4.5f, shopReview.getRating(), 0.01);

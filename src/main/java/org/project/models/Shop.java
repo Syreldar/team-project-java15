@@ -1,26 +1,50 @@
 package org.project.models;
 
+import jakarta.persistence.*;
 import org.project.database.Database;
 import org.project.charts.Chart;
 import org.project.interfaces.Storable;
 
 import java.util.*;
-
+@Entity
+@Table(name = "Shop", schema = "newdb" )
 public class Shop implements Storable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
     private String ownerName;
     private double totalGains = 0.0;
     private final List<Product> products;
+    @ManyToMany
+    @JoinTable(
+            name = "category_sales",
+            joinColumns = @JoinColumn(name = "shop_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
     private final Map<Category, Integer> categorySales;
     private int totalSales = 0;
+    @ManyToMany
+    @JoinTable(
+            name = "shop_review",
+            joinColumns = @JoinColumn(name = "shop_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
     private final List<ShopReview> reviews;
 
-    public Shop(String name, String ownerName, List<Product> products) {
+    public Shop(String name, String ownerName) {
         this.name = name;
         this.ownerName = ownerName;
-        this.products = new ArrayList<>(products);
-        this.categorySales = new HashMap<>();
+        this.products = new ArrayList<Product>();
+        this.categorySales = new HashMap<Category,Integer>();
         this.reviews = new ArrayList<>();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

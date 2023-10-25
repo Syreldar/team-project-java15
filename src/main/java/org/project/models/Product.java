@@ -1,5 +1,6 @@
 package org.project.models;
 
+import jakarta.persistence.*;
 import org.project.database.Database;
 import org.project.charts.Chart;
 import org.project.interfaces.Storable;
@@ -8,14 +9,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalDouble;
 import java.util.Objects;
-
+@Entity
+@Table(name = "products", schema = "newdb" )
 public class Product implements Storable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private Category category;
     private String name;
     private String manufacturer;
     private double price;
-    private final int initialQuantity;
+    private  int initialQuantity;
     private int currentQuantity;
+    @OneToMany(mappedBy = "reviewedProduct")
     private final List<ProductReview> reviews;
 
     public Product(Category category, String name, double price, int initialQuantity) {
@@ -38,6 +44,18 @@ public class Product implements Storable {
         this.price = price;
         this.initialQuantity = this.currentQuantity = initialQuantity;
         this.reviews = new ArrayList<>();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setInitialQuantity(int initialQuantity) {
+        this.initialQuantity = initialQuantity;
     }
 
     public Category getCategory() {

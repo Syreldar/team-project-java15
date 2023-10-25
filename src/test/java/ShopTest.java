@@ -17,7 +17,7 @@ public class ShopTest {
         List<Product> products = new ArrayList<>();
         products.add(new Product(Category.CLOTHING, "T-Shirt", 20.0, 50));
         products.add(new Product(Category.ELECTRONICS, "Smartphone", 500.0, 30));
-        shop = new Shop("Fashion Store", "Alice", products);
+        shop = new Shop("Fashion Store", "Alice");
     }
 
     @Test

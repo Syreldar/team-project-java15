@@ -3,9 +3,7 @@ package org.project;
 import org.project.database.Database;
 import org.project.charts.Chart;
 import org.project.factory.EntityFactory;
-import org.project.models.Category;
 import org.project.models.Customer;
-import org.project.models.Product;
 import org.project.models.Shop;
 import org.project.utils.Utilities;
 
@@ -18,21 +16,9 @@ public class Main {
         EntityFactory factory = new EntityFactory(database, chart);
 
         factory.createShops(List.of(
-                new Shop("ShopA", "Carlo", List.of(
-                        new Product(Category.ELECTRONICS, "Computer", 500, 7),
-                        new Product(Category.CLEANING, "Detergent", 10, 21),
-                        new Product(Category.FOOD, "Apple", 2.20, 231)
-                )),
-                new Shop("ShopB", "Para", List.of(
-                        new Product(Category.ELECTRONICS, "Computer", 550, 6),
-                        new Product(Category.HEALTH, "Medicine", 10, 78),
-                        new Product(Category.FOOD, "Banana", 2.10, 194)
-                )),
-                new Shop("ShopC", "Malo", List.of(
-                        new Product(Category.CLEANING, "Detergent", 12, 24),
-                        new Product(Category.HEALTH, "Medicine", 11, 82),
-                        new Product(Category.FOOD, "Pear", 2.50, 253)
-                ))
+                new Shop("ShopA", "Carlo"),
+                new Shop("ShopB", "Para"),
+                new Shop("ShopC", "Malo")
         ));
 
         factory.createCustomer(new Customer("Enrico", "Drago", 24.52));
@@ -41,3 +27,4 @@ public class Main {
         Utilities.MainMenu(factory, database);
     }
 }
+

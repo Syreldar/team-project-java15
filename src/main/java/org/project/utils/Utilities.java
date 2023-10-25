@@ -189,7 +189,7 @@ public class Utilities
         System.out.print("Enter review comment (optional): ");
         String comment = scanner.nextLine();
 
-        reviewer.reviewProduct(database, product, rating, comment);
+        reviewer.reviewProduct(database, product, rating, comment, reviewer);
         System.out.println("Product review submitted successfully.");
         askContinueOrExitProgram(scanner);
     }

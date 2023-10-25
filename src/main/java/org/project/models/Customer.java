@@ -1,17 +1,35 @@
 package org.project.models;
 
+import jakarta.persistence.*;
 import org.project.charts.Chart;
 import org.project.database.Database;
 import org.project.interfaces.Storable;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@Entity
+@Table(name = "customer", schema = "newdb" )
 public class Customer implements Storable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String firstName;
     private String lastName;
     private double balance;
+    @ManyToMany
+    @JoinTable(
+            name = "customer_product",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
     private List<Product> wishList;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Customer(String firstName, String lastName, double balance) {
         if (firstName == null || lastName == null) {
@@ -139,8 +157,8 @@ public class Customer implements Storable {
         shop.addReview(review);
     }
 
-    public void reviewProduct(Database database, Product product, float rating, String comment) {
-        ProductReview review = new ProductReview(product, this, rating, comment);
+    public void reviewProduct(Database database, Product product, float rating, String comment, Customer reviewer) {
+        ProductReview review = new ProductReview(product, reviewer, rating, comment);
         database.registerProductReview(review);
         product.addReview(review);
     }
