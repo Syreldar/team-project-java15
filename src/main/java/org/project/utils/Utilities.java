@@ -349,11 +349,10 @@ public class Utilities
                     case 4 -> Utilities.makePurchase(database, scanner);
                     case 5 -> Utilities.leaveReview(factory, scanner);
                     case 6 -> Utilities.showReviews(database, scanner);
-                    case 8 -> {
+                    default -> {
                         System.out.println(Utilities.GOODBYE_MESSAGE);
                         System.exit(0); // Terminate the program
                     }
-                    default -> System.out.println("Invalid option. Please try again.");
                 }
             }
         }
