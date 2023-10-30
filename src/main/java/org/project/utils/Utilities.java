@@ -194,7 +194,13 @@ public class Utilities
         askContinueOrExitProgram(scanner);
     }
 
-    public static void leaveReview(EntityFactory factory, Database database, Scanner scanner) {
+    public static void leaveReview(EntityFactory factory, Scanner scanner) {
+        Database database = factory.database();
+        if (database == null) {
+            System.out.println("Database not found.");
+            return;
+        }
+
         System.out.print("Enter customer's full name: ");
         String reviewerFullName = scanner.nextLine();
 
@@ -222,7 +228,7 @@ public class Utilities
             switch (option) {
                 case 1 -> shopReview(database, scanner, reviewer);
                 case 2 -> productReview(database, scanner, reviewer);
-                case 3 -> MainMenu(factory, database);
+                case 3 -> MainMenu(factory);
                 case 4 -> {
                     System.out.println(GOODBYE_MESSAGE);
                     return;
@@ -309,37 +315,13 @@ public class Utilities
         System.out.printf("Average Rating for %s's %s: %.2f%n", shop.getName(), product.getName(), averageRating);
     }
 
-    public static void showCharts(EntityFactory factory, Database database, Scanner scanner) {
-        System.out.println("Select a type of chart to display:");
-        String[] options = {
-                "Not Implemented 1",
-                "Not Implemented 2",
-                "Go back",
-                "Exit"
-        };
-
-        System.out.println("\nOptions:");
-        for (int i = 0; i < options.length; i++) {
-            System.out.printf(String.format("%d. %s%n", i + 1, options[i]));
+    public static void MainMenu(EntityFactory factory) {
+        Database database = factory.database();
+        if (database == null) {
+            System.out.println("Database not found.");
+            return;
         }
 
-        System.out.print("Select an option: ");
-
-        int chartOption = Integer.parseInt(scanner.nextLine());
-        switch (chartOption) {
-            case 1 -> System.out.println("Not yet implemented 1.");
-            case 2 -> System.out.println("Not yet implemented 2.");
-            case 3 -> MainMenu(factory, database);
-            case 4 -> {
-                System.out.println(GOODBYE_MESSAGE);
-                System.exit(0); // Terminate the program
-            }
-            default -> System.out.println("Invalid chart option.");
-        }
-        askContinueOrExitProgram(scanner);
-    }
-
-    public static void MainMenu(EntityFactory factory, Database database) {
         System.out.println("\nWelcome to the Shopping App!");
         try (Scanner scanner = new Scanner(System.in)) {
             while (true) {
@@ -350,7 +332,6 @@ public class Utilities
                         "Make a purchase",
                         "Leave a review",
                         "Show reviews for a shop",
-                        "Show charts",
                         "Exit"
                 };
 
@@ -366,14 +347,12 @@ public class Utilities
                     case 2 -> Utilities.listCustomers(database, scanner);
                     case 3 -> Utilities.listShops(database, scanner);
                     case 4 -> Utilities.makePurchase(database, scanner);
-                    case 5 -> Utilities.leaveReview(factory, database, scanner);
+                    case 5 -> Utilities.leaveReview(factory, scanner);
                     case 6 -> Utilities.showReviews(database, scanner);
-                    case 7 -> Utilities.showCharts(factory, database, scanner);
-                    case 8 -> {
+                    default -> {
                         System.out.println(Utilities.GOODBYE_MESSAGE);
                         System.exit(0); // Terminate the program
                     }
-                    default -> System.out.println("Invalid option. Please try again.");
                 }
             }
         }

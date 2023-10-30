@@ -1,7 +1,6 @@
 package org.project.models;
 
 import org.project.database.Database;
-import org.project.charts.Chart;
 import org.project.interfaces.Storable;
 
 import java.util.ArrayList;
@@ -124,9 +123,8 @@ public class Product implements Storable {
     }
 
     @Override
-    public void register(Database database, Chart chart) {
+    public void register(Database database) {
         database.registerProduct(this);
-        chart.addProduct(this);
     }
 
     @Override

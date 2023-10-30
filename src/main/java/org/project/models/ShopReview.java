@@ -1,7 +1,6 @@
 package org.project.models;
 
 import org.project.database.Database;
-import org.project.charts.Chart;
 
 public class ShopReview extends Review {
     private final Shop reviewedShop;
@@ -12,9 +11,8 @@ public class ShopReview extends Review {
     }
 
     @Override
-    public void register(Database database, Chart chart) {
+    public void register(Database database) {
         database.registerShopReview(this);
-        chart.addShopReview(this);
     }
 
     public Shop getReviewedShop() {
