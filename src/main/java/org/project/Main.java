@@ -1,7 +1,6 @@
 package org.project;
 
 import org.project.database.Database;
-import org.project.charts.Chart;
 import org.project.factory.EntityFactory;
 import org.project.models.Category;
 import org.project.models.Customer;
@@ -14,8 +13,7 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         Database database = new Database();
-        Chart chart = new Chart();
-        EntityFactory factory = new EntityFactory(database, chart);
+        EntityFactory factory = new EntityFactory(database);
 
         factory.createShops(List.of(
                 new Shop("ShopA", "Carlo", List.of(
@@ -38,6 +36,6 @@ public class Main {
         factory.createCustomer(new Customer("Enrico", "Drago", 24.52));
         factory.createCustomer(new Customer("Enrico", "Drago", 12.71));
 
-        Utilities.MainMenu(factory, database);
+        Utilities.MainMenu(factory);
     }
 }

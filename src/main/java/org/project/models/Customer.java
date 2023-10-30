@@ -1,6 +1,5 @@
 package org.project.models;
 
-import org.project.charts.Chart;
 import org.project.database.Database;
 import org.project.interfaces.Storable;
 
@@ -154,9 +153,8 @@ public class Customer implements Storable {
     }
 
     @Override
-    public void register(Database database, Chart chart) {
+    public void register(Database database) {
         database.registerCustomer(this);
-        chart.addCustomer(this);
     }
 
     @Override
