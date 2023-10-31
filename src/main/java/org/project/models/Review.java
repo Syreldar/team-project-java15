@@ -2,11 +2,15 @@ package org.project.models;
 
 import org.project.interfaces.Storable;
 
+import java.time.LocalDate;
+
 public abstract class Review implements Storable {
     private int id;
     private Customer reviewer;
     private float rating;
     private String comment;
+    private LocalDate creationDate;
+    private LocalDate updateDate;
 
     public Review() {}
 
@@ -46,6 +50,22 @@ public abstract class Review implements Storable {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public LocalDate getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDate creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public LocalDate getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(LocalDate updateDate) {
+        this.updateDate = updateDate;
     }
 
     @Override
