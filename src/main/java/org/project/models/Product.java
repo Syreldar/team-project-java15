@@ -1,6 +1,7 @@
 package org.project.models;
 
 import org.project.database.Database;
+import org.project.interfaces.Reviewable;
 import org.project.interfaces.Storable;
 
 import java.util.ArrayList;
@@ -8,16 +9,18 @@ import java.util.List;
 import java.util.OptionalDouble;
 import java.util.Objects;
 
-public class Product implements Storable {
+public class Product implements Storable, Reviewable<ProductReview> {
+    private int id;
     private Category category;
     private String name;
     private String manufacturer;
     private double price;
-    private final int initialQuantity;
-    private int currentQuantity;
-    private final List<ProductReview> reviews;
+    private int quantity;
+    private final List<ProductReview> reviews = new ArrayList<>();
 
-    public Product(Category category, String name, double price, int initialQuantity) {
+    public Product() {}
+
+    public Product(Category category, String name, double price, int quantity) {
         if (category == null) {
             throw new IllegalArgumentException("The category cannot be null");
         }
@@ -27,7 +30,7 @@ public class Product implements Storable {
         if (price < 0) {
             throw new IllegalArgumentException("The price must be >= 0");
         }
-        if (initialQuantity <= 0) {
+        if (quantity <= 0) {
             throw new IllegalArgumentException("The quantity must be > 0");
         }
 
@@ -35,8 +38,15 @@ public class Product implements Storable {
         this.name = name;
         this.manufacturer = null;
         this.price = price;
-        this.initialQuantity = this.currentQuantity = initialQuantity;
-        this.reviews = new ArrayList<>();
+        this.quantity = quantity;
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Category getCategory() {
@@ -74,19 +84,15 @@ public class Product implements Storable {
         this.price = price;
     }
 
-    public int getInitialQuantity() {
-        return initialQuantity;
+    public int getQuantity() {
+        return this.quantity;
     }
 
-    public int getCurrentQuantity() {
-        return this.currentQuantity;
-    }
-
-    public void setCurrentQuantity(int currentQuantity) {
-        if (currentQuantity < 0) {
+    public void setQuantity(int quantity) {
+        if (quantity < 0) {
             throw new IllegalArgumentException("You can't set a negative quantity");
         }
-        this.currentQuantity = currentQuantity;
+        this.quantity = quantity;
     }
 
     public void reduceQuantity(Integer amount) {
@@ -94,31 +100,31 @@ public class Product implements Storable {
             throw new IllegalArgumentException("The amount cannot be null or <= 0");
         }
 
-        this.currentQuantity = Math.max(0, this.currentQuantity - amount);
-    }
-
-    public int getSoldAmount() {
-        return this.initialQuantity - this.currentQuantity;
+        this.quantity = Math.max(0, this.quantity - amount);
     }
 
     public void reduceQuantity() {
-        this.currentQuantity -= 1;
+        this.quantity -= 1;
     }
 
+    @Override
     public List<ProductReview> getReviews() {
         return reviews;
     }
 
+    @Override
     public void addReview(ProductReview review) {
         reviews.add(review);
     }
 
+    @Override
     public int getReviewCount() {
         return reviews.size();
     }
 
+    @Override
     public double getReviewsAverage() {
-        OptionalDouble average = reviews.stream().mapToDouble(Review::getRating).average();
+        OptionalDouble average = reviews.stream().mapToDouble(ProductReview::getRating).average();
         return average.orElse(0.0);
     }
 
@@ -148,6 +154,6 @@ public class Product implements Storable {
     @Override
     public String toString() {
         return String.format("Product [Name: %s, Category: %s, Price: %.2f, Quantity: %d]",
-                this.name, this.category, this.price, this.currentQuantity);
+                this.name, this.category, this.price, this.quantity);
     }
 }

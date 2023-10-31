@@ -8,7 +8,6 @@ import org.project.models.Shop;
 import java.util.List;
 
 public record EntityFactory(Database database) {
-
     public Product createProduct(Product product) {
         product.register(database);
         return product;
