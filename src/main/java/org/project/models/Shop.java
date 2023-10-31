@@ -6,12 +6,17 @@ import org.project.interfaces.Storable;
 
 import java.util.*;
 
+//@Entity
 public class Shop implements Storable, Reviewable<ShopReview> {
+    //@Id
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
     private String ownerName;
+    //@ManyToOne
     private List<Product> products;
-    private final List<ShopReview> reviews = new ArrayList<>();
+    //@ManyToOne
+    private List<ShopReview> reviews;
 
     public Shop() {}
 
@@ -19,6 +24,7 @@ public class Shop implements Storable, Reviewable<ShopReview> {
         this.name = name;
         this.ownerName = ownerName;
         this.products = products;
+        this.reviews = new ArrayList<>();
     }
 
     public int getId() {

@@ -4,12 +4,18 @@ import org.project.interfaces.Storable;
 
 import java.time.LocalDate;
 
+//@MappedSuperclass
 public abstract class Review implements Storable {
+    //@Id
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    //@ManyToOne
     private Customer reviewer;
     private float rating;
     private String comment;
+    //@JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate creationDate;
+    //@JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate updateDate;
 
     public Review() {}
@@ -18,6 +24,8 @@ public abstract class Review implements Storable {
         this.reviewer = customer;
         this.rating = rating;
         this.comment = comment;
+        this.creationDate = LocalDate.now();
+        this.updateDate = LocalDate.now();
     }
 
     public int getId() {

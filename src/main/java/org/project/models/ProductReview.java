@@ -2,6 +2,7 @@ package org.project.models;
 
 import org.project.database.Database;
 
+//@Entity
 public class ProductReview extends Review {
     private Product reviewedProduct;
 

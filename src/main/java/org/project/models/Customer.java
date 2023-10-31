@@ -6,11 +6,15 @@ import org.project.interfaces.Storable;
 import java.util.ArrayList;
 import java.util.List;
 
+//@Entity
 public class Customer implements Storable {
+    //@Id
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String firstName;
     private String lastName;
     private double balance;
+    //@OneToOne(mappedBy = "customer")
     private List<Product> wishList;
 
     public Customer() {}

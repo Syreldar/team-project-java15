@@ -9,14 +9,19 @@ import java.util.List;
 import java.util.OptionalDouble;
 import java.util.Objects;
 
+//@Entity
 public class Product implements Storable, Reviewable<ProductReview> {
+    //@Id
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    //@JsonIgnore
     private Category category;
     private String name;
     private String manufacturer;
     private double price;
     private int quantity;
-    private final List<ProductReview> reviews = new ArrayList<>();
+    //@ManyToOne
+    private List<ProductReview> reviews;
 
     public Product() {}
 
@@ -39,6 +44,7 @@ public class Product implements Storable, Reviewable<ProductReview> {
         this.manufacturer = null;
         this.price = price;
         this.quantity = quantity;
+        this.reviews = new ArrayList<>();
     }
 
     public int getId() {
