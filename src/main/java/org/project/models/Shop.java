@@ -1,25 +1,38 @@
 package org.project.models;
 
 import org.project.database.Database;
+import org.project.interfaces.Reviewable;
 import org.project.interfaces.Storable;
 
 import java.util.*;
 
-public class Shop implements Storable {
+//@Entity
+public class Shop implements Storable, Reviewable<ShopReview> {
+    //@Id
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
     private String name;
     private String ownerName;
-    private double totalGains = 0.0;
-    private final List<Product> products;
-    private final Map<Category, Integer> categorySales;
-    private int totalSales = 0;
-    private final List<ShopReview> reviews;
+    //@ManyToOne
+    private List<Product> products;
+    //@ManyToOne
+    private List<ShopReview> reviews;
+
+    public Shop() {}
 
     public Shop(String name, String ownerName, List<Product> products) {
         this.name = name;
         this.ownerName = ownerName;
-        this.products = new ArrayList<>(products);
-        this.categorySales = new HashMap<>();
+        this.products = products;
         this.reviews = new ArrayList<>();
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -38,24 +51,8 @@ public class Shop implements Storable {
         this.ownerName = ownerName;
     }
 
-    public double getTotalGains() {
-        return totalGains;
-    }
-
-    public void setTotalGains(double totalGains) {
-        this.totalGains = totalGains;
-    }
-
-    public int getTotalSales() {
-        return totalSales;
-    }
-
-    public void incrementTotalSales() {
-        totalSales++;
-    }
-
-    public void addGains(double gains) {
-        totalGains += gains;
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 
     public List<Product> getProducts() {
@@ -81,31 +78,32 @@ public class Shop implements Storable {
         if (quantity <= 0) {
             throw new IllegalArgumentException("The quantity cannot be <= 0");
         }
-        if (quantity > product.getCurrentQuantity()) {
+        if (quantity > product.getQuantity()) {
             throw new IllegalArgumentException("The quantity cannot be over the product's quantity");
         }
 
         handleTransaction(product, quantity);
         updateSalesStatistics(product);
-        incrementTotalSales();
+        //incrementTotalSales();
 
         System.out.printf("%s: Sold %d unit%s of %s to customer %s. Remaining units: %d;%n",
                 this.name, quantity, quantity > 1 ? "s" : "", product.getName(), customer.getFullName(),
-                product.getCurrentQuantity());
+                product.getQuantity());
         return true;
     }
 
     private void handleTransaction(Product product, int quantity) {
         product.reduceQuantity(quantity);
-        this.totalGains += product.getPrice() * quantity;
+        //this.totalGains += product.getPrice() * quantity;
     }
 
     private void updateSalesStatistics(Product product) {
         Category productCategory = product.getCategory();
-        int currentSales = this.categorySales.getOrDefault(productCategory, 0);
-        this.categorySales.put(productCategory, currentSales + 1);
+        //int currentSales = this.categorySales.getOrDefault(productCategory, 0);
+        //this.categorySales.put(productCategory, currentSales + 1);
     }
 
+    /*
     public Category getMostSoldCategory() {
         return categorySales.entrySet()
                 .stream()
@@ -113,6 +111,7 @@ public class Shop implements Storable {
                 .map(Map.Entry::getKey)
                 .orElse(null);
     }
+    */
 
     public Product findProductByName(String name) {
         return products.stream()
@@ -121,27 +120,25 @@ public class Shop implements Storable {
                 .orElse(null);
     }
 
+    @Override
     public List<ShopReview> getReviews() {
         return reviews;
     }
 
+    @Override
     public void addReview(ShopReview review) {
         reviews.add(review);
     }
 
+    @Override
     public int getReviewCount() {
         return reviews.size();
     }
 
+    @Override
     public double getReviewsAverage() {
-        OptionalDouble average = reviews.stream().mapToDouble(Review::getRating).average();
+        OptionalDouble average = reviews.stream().mapToDouble(ShopReview::getRating).average();
         return average.orElse(0.0);
-    }
-
-    public Product getMostSoldProduct() {
-        return products.stream()
-                .max(Comparator.comparingInt(Product::getSoldAmount))
-                .orElse(null);
     }
 
     @Override
@@ -151,8 +148,13 @@ public class Shop implements Storable {
 
     @Override
     public String toString() {
+        return String.format("Shop [Name: %s, OwnerName: %s]", this.name, this.ownerName);
+    }
+    /*
+    public String toString() {
         return String.format("Shop [Name: %s, OwnerName: %s, TotalGains: %.2f, MostSoldCategory: %s]",
                 this.name, this.ownerName, this.totalGains,
                 getMostSoldCategory() != null ? getMostSoldCategory() : "None");
     }
+    */
 }

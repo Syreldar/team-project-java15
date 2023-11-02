@@ -6,11 +6,18 @@ import org.project.interfaces.Storable;
 import java.util.ArrayList;
 import java.util.List;
 
+//@Entity
 public class Customer implements Storable {
+    //@Id
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
     private String firstName;
     private String lastName;
     private double balance;
+    //@OneToOne(mappedBy = "customer")
     private List<Product> wishList;
+
+    public Customer() {}
 
     public Customer(String firstName, String lastName, double balance) {
         if (firstName == null || lastName == null) {
@@ -24,6 +31,53 @@ public class Customer implements Storable {
         this.lastName = lastName;
         this.balance = balance;
         this.wishList = new ArrayList<>();
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return this.firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return this.lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getFullName() {
+        return String.format("%s %s", this.firstName, this.lastName);
+    }
+
+    public double getBalance() {
+        return this.balance;
+    }
+
+    public void setBalance(double balance) {
+        if (balance < 0) {
+            throw new IllegalArgumentException("Balance cannot be negative");
+        }
+        this.balance = balance;
+    }
+
+    public List<Product> getWishList() {
+        return wishList;
+    }
+
+    public void setWishList(List<Product> wishList) {
+        this.wishList = wishList;
     }
 
     public void addToWishList(Shop shop, String productName) {
@@ -59,7 +113,7 @@ public class Customer implements Storable {
 
         quantity = (quantity == null || quantity <= 0) ? 1 : quantity;
 
-        int productQuantity = product.getCurrentQuantity();
+        int productQuantity = product.getQuantity();
         if (productQuantity < quantity) {
             System.out.printf("%s: The shop doesn't have enough units of %s.%n- Requested: %d;%n- Available: %d;%n",
                     getFullName(), productName, quantity, productQuantity);
@@ -84,37 +138,6 @@ public class Customer implements Storable {
 
     public Product buyProduct(Shop shop, String productName) {
         return buyProduct(shop, productName, null);
-    }
-
-    public String getFirstName() {
-        return this.firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return this.lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getFullName() {
-        return String.format("%s %s", this.firstName, this.lastName);
-    }
-
-    public double getBalance() {
-        return this.balance;
-    }
-
-    public void setBalance(double balance) {
-        if (balance < 0) {
-            throw new IllegalArgumentException("Balance cannot be negative");
-        }
-        this.balance = balance;
     }
 
     public void addToBalance(double balance) {
@@ -142,14 +165,6 @@ public class Customer implements Storable {
         ProductReview review = new ProductReview(product, this, rating, comment);
         database.registerProductReview(review);
         product.addReview(review);
-    }
-
-    public List<Product> getWishList() {
-        return wishList;
-    }
-
-    public void setWishList(List<Product> wishList) {
-        this.wishList = wishList;
     }
 
     @Override
