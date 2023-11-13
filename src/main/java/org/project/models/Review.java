@@ -1,21 +1,28 @@
 package org.project.models;
 
-import org.project.interfaces.Storable;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
-//@MappedSuperclass
-public abstract class Review implements Storable {
-    //@Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    //@ManyToOne
+@MappedSuperclass
+public abstract class Review {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "reviewer_id", referencedColumnName = "id")
     private Customer reviewer;
+
     private float rating;
     private String comment;
-    //@JsonFormat(pattern = "dd-MM-yyyy")
+
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate creationDate;
-    //@JsonFormat(pattern = "dd-MM-yyyy")
+
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate updateDate;
 
     public Review() {}
@@ -28,11 +35,11 @@ public abstract class Review implements Storable {
         this.updateDate = LocalDate.now();
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -74,6 +81,28 @@ public abstract class Review implements Storable {
 
     public void setUpdateDate(LocalDate updateDate) {
         this.updateDate = updateDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Review review = (Review) o;
+        return Float.compare(review.rating, rating) == 0 &&
+            Objects.equals(reviewer, review.reviewer) &&
+            Objects.equals(comment, review.comment) &&
+            Objects.equals(creationDate, review.creationDate) &&
+            Objects.equals(updateDate, review.updateDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(reviewer, rating, comment, creationDate, updateDate);
     }
 
     @Override

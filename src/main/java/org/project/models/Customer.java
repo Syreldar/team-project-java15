@@ -1,21 +1,25 @@
 package org.project.models;
 
-import org.project.database.Database;
-import org.project.interfaces.Storable;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.persistence.*;
+import java.util.Objects;
 
-//@Entity
-public class Customer implements Storable {
-    //@Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+@Entity
+@Table(name = "customers")
+public class Customer {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "first_name")
     private String firstName;
+
+    @Column(name = "last_name")
     private String lastName;
-    private double balance;
-    //@OneToOne(mappedBy = "customer")
-    private List<Product> wishList;
+
+    private double balance = 0.0;
 
     public Customer() {}
 
@@ -30,19 +34,18 @@ public class Customer implements Storable {
         this.firstName = firstName;
         this.lastName = lastName;
         this.balance = balance;
-        this.wishList = new ArrayList<>();
     }
 
-    public int getId() {
-        return this.id;
+    public Long getId() {
+        return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
     public String getFirstName() {
-        return this.firstName;
+        return firstName;
     }
 
     public void setFirstName(String firstName) {
@@ -50,126 +53,39 @@ public class Customer implements Storable {
     }
 
     public String getLastName() {
-        return this.lastName;
+        return lastName;
     }
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
-    public String getFullName() {
-        return String.format("%s %s", this.firstName, this.lastName);
-    }
-
     public double getBalance() {
-        return this.balance;
+        return balance;
     }
 
     public void setBalance(double balance) {
-        if (balance < 0) {
-            throw new IllegalArgumentException("Balance cannot be negative");
-        }
         this.balance = balance;
     }
 
-    public List<Product> getWishList() {
-        return wishList;
-    }
-
-    public void setWishList(List<Product> wishList) {
-        this.wishList = wishList;
-    }
-
-    public void addToWishList(Shop shop, String productName) {
-        Product product = shop.findProductByName(productName);
-        if (product != null && !wishList.contains(product)) {
-            wishList.add(product);
-        }
-    }
-
-    public void removeFromWishList(Product product) {
-        if (product != null) {
-            wishList.remove(product);
-        }
-    }
-
-    public Product buyProduct(Database database, String shopName, String productName, Integer quantity) {
-        return buyProduct(database.findShopByName(shopName), productName, quantity);
-    }
-
-    public Product buyProduct(Shop shop, String productName, Integer quantity) {
-        if (shop == null) {
-            throw new IllegalArgumentException("The Shop cannot be null");
-        }
-        if (productName == null) {
-            throw new IllegalArgumentException("The name of the Product cannot be null");
-        }
-
-        Product product = shop.findProductByName(productName);
-        if (product == null) {
-            System.out.printf("%s: Shop found, but Product not found.%n", this.getFullName());
-            return null;
-        }
-
-        quantity = (quantity == null || quantity <= 0) ? 1 : quantity;
-
-        int productQuantity = product.getQuantity();
-        if (productQuantity < quantity) {
-            System.out.printf("%s: The shop doesn't have enough units of %s.%n- Requested: %d;%n- Available: %d;%n",
-                    getFullName(), productName, quantity, productQuantity);
-            return null;
-        }
-
-        double totalPrice = product.getPrice() * quantity;
-        if (balance < totalPrice) {
-            System.out.printf("%s: I don't have enough money.%n- Remaining: %.2f$;%n- Needed: %.2f$;%n",
-                    getFullName(), balance, totalPrice);
-            return null;
-        }
-
-        subtractFromBalance(totalPrice);
-        shop.sellProduct(this, product, quantity);
-        return product;
-    }
-
-    public Product buyProduct(Database database, String shopName, String productName) {
-        return buyProduct(database, shopName, productName, null);
-    }
-
-    public Product buyProduct(Shop shop, String productName) {
-        return buyProduct(shop, productName, null);
-    }
-
-    public void addToBalance(double balance) {
-        this.balance += balance;
-    }
-
-    public boolean subtractFromBalance(double balance) {
-        if (balance < 0) {
-            throw new IllegalArgumentException("Balance cannot be negative");
-        }
-        if (this.balance >= balance) {
-            this.balance -= balance;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        return false;
-    }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-    public void reviewShop(Database database, Shop shop, float rating, String comment) {
-        ShopReview review = new ShopReview(shop, this, rating, comment);
-        database.registerShopReview(review);
-        shop.addReview(review);
-    }
-
-    public void reviewProduct(Database database, Product product, float rating, String comment) {
-        ProductReview review = new ProductReview(product, this, rating, comment);
-        database.registerProductReview(review);
-        product.addReview(review);
+        Customer customer = (Customer) o;
+        return Double.compare(customer.balance, balance) == 0 &&
+                Objects.equals(firstName, customer.firstName) &&
+                Objects.equals(lastName, customer.lastName);
     }
 
     @Override
-    public void register(Database database) {
-        database.registerCustomer(this);
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, balance);
     }
 
     @Override
