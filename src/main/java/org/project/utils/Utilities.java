@@ -1,12 +1,6 @@
 package org.project.utils;
 
-import org.project.database.Database;
-import org.project.factory.EntityFactory;
-import org.project.models.*;
-
-import java.util.List;
 import java.util.Scanner;
-import java.util.stream.IntStream;
 
 public class Utilities
 {
@@ -26,6 +20,7 @@ public class Utilities
         }
     }
 
+    /*
     public static void createCustomer(EntityFactory factory, Scanner scanner)
     {
         System.out.print("Enter customer's first name: ");
@@ -314,14 +309,9 @@ public class Utilities
         double averageRating = totalRating / productReviews.size();
         System.out.printf("Average Rating for %s's %s: %.2f%n", shop.getName(), product.getName(), averageRating);
     }
+    */
 
-    public static void MainMenu(EntityFactory factory) {
-        Database database = factory.database();
-        if (database == null) {
-            System.out.println("Database not found.");
-            return;
-        }
-
+    public static void MainMenu() {
         System.out.println("\nWelcome to the Shopping App!");
         try (Scanner scanner = new Scanner(System.in)) {
             while (true) {
@@ -343,16 +333,16 @@ public class Utilities
 
                 int option = Integer.parseInt(scanner.nextLine());
                 switch (option) {
-                    case 1 -> Utilities.createCustomer(factory, scanner);
-                    case 2 -> Utilities.listCustomers(database, scanner);
-                    case 3 -> Utilities.listShops(database, scanner);
-                    case 4 -> Utilities.makePurchase(database, scanner);
-                    case 5 -> Utilities.leaveReview(factory, scanner);
-                    case 6 -> Utilities.showReviews(database, scanner);
-                    default -> {
-                        System.out.println(Utilities.GOODBYE_MESSAGE);
-                        System.exit(0); // Terminate the program
-                    }
+                    //case 1 -> Utilities.createCustomer(scanner);
+                    //case 2 -> Utilities.listCustomers(scanner);
+                    //case 3 -> Utilities.listShops(scanner);
+                    //case 4 -> Utilities.makePurchase(scanner);
+                    //case 5 -> Utilities.leaveReview(scanner);
+                    //case 6 -> Utilities.showReviews(scanner);
+                    //default -> {
+                    //    System.out.println(Utilities.GOODBYE_MESSAGE);
+                    //    System.exit(0); // Terminate the program
+                    //}
                 }
             }
         }

@@ -1,21 +1,27 @@
 package org.project.models;
 
-import org.project.database.Database;
+import jakarta.persistence.*;
 import org.project.interfaces.Reviewable;
-import org.project.interfaces.Storable;
 
 import java.util.*;
 
-//@Entity
-public class Shop implements Storable, Reviewable<ShopReview> {
-    //@Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+@Entity
+@Table(name = "shops")
+public class Shop implements Reviewable<ShopReview> {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "shop_name")
     private String name;
+
+    @Column(name = "owner_name")
     private String ownerName;
-    //@ManyToOne
+
+    @ManyToMany(mappedBy = "shops")
     private List<Product> products;
-    //@ManyToOne
+
+    @OneToMany(mappedBy = "reviewedShop")
     private List<ShopReview> reviews;
 
     public Shop() {}
@@ -27,11 +33,11 @@ public class Shop implements Storable, Reviewable<ShopReview> {
         this.reviews = new ArrayList<>();
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -59,67 +65,6 @@ public class Shop implements Storable, Reviewable<ShopReview> {
         return products;
     }
 
-    public boolean containsProduct(Product product) {
-        return products.stream().anyMatch(p -> p.equals(product));
-    }
-
-    public boolean containsProduct(String productName) {
-        return products.stream()
-                .anyMatch(product -> product.getName().equalsIgnoreCase(productName));
-    }
-
-    public boolean sellProduct(Customer customer, Product product, int quantity) {
-        if (customer == null) {
-            throw new IllegalArgumentException("The customer cannot be null");
-        }
-        if (product == null) {
-            throw new IllegalArgumentException("The product cannot be null");
-        }
-        if (quantity <= 0) {
-            throw new IllegalArgumentException("The quantity cannot be <= 0");
-        }
-        if (quantity > product.getQuantity()) {
-            throw new IllegalArgumentException("The quantity cannot be over the product's quantity");
-        }
-
-        handleTransaction(product, quantity);
-        updateSalesStatistics(product);
-        //incrementTotalSales();
-
-        System.out.printf("%s: Sold %d unit%s of %s to customer %s. Remaining units: %d;%n",
-                this.name, quantity, quantity > 1 ? "s" : "", product.getName(), customer.getFullName(),
-                product.getQuantity());
-        return true;
-    }
-
-    private void handleTransaction(Product product, int quantity) {
-        product.reduceQuantity(quantity);
-        //this.totalGains += product.getPrice() * quantity;
-    }
-
-    private void updateSalesStatistics(Product product) {
-        Category productCategory = product.getCategory();
-        //int currentSales = this.categorySales.getOrDefault(productCategory, 0);
-        //this.categorySales.put(productCategory, currentSales + 1);
-    }
-
-    /*
-    public Category getMostSoldCategory() {
-        return categorySales.entrySet()
-                .stream()
-                .max(Map.Entry.comparingByValue())
-                .map(Map.Entry::getKey)
-                .orElse(null);
-    }
-    */
-
-    public Product findProductByName(String name) {
-        return products.stream()
-                .filter(product -> product.getName().equals(name))
-                .findFirst()
-                .orElse(null);
-    }
-
     @Override
     public List<ShopReview> getReviews() {
         return reviews;
@@ -142,19 +87,25 @@ public class Shop implements Storable, Reviewable<ShopReview> {
     }
 
     @Override
-    public void register(Database database) {
-        database.registerShop(this);
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Shop shop = (Shop) o;
+        return Objects.equals(name, shop.name) && Objects.equals(ownerName, shop.ownerName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, ownerName);
     }
 
     @Override
     public String toString() {
         return String.format("Shop [Name: %s, OwnerName: %s]", this.name, this.ownerName);
     }
-    /*
-    public String toString() {
-        return String.format("Shop [Name: %s, OwnerName: %s, TotalGains: %.2f, MostSoldCategory: %s]",
-                this.name, this.ownerName, this.totalGains,
-                getMostSoldCategory() != null ? getMostSoldCategory() : "None");
-    }
-    */
 }

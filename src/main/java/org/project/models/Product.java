@@ -1,31 +1,45 @@
 package org.project.models;
 
-import org.project.database.Database;
+import jakarta.persistence.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.project.interfaces.Reviewable;
-import org.project.interfaces.Storable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalDouble;
 import java.util.Objects;
 
-//@Entity
-public class Product implements Storable, Reviewable<ProductReview> {
-    //@Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    //@JsonIgnore
+@Entity
+@Table(name = "products")
+public class Product implements Reviewable<ProductReview> {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Enumerated(EnumType.STRING)
     private Category category;
+
     private String name;
     private String manufacturer;
+
+    @ColumnDefault("0.10")
     private double price;
-    private int quantity;
-    //@ManyToOne
+    @ColumnDefault("1")
+    private int quantity = 1;
+
+    @ManyToMany
+    @JoinTable(
+            name = "product_to_shop",
+            joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "shop_id", referencedColumnName = "id")
+    )
+    private List<Shop> shops;
+
+    @OneToMany(mappedBy = "reviewedProduct")
     private List<ProductReview> reviews;
 
     public Product() {}
 
-    public Product(Category category, String name, double price, int quantity) {
+    public Product(Category category, String name, double price, int quantity, List<Shop> shops, List<ProductReview> reviews) {
         if (category == null) {
             throw new IllegalArgumentException("The category cannot be null");
         }
@@ -44,14 +58,15 @@ public class Product implements Storable, Reviewable<ProductReview> {
         this.manufacturer = null;
         this.price = price;
         this.quantity = quantity;
-        this.reviews = new ArrayList<>();
+        this.shops = shops;
+        this.reviews = reviews;
     }
 
-    public int getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -113,6 +128,18 @@ public class Product implements Storable, Reviewable<ProductReview> {
         this.quantity -= 1;
     }
 
+    public List<Shop> getShops() {
+        return this.shops;
+    }
+
+    public void setShops(List<Shop> shops) {
+        this.shops = shops;
+    }
+
+    public void addShop(Shop shop) {
+        this.shops.add(shop);
+    }
+
     @Override
     public List<ProductReview> getReviews() {
         return reviews;
@@ -132,11 +159,6 @@ public class Product implements Storable, Reviewable<ProductReview> {
     public double getReviewsAverage() {
         OptionalDouble average = reviews.stream().mapToDouble(ProductReview::getRating).average();
         return average.orElse(0.0);
-    }
-
-    @Override
-    public void register(Database database) {
-        database.registerProduct(this);
     }
 
     @Override
