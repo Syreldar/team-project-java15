@@ -1,7 +1,11 @@
 package org.project.controllers;
 
+import org.project.models.APIResponse;
+import org.project.models.dtos.ReviewDTO;
 import org.project.models.entities.Customer;
 import org.project.models.dtos.CustomerDTO;
+import org.project.models.entities.ProductReview;
+import org.project.models.entities.ShopReview;
 import org.project.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,46 +22,118 @@ public class CustomerController {
 
 
     @PostMapping
-    public ResponseEntity<Customer> add(@RequestBody Customer customer) {
+    public ResponseEntity<APIResponse<Customer>> add(@RequestBody Customer customer) {
+        if (customer == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new APIResponse<>(null, "Invalid customer provided."));
+        }
+
         Customer createdCustomer = customerService.add(customer);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdCustomer);
+        if (createdCustomer == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new APIResponse<>(null, "Failed to create customer."));
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                new APIResponse<>(createdCustomer, "Customer created successfully."));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Customer> update(@PathVariable Long id, @RequestBody CustomerDTO customer) {
+    public ResponseEntity<APIResponse<Customer>> update(@PathVariable Long id, @RequestBody CustomerDTO customer) {
+        if (id == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new APIResponse<>(null, "Invalid ID provided."));
+        }
+
+        if (customer == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new APIResponse<>(null, "Invalid customer provided."));
+        }
+
         Customer updatedCustomer = customerService.update(id, customer);
-        return ResponseEntity.ok(updatedCustomer);
+        if (updatedCustomer == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new APIResponse<>(null, "Failed to update customer."));
+        }
+
+        return ResponseEntity.ok(
+                new APIResponse<>(updatedCustomer, "Customer updated successfully."));
     }
 
     @DeleteMapping("/id/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+    public ResponseEntity<APIResponse<Customer>> deleteById(@PathVariable Long id) {
+        if (id == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new APIResponse<>(null, "Invalid ID provided."));
+        }
+
+        Customer customer = customerService.findById(id);
+        if (customer == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new APIResponse<>(null, "Failed to delete customer."));
+        }
+
         customerService.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(
+                new APIResponse<>(customer, "Customer deleted successfully."));
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteAll() {
+    public ResponseEntity<APIResponse<Iterable<Customer>>> deleteAll() {
+        Iterable<Customer> customers = customerService.findAll();
+        if (!customers.iterator().hasNext()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new APIResponse<>(null, "No Customers found."));
+        }
+
         customerService.deleteAll();
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(
+                new APIResponse<>(customers, "All Customers deleted successfully."));
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<Customer> findById(@PathVariable Long id) {
+    public ResponseEntity<APIResponse<Customer>> findById(@PathVariable Long id) {
+        if (id == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new APIResponse<>(null, "Invalid ID provided."));
+        }
+
         Customer customer = customerService.findById(id);
-        return ResponseEntity.ok(customer);
+        if (customer == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new APIResponse<>(null, "Customer not found."));
+        }
+
+        return ResponseEntity.ok(
+                new APIResponse<>(customer, "Customer retrieved successfully."));
     }
 
     @GetMapping("/name/{name}")
-    public ResponseEntity<Customer> findByName(@PathVariable String name) {
+    public ResponseEntity<APIResponse<Customer>> findByName(@PathVariable String name) {
+        if (name == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new APIResponse<>(null, "Invalid name provided."));
+        }
+
         Customer customer = customerService.findByName(name);
-        return ResponseEntity.ok(customer);
+        if (customer == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new APIResponse<>(null, "Customer not found."));
+        }
+
+        return ResponseEntity.ok(
+                new APIResponse<>(customer, "Customer retrieved successfully."));
     }
 
     @GetMapping
-    public ResponseEntity<List<Customer>> findAll() {
-        List<Customer> customers = customerService.findAll();
-        return ResponseEntity.ok(customers);
+    public ResponseEntity<APIResponse<Iterable<Customer>>> findAll() {
+        Iterable<Customer> customers = customerService.findAll();
+        if (!customers.iterator().hasNext()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new APIResponse<>(null, "No Customers found."));
+        }
+
+        return ResponseEntity.ok(
+                new APIResponse<>(customers, "Customers retrieved successfully."));
     }
-
-
 }

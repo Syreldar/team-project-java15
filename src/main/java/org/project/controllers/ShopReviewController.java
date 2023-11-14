@@ -1,7 +1,10 @@
 package org.project.controllers;
 
+import org.project.models.APIResponse;
+import org.project.models.entities.Customer;
 import org.project.models.entities.ShopReview;
 import org.project.models.dtos.ReviewDTO;
+import org.project.services.CustomerService;
 import org.project.services.ShopReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,42 +17,130 @@ public class ShopReviewController {
     @Autowired
     private ShopReviewService shopReviewService;
 
+    @Autowired
+    private CustomerService customerService;
 
     @PostMapping
-    public ResponseEntity<ShopReview> add(@RequestBody ShopReview review) {
-        ShopReview createdShopReview = shopReviewService.add(review);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdShopReview);
+    public ResponseEntity<APIResponse<ShopReview>> add(@RequestBody ShopReview review, @RequestParam Long customerId) {
+        if (review == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new APIResponse<>(null, "Invalid review provided."));
+        }
+
+        if (customerId == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new APIResponse<>(null, "Invalid customerID provided."));
+        }
+
+        Customer reviewer = customerService.findById(customerId);
+        if (reviewer == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new APIResponse<>(null, "Customer not found."));
+        }
+
+        review.setReviewer(reviewer);
+        shopReviewService.add(review);
+        return ResponseEntity.ok(
+                new APIResponse<>(review,"ShopReview added successfully."));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ShopReview> update(@PathVariable Long id, @RequestBody ReviewDTO review) {
-        ShopReview updatedShopReview = shopReviewService.update(id, review);
-        return ResponseEntity.ok(updatedShopReview);
+    public ResponseEntity<APIResponse<ShopReview>> update(@PathVariable Long id, @RequestBody ReviewDTO reviewDTO) {
+        if (id == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new APIResponse<>(null, "Invalid ID provided."));
+        }
+
+        if (reviewDTO == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new APIResponse<>(null, "Invalid reviewDTO provided."));
+        }
+
+        ShopReview review = shopReviewService.findById(id);
+        if (review == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new APIResponse<>(null, "ShopReview not found."));
+        }
+
+        shopReviewService.update(id, reviewDTO);
+        return ResponseEntity.ok(
+                new APIResponse<>(review,"ShopReview updated successfully."));
     }
 
     @DeleteMapping("/id/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+    public ResponseEntity<APIResponse<ShopReview>> deleteById(@PathVariable Long id) {
+        if (id == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new APIResponse<>(null, "Invalid ID provided."));
+        }
+
+        ShopReview review = shopReviewService.findById(id);
+        if (review == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new APIResponse<>(null, "ShopReview not found."));
+        }
+
         shopReviewService.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(
+                new APIResponse<>(review,"ShopReview deleted successfully."));
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteAll() {
+    public ResponseEntity<APIResponse<Iterable<ShopReview>>> deleteAll() {
+        Iterable<ShopReview> reviews = shopReviewService.findAll();
+        if (!reviews.iterator().hasNext()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new APIResponse<>(null, "No ShopReviews found."));
+        }
+
         shopReviewService.deleteAll();
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(
+                new APIResponse<>(reviews,"All ShopReviews deleted successfully."));
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<ShopReview> findById(@PathVariable Long id) {
-        ShopReview productReview = shopReviewService.findById(id);
-        return ResponseEntity.ok(productReview);
+    public ResponseEntity<APIResponse<ShopReview>> findById(@PathVariable Long id) {
+        if (id == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new APIResponse<>(null, "Invalid ID provided."));
+        }
+
+        ShopReview shopReview = shopReviewService.findById(id);
+        if (shopReview == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new APIResponse<>(null, "ShopReview not found."));
+        }
+
+        return ResponseEntity.ok(
+                new APIResponse<>(shopReview, "ShopReview retrieved successfully."));
     }
 
     @GetMapping("/reviewer/{reviewerId}")
-    public ResponseEntity<Iterable<ShopReview>> findAllByReviewerId(@PathVariable Long reviewerId) {
-        Iterable<ShopReview> productReview = shopReviewService.findAllByReviewerId(reviewerId);
-        return ResponseEntity.ok(productReview);
+    public ResponseEntity<APIResponse<Iterable<ShopReview>>> findAllByReviewerId(@PathVariable Long reviewerId) {
+        if (reviewerId == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new APIResponse<>(null, "Invalid ID provided."));
+        }
+
+        Iterable<ShopReview> shopReviews = shopReviewService.findAllByReviewerId(reviewerId);
+        if (!shopReviews.iterator().hasNext()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new APIResponse<>(null, "No ShopReviews found for the given reviewerID."));
+        }
+
+        return ResponseEntity.ok(
+                new APIResponse<>(shopReviews, "Shop reviews retrieved successfully."));
     }
 
+    @GetMapping
+    public ResponseEntity<APIResponse<Iterable<ShopReview>>> findAll() {
+        Iterable<ShopReview> shopReviews = shopReviewService.findAll();
+        if (!shopReviews.iterator().hasNext()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new APIResponse<>(null, "No ShopReviews found."));
+        }
 
+        return ResponseEntity.ok(
+                new APIResponse<>(shopReviews, "Shop reviews retrieved successfully."));
+    }
 }

@@ -1,7 +1,10 @@
 package org.project.controllers;
 
+import org.project.models.APIResponse;
+import org.project.models.entities.Customer;
 import org.project.models.entities.ProductReview;
 import org.project.models.dtos.ReviewDTO;
+import org.project.services.CustomerService;
 import org.project.services.ProductReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,41 +17,130 @@ public class ProductReviewController {
     @Autowired
     private ProductReviewService productReviewService;
 
+    @Autowired
+    private CustomerService customerService;
 
     @PostMapping
-    public ResponseEntity<ProductReview> add(@RequestBody ProductReview review) {
-        ProductReview createdProductReview = productReviewService.add(review);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdProductReview);
+    public ResponseEntity<APIResponse<ProductReview>> add(@RequestBody ProductReview review, @RequestParam Long customerId) {
+        if (review == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new APIResponse<>(null, "Invalid review provided."));
+        }
+
+        if (customerId == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new APIResponse<>(null, "Invalid customerID provided."));
+        }
+
+        Customer reviewer = customerService.findById(customerId);
+        if (reviewer == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new APIResponse<>(null, "Customer not found."));
+        }
+
+        review.setReviewer(reviewer);
+        productReviewService.add(review);
+        return ResponseEntity.ok(
+                new APIResponse<>(review,"ProductReview added successfully."));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductReview> update(@PathVariable Long id, @RequestBody ReviewDTO review) {
-        ProductReview updatedProductReview = productReviewService.update(id, review);
-        return ResponseEntity.ok(updatedProductReview);
+    public ResponseEntity<APIResponse<ProductReview>> update(@PathVariable Long id, @RequestBody ReviewDTO reviewDTO) {
+        if (id == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new APIResponse<>(null, "Invalid ID provided."));
+        }
+
+        if (reviewDTO == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new APIResponse<>(null, "Invalid reviewDTO provided."));
+        }
+
+        ProductReview review = productReviewService.findById(id);
+        if (review == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new APIResponse<>(null, "ProductReview not found."));
+        }
+
+        productReviewService.update(id, reviewDTO);
+        return ResponseEntity.ok(
+                new APIResponse<>(review,"ProductReview updated successfully."));
     }
 
     @DeleteMapping("/id/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+    public ResponseEntity<APIResponse<ProductReview>> deleteById(@PathVariable Long id) {
+        if (id == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new APIResponse<>(null, "Invalid ID provided."));
+        }
+
+        ProductReview review = productReviewService.findById(id);
+        if (review == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new APIResponse<>(null, "ProductReview not found."));
+        }
+
         productReviewService.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(
+                new APIResponse<>(review,"ProductReview deleted successfully."));
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteAll() {
+    public ResponseEntity<APIResponse<Iterable<ProductReview>>> deleteAll() {
+        Iterable<ProductReview> reviews = productReviewService.findAll();
+        if (!reviews.iterator().hasNext()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new APIResponse<>(null, "No ProductReviews found."));
+        }
+
         productReviewService.deleteAll();
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(
+                new APIResponse<>(reviews,"All ProductReviews deleted successfully."));
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<ProductReview> findById(@PathVariable Long id) {
+    public ResponseEntity<APIResponse<ProductReview>> findById(@PathVariable Long id) {
+        if (id == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new APIResponse<>(null, "Invalid ID provided."));
+        }
+
         ProductReview productReview = productReviewService.findById(id);
-        return ResponseEntity.ok(productReview);
+        if (productReview == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new APIResponse<>(null, "ProductReview not found."));
+        }
+
+        return ResponseEntity.ok(
+                new APIResponse<>(productReview, "ProductReview retrieved successfully."));
     }
 
     @GetMapping("/reviewer/{reviewerId}")
-    public ResponseEntity<Iterable<ProductReview>> findAllByReviewerId(@PathVariable Long reviewerId) {
-        Iterable<ProductReview> productReview = productReviewService.findAllByReviewerId(reviewerId);
-        return ResponseEntity.ok(productReview);
+    public ResponseEntity<APIResponse<Iterable<ProductReview>>> findAllByReviewerId(@PathVariable Long reviewerId) {
+        if (reviewerId == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new APIResponse<>(null, "Invalid ID provided."));
+        }
+
+        Iterable<ProductReview> productReviews = productReviewService.findAllByReviewerId(reviewerId);
+        if (!productReviews.iterator().hasNext()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new APIResponse<>(null, "No ProductReviews found for the given reviewerID."));
+        }
+
+        return ResponseEntity.ok(
+                new APIResponse<>(productReviews, "Product reviews retrieved successfully."));
     }
 
+    @GetMapping
+    public ResponseEntity<APIResponse<Iterable<ProductReview>>> findAll() {
+        Iterable<ProductReview> productReviews = productReviewService.findAll();
+        if (!productReviews.iterator().hasNext()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new APIResponse<>(null, "No ProductReviews found."));
+        }
+
+        return ResponseEntity.ok(
+                new APIResponse<>(productReviews, "Product reviews retrieved successfully."));
+    }
 }
