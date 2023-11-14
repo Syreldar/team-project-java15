@@ -1,6 +1,8 @@
-package org.project.models;
+package org.project.models.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.project.interfaces.Reviewable;
 
 import java.util.*;
@@ -12,12 +14,16 @@ public class Shop implements Reviewable<ShopReview> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "shop_name")
+    @NotBlank
+    @Column(name = "shop_name", nullable = false)
     private String name;
 
-    @Column(name = "owner_name")
+    @NotBlank
+    @Column(name = "owner_name", nullable = false)
     private String ownerName;
 
+    @NotNull
+    @Column(nullable = false)
     @ManyToMany(mappedBy = "shops")
     private List<Product> products;
 

@@ -2,6 +2,10 @@ package org.project.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import org.project.models.entities.Customer;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -12,16 +16,26 @@ public abstract class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     @ManyToOne
-    @JoinColumn(name = "reviewer_id", referencedColumnName = "id")
+    @JoinColumn(name = "reviewer_id", referencedColumnName = "id", nullable = false)
     private Customer reviewer;
 
-    private float rating;
-    private String comment;
+    @NotNull
+    @Column(nullable = false)
+    @Min(1)
+    @Max(5)
+    private double rating;
 
+    private String comment = "";
+
+    @NotNull
+    @Column(name = "creation_date", nullable = false)
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate creationDate;
 
+    @NotNull
+    @Column(name = "update_date", nullable = false)
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate updateDate;
 
@@ -51,11 +65,11 @@ public abstract class Review {
         this.reviewer = reviewer;
     }
 
-    public float getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(float rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 
@@ -93,7 +107,7 @@ public abstract class Review {
         }
 
         Review review = (Review) o;
-        return Float.compare(review.rating, rating) == 0 &&
+        return Double.compare(rating, review.rating) == 0 &&
             Objects.equals(reviewer, review.reviewer) &&
             Objects.equals(comment, review.comment) &&
             Objects.equals(creationDate, review.creationDate) &&
