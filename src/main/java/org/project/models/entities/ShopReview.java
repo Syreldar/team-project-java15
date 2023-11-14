@@ -1,7 +1,8 @@
-package org.project.models;
+package org.project.models.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import org.project.models.Review;
 
 import java.util.Objects;
 

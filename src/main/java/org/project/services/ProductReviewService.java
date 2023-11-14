@@ -1,8 +1,11 @@
 package org.project.services;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.project.models.*;
 import org.project.models.dtos.ReviewDTO;
+import org.project.models.entities.Customer;
+import org.project.models.entities.Product;
+import org.project.models.entities.ProductReview;
+import org.project.models.entities.Shop;
 import org.project.repositories.ProductReviewRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;

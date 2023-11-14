@@ -1,6 +1,6 @@
 package org.project.controllers;
 
-import org.project.models.Customer;
+import org.project.models.entities.Customer;
 import org.project.models.dtos.CustomerDTO;
 import org.project.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,5 +58,6 @@ public class CustomerController {
         List<Customer> customers = customerService.findAll();
         return ResponseEntity.ok(customers);
     }
+
 
 }

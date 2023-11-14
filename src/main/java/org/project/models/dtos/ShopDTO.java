@@ -3,7 +3,7 @@ package org.project.models.dtos;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import org.project.models.Product;
+import org.project.models.entities.Product;
 
 import java.util.List;
 

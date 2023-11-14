@@ -1,6 +1,6 @@
 package org.project.controllers;
 
-import org.project.models.ShopReview;
+import org.project.models.entities.ShopReview;
 import org.project.models.dtos.ReviewDTO;
 import org.project.services.ShopReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,5 +50,6 @@ public class ShopReviewController {
         Iterable<ShopReview> productReview = shopReviewService.findAllByReviewerId(reviewerId);
         return ResponseEntity.ok(productReview);
     }
+
 
 }

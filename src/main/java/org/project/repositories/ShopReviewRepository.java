@@ -1,6 +1,8 @@
 package org.project.repositories;
 
-import org.project.models.*;
+import org.project.models.entities.Customer;
+import org.project.models.entities.Shop;
+import org.project.models.entities.ShopReview;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,6 +14,7 @@ public interface ShopReviewRepository extends JpaRepository<ShopReview, Long> {
     Iterable<ShopReview> findAllByReviewerId(Long id);
     Iterable<ShopReview> findAllByReviewedShop(Shop shop);
     Iterable<ShopReview> findAllByReviewedShop_Id(Long shopId);
+
     @Modifying
     @Transactional
     @Query("DELETE FROM ShopReview sr WHERE sr.reviewedShop = :shop")

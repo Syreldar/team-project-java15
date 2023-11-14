@@ -1,10 +1,11 @@
-package org.project.models;
+package org.project.models.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.ColumnDefault;
 import org.project.interfaces.Reviewable;
+import org.project.models.Category;
 
 import java.util.List;
 import java.util.OptionalDouble;

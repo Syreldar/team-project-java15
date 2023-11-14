@@ -2,7 +2,7 @@ package org.project.services;
 
 import jakarta.persistence.EntityNotFoundException;
 
-import org.project.models.Customer;
+import org.project.models.entities.Customer;
 import org.project.models.dtos.CustomerDTO;
 import org.project.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;

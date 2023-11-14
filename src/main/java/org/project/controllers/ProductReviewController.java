@@ -1,6 +1,6 @@
 package org.project.controllers;
 
-import org.project.models.ProductReview;
+import org.project.models.entities.ProductReview;
 import org.project.models.dtos.ReviewDTO;
 import org.project.services.ProductReviewService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,10 +1,10 @@
 package org.project.services;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.project.models.Product;
+import org.project.models.entities.Product;
 import org.project.models.dtos.ShopDTO;
 import org.springframework.transaction.annotation.Transactional;
-import org.project.models.Shop;
+import org.project.models.entities.Shop;
 import org.project.repositories.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
