@@ -32,7 +32,6 @@ public interface ProductReviewRepository extends JpaRepository<ProductReview, Lo
     @Query("DELETE FROM ProductReview pr WHERE pr.reviewedProduct IN (SELECT p FROM Product p JOIN p.shops shop WHERE shop.id = :shopId)")
     void deleteAllByShopId(@Param("shopId") Long shopId);
 
-    @Modifying
     @Transactional
     void deleteAllByReviewer(Customer reviewer);
 }
