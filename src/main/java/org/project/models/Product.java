@@ -1,6 +1,8 @@
 package org.project.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.ColumnDefault;
 import org.project.interfaces.Reviewable;
 
@@ -15,17 +17,31 @@ public class Product implements Reviewable<ProductReview> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Category category;
 
+    @NotBlank
+    @Column(nullable = false)
     private String name;
+
+    @NotBlank
+    @Column(nullable = false)
     private String manufacturer;
 
+    @NotNull
+    @Column(nullable = false)
     @ColumnDefault("0.10")
     private double price;
+
+    @NotNull
+    @Column(nullable = false)
     @ColumnDefault("1")
     private int quantity = 1;
 
+    @NotNull
+    @Column(nullable = false)
     @ManyToMany
     @JoinTable(
             name = "product_to_shop",
@@ -40,19 +56,6 @@ public class Product implements Reviewable<ProductReview> {
     public Product() {}
 
     public Product(Category category, String name, double price, int quantity, List<Shop> shops, List<ProductReview> reviews) {
-        if (category == null) {
-            throw new IllegalArgumentException("The category cannot be null");
-        }
-        if (name == null) {
-            throw new IllegalArgumentException("The name of the product cannot be null");
-        }
-        if (price < 0) {
-            throw new IllegalArgumentException("The price must be >= 0");
-        }
-        if (quantity <= 0) {
-            throw new IllegalArgumentException("The quantity must be > 0");
-        }
-
         this.category = category;
         this.name = name;
         this.manufacturer = null;
