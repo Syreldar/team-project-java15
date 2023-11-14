@@ -39,7 +39,12 @@ public class ProductReviewController {
         }
 
         review.setReviewer(reviewer);
-        productReviewService.add(review);
+        ProductReview createdProductReview = productReviewService.add(review);
+        if (createdProductReview == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new APIResponse<>(null, "Failed to add ProductReview."));
+        }
+
         return ResponseEntity.ok(
                 new APIResponse<>(review,"ProductReview added successfully."));
     }
@@ -62,7 +67,12 @@ public class ProductReviewController {
                     new APIResponse<>(null, "ProductReview not found."));
         }
 
-        productReviewService.update(id, reviewDTO);
+        ProductReview updatedReview = productReviewService.update(id, reviewDTO);
+        if (updatedReview == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new APIResponse<>(null, "Failed to update ProductReview."));
+        }
+
         return ResponseEntity.ok(
                 new APIResponse<>(review,"ProductReview updated successfully."));
     }

@@ -31,7 +31,7 @@ public class CustomerController {
         Customer createdCustomer = customerService.add(customer);
         if (createdCustomer == null) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    new APIResponse<>(null, "Failed to create customer."));
+                    new APIResponse<>(null, "Failed to add customer."));
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(
@@ -69,8 +69,8 @@ public class CustomerController {
 
         Customer customer = customerService.findById(id);
         if (customer == null) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    new APIResponse<>(null, "Failed to delete customer."));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new APIResponse<>(null, "Failed to retrieve customer."));
         }
 
         customerService.deleteById(id);
