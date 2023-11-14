@@ -21,52 +21,12 @@ public class Utilities
     }
 
     /*
-    public static void createCustomer(EntityFactory factory, Scanner scanner)
-    {
-        System.out.print("Enter customer's first name: ");
-        String firstName = scanner.nextLine();
-
-        System.out.print("Enter customer's last name: ");
-        String lastName = scanner.nextLine();
-
-        System.out.print("Enter customer's initial balance: ");
-        double initialBalance = Double.parseDouble(scanner.nextLine());
-
-        Customer customer = factory.createCustomer(new Customer(firstName, lastName, initialBalance));
-        System.out.printf("Customer created: %s, Initial balance: %.2f$.%n", customer.getFullName(), initialBalance);
-        askContinueOrExitProgram(scanner);
-    }
-
     private static void printMatchingCustomersData(List<Customer> customers) {
         IntStream.range(0, customers.size())
                 .forEach(i -> {
                     Customer currentCustomer = customers.get(i);
                     System.out.printf("%d. %s: %.2f$%n", i + 1, currentCustomer.getFullName(), currentCustomer.getBalance());
                 });
-    }
-
-    public static void listCustomers(Database database, Scanner scanner) {
-        List<Customer> customers = database.getCustomers();
-        if (customers.isEmpty()) {
-            System.out.println("No customers available.");
-            return;
-        }
-
-        System.out.println("Available Customers:");
-        printMatchingCustomersData(customers);
-        askContinueOrExitProgram(scanner);
-    }
-
-    public static void listShops(Database database, Scanner scanner) {
-        List<Shop> shops = database.getShops();
-        if (shops.isEmpty()) {
-            System.out.println("No shops available.");
-            return;
-        }
-
-        System.out.println("Available Shops:");
-        shops.forEach(shop -> System.out.println(shop.getName()));
-        askContinueOrExitProgram(scanner);
     }
 
     private static Customer getSpecificCustomer(Scanner scanner, List<Customer> matchingCustomers) {
@@ -135,57 +95,6 @@ public class Utilities
         System.out.printf("Quantity: %d;%n", quantity);
         System.out.printf("Total Cost: %.2f$;%n", purchasedProduct.getPrice() * quantity);
         System.out.println("------------------------------");
-        askContinueOrExitProgram(scanner);
-    }
-
-    private static void shopReview(Database database, Scanner scanner, Customer reviewer) {
-        System.out.print("Enter the name of the shop to review: ");
-        String shopName = scanner.nextLine();
-
-        Shop shop = database.findShopByName(shopName);
-        if (shop == null) {
-            System.out.println("Shop not found.");
-            return;
-        }
-
-        System.out.print("Enter rating (1-5) [one floating point allowed, e.g. 3.8]: ");
-        float rating = Float.parseFloat(scanner.nextLine());
-
-        System.out.print("Enter review comment (optional): ");
-        String comment = scanner.nextLine();
-
-        reviewer.reviewShop(database, shop, rating, comment);
-        System.out.println("Shop review submitted successfully.");
-        askContinueOrExitProgram(scanner);
-    }
-
-    private static void productReview(Database database, Scanner scanner, Customer reviewer) {
-        System.out.print("Enter the name of the product's shop: ");
-        String shopName = scanner.nextLine();
-
-        Shop shop = database.findShopByName(shopName);
-        if (shop == null) {
-            System.out.println("Shop not found.");
-            return;
-        }
-
-        System.out.print("Enter the name of the product to review: ");
-        String productName = scanner.nextLine();
-
-        Product product = shop.findProductByName(productName);
-        if (product == null) {
-            System.out.println("Product not found.");
-            return;
-        }
-
-        System.out.print("Enter rating (1-5): ");
-        float rating = Float.parseFloat(scanner.nextLine());
-
-        System.out.print("Enter review comment (optional): ");
-        String comment = scanner.nextLine();
-
-        reviewer.reviewProduct(database, product, rating, comment);
-        System.out.println("Product review submitted successfully.");
         askContinueOrExitProgram(scanner);
     }
 
@@ -316,7 +225,6 @@ public class Utilities
         try (Scanner scanner = new Scanner(System.in)) {
             while (true) {
                 String[] options = {
-                        "Create a customer",
                         "List available customers",
                         "List available shops",
                         "Make a purchase",
@@ -333,16 +241,13 @@ public class Utilities
 
                 int option = Integer.parseInt(scanner.nextLine());
                 switch (option) {
-                    //case 1 -> Utilities.createCustomer(scanner);
-                    //case 2 -> Utilities.listCustomers(scanner);
-                    //case 3 -> Utilities.listShops(scanner);
                     //case 4 -> Utilities.makePurchase(scanner);
                     //case 5 -> Utilities.leaveReview(scanner);
                     //case 6 -> Utilities.showReviews(scanner);
-                    //default -> {
-                    //    System.out.println(Utilities.GOODBYE_MESSAGE);
-                    //    System.exit(0); // Terminate the program
-                    //}
+                    default -> {
+                        System.out.println(Utilities.GOODBYE_MESSAGE);
+                        System.exit(0); // Terminate the program
+                    }
                 }
             }
         }

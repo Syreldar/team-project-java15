@@ -16,11 +16,11 @@ VALUES
     ('HEALTHCARE_PRODUCTS', 'Medicine', 'Moment', 11.00),
     ('FOOD_AND_BEVERAGES', 'Pear', 'BioFruits', 2.50);
 
-INSERT INTO `customers` (`first_name`, `last_name`, `balance`)
+INSERT INTO `customers` (`name`, `surname`, `balance`, `address`, `email`)
 VALUES
-    ('Enrico', 'Drago', 24.52),
-    ('Sara', 'Coppola', 64.45),
-    ('Andrea', 'Zora', 121.71);
+    ('Enrico', 'Drago', 24.52, 'Viale dei Tigli 16', 'enrico.drago3@gmail.com'),
+    ('Sara', 'Coppola', 64.45, '', ''),
+    ('Andrea', 'Zora', 121.71, '', '');
 
 INSERT INTO `product_to_shop` (`product_id`, `shop_id`)
 VALUES
@@ -33,3 +33,15 @@ VALUES
     (7, 3),
     (8, 3),
     (9, 3);
+
+INSERT INTO `product_reviews` (`reviewer_id`, `rating`, `comment`, `creation_date`, `update_date`, `product_id`)
+VALUES
+    (1, 4.21, 'Good stuff!', CURDATE(), CURDATE(), 1),
+    (2, 3.62, 'I liked it.', CURDATE(), CURDATE(), 4),
+    (3, 2.21, 'Disappointing performance..', CURDATE(), CURDATE(), 6);
+
+INSERT INTO `shop_reviews` (`reviewer_id`, `rating`, `comment`, `creation_date`, `update_date`, `shop_id`)
+VALUES
+    (1, 4.15, 'Good shop!', CURDATE(), CURDATE(), 2),
+    (2, 3.38, 'I liked this shop.', CURDATE(), CURDATE(), 2),
+    (3, 2.35, 'Disappointing service..', CURDATE(), CURDATE(), 1);

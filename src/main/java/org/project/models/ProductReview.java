@@ -1,16 +1,16 @@
 package org.project.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.Objects;
 
 @Entity
 @Table(name = "product_reviews")
 public class ProductReview extends Review {
+    @NotNull
     @ManyToOne
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
     private Product reviewedProduct;
 
     public ProductReview() {}
@@ -38,7 +38,7 @@ public class ProductReview extends Review {
         }
 
         ProductReview productReview = (ProductReview) o;
-        return Float.compare(productReview.getRating(), getRating()) == 0 &&
+        return Double.compare(getRating(), productReview.getRating()) == 0 &&
                 Objects.equals(reviewedProduct, productReview.reviewedProduct);
     }
 

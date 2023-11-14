@@ -4,6 +4,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+
 import java.util.Objects;
 
 @Entity
@@ -13,27 +18,36 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "first_name")
-    private String firstName;
+    @NotBlank
+    @Column(name = "name", nullable = false)
+    private String name;
 
-    @Column(name = "last_name")
+    @NotBlank
+    @Column(name = "surname", nullable = false)
     private String lastName;
 
+    @NotNull
+    @Column(nullable = false)
+    @PositiveOrZero
     private double balance = 0.0;
+
+    @NotBlank
+    @Column(nullable = false)
+    private String address;
+
+    @NotBlank
+    @Column(nullable = false)
+    @Email
+    private String email;
 
     public Customer() {}
 
-    public Customer(String firstName, String lastName, double balance) {
-        if (firstName == null || lastName == null) {
-            throw new IllegalArgumentException("firstName and lastName arguments cannot be null");
-        }
-        if (balance < 0) {
-            throw new IllegalArgumentException("Balance cannot be negative");
-        }
-
-        this.firstName = firstName;
+    public Customer(String name, String lastName, double balance, String address, String email) {
+        this.name = name;
         this.lastName = lastName;
         this.balance = balance;
+        this.address = address;
+        this.email = email;
     }
 
     public Long getId() {
@@ -44,12 +58,12 @@ public class Customer {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setName(String firstName) {
+        this.name = firstName;
     }
 
     public String getLastName() {
@@ -68,6 +82,22 @@ public class Customer {
         this.balance = balance;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -79,18 +109,18 @@ public class Customer {
 
         Customer customer = (Customer) o;
         return Double.compare(customer.balance, balance) == 0 &&
-                Objects.equals(firstName, customer.firstName) &&
+                Objects.equals(name, customer.name) &&
                 Objects.equals(lastName, customer.lastName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName, lastName, balance);
+        return Objects.hash(name, lastName, balance);
     }
 
     @Override
     public String toString() {
-        return String.format("Customer [FirstName: %s, LastName: %s, Balance: %.2f]",
-                this.firstName, this.lastName, this.balance);
+        return String.format("Customer [Name: %s, Surname: %s, Balance: %.2f, Address: %s, Email: %s]",
+                this.name, this.lastName, this.balance, this.address, this.email);
     }
 }
