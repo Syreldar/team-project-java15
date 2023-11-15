@@ -1,7 +1,7 @@
-package org.project.review.shopreview;
+package org.project.entities.review.shopreview;
 
-import org.project.customer.Customer;
-import org.project.shop.Shop;
+import org.project.entities.customer.Customer;
+import org.project.entities.shop.Shop;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

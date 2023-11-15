@@ -1,7 +1,7 @@
-package org.project.shop;
+package org.project.entities.shop;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.project.product.Product;
+import org.project.entities.product.Product;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

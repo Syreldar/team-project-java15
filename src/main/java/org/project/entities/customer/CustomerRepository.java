@@ -1,6 +1,5 @@
-package org.project.customer;
+package org.project.entities.customer;
 
-import org.project.customer.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {

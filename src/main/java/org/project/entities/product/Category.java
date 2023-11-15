@@ -1,4 +1,4 @@
-package org.project.product;
+package org.project.entities.product;
 
 public enum Category {
     ELECTRONICS,

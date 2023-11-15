@@ -1,12 +1,12 @@
-package org.project.product;
+package org.project.entities.product;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.ColumnDefault;
-import org.project.review.interfaces.Reviewable;
-import org.project.review.productreview.ProductReview;
-import org.project.shop.Shop;
+import org.project.entities.review.interfaces.Reviewable;
+import org.project.entities.review.productreview.ProductReview;
+import org.project.entities.shop.Shop;
 
 import java.util.List;
 import java.util.OptionalDouble;

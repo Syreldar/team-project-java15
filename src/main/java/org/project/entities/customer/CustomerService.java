@@ -1,10 +1,7 @@
-package org.project.customer;
+package org.project.entities.customer;
 
 import jakarta.persistence.EntityNotFoundException;
 
-import org.project.customer.Customer;
-import org.project.customer.CustomerDTO;
-import org.project.customer.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

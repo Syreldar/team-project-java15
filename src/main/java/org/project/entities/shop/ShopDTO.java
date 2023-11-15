@@ -1,9 +1,9 @@
-package org.project.shop;
+package org.project.entities.shop;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import org.project.product.Product;
+import org.project.entities.product.Product;
 
 import java.util.List;
 

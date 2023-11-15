@@ -1,4 +1,4 @@
-package org.project.customer;
+package org.project.entities.customer;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Email;

@@ -1,10 +1,10 @@
-package org.project.review.productreview;
+package org.project.entities.review.productreview;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import org.project.customer.Customer;
-import org.project.review.Review;
-import org.project.product.Product;
+import org.project.entities.customer.Customer;
+import org.project.entities.product.Product;
+import org.project.entities.review.Review;
 
 import java.util.Objects;
 

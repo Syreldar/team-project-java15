@@ -1,11 +1,11 @@
-package org.project.shop;
+package org.project.entities.shop;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.project.review.interfaces.Reviewable;
-import org.project.review.shopreview.ShopReview;
-import org.project.product.Product;
+import org.project.entities.product.Product;
+import org.project.entities.review.interfaces.Reviewable;
+import org.project.entities.review.shopreview.ShopReview;
 
 import java.util.*;
 

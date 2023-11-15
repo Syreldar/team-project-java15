@@ -1,9 +1,9 @@
-package org.project.review.shopreview;
+package org.project.entities.review.shopreview;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.project.review.ReviewDTO;
-import org.project.customer.Customer;
-import org.project.shop.Shop;
+import org.project.entities.review.ReviewDTO;
+import org.project.entities.customer.Customer;
+import org.project.entities.shop.Shop;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

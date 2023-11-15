@@ -1,9 +1,9 @@
-package org.project.review.shopreview;
+package org.project.entities.review.shopreview;
 
+import org.project.entities.review.ReviewDTO;
 import org.project.helpers.APIResponse;
-import org.project.customer.Customer;
-import org.project.review.ReviewDTO;
-import org.project.customer.CustomerService;
+import org.project.entities.customer.Customer;
+import org.project.entities.customer.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

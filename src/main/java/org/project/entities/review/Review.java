@@ -1,11 +1,11 @@
-package org.project.review;
+package org.project.entities.review;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import org.project.customer.Customer;
+import org.project.entities.customer.Customer;
 
 import java.time.LocalDate;
 import java.util.Objects;

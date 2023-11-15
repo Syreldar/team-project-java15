@@ -1,4 +1,4 @@
-package org.project.customer;
+package org.project.entities.customer;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

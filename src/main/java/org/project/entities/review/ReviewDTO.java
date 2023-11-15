@@ -1,4 +1,4 @@
-package org.project.review;
+package org.project.entities.review;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Max;

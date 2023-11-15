@@ -1,4 +1,4 @@
-package org.project.customer;
+package org.project.entities.customer;
 
 import org.project.helpers.APIResponse;
 import org.springframework.beans.factory.annotation.Autowired;
