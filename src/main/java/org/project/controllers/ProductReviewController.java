@@ -46,7 +46,7 @@ public class ProductReviewController {
         }
 
         return ResponseEntity.ok(
-                new APIResponse<>(review,"ProductReview added successfully."));
+                new APIResponse<>(review, "ProductReview added successfully."));
     }
 
     @PutMapping("/{id}")
@@ -74,7 +74,7 @@ public class ProductReviewController {
         }
 
         return ResponseEntity.ok(
-                new APIResponse<>(review,"ProductReview updated successfully."));
+                new APIResponse<>(review, "ProductReview updated successfully."));
     }
 
     @DeleteMapping("/id/{id}")
@@ -92,7 +92,7 @@ public class ProductReviewController {
 
         productReviewService.deleteById(id);
         return ResponseEntity.ok(
-                new APIResponse<>(review,"ProductReview deleted successfully."));
+                new APIResponse<>(review, "ProductReview deleted successfully."));
     }
 
     @DeleteMapping
@@ -105,7 +105,7 @@ public class ProductReviewController {
 
         productReviewService.deleteAll();
         return ResponseEntity.ok(
-                new APIResponse<>(reviews,"All ProductReviews deleted successfully."));
+                new APIResponse<>(reviews, "All ProductReviews deleted successfully."));
     }
 
     @GetMapping("/id/{id}")

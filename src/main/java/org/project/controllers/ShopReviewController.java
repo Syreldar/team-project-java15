@@ -46,7 +46,7 @@ public class ShopReviewController {
         }
 
         return ResponseEntity.ok(
-                new APIResponse<>(review,"ShopReview added successfully."));
+                new APIResponse<>(review, "ShopReview added successfully."));
     }
 
     @PutMapping("/{id}")
@@ -73,7 +73,7 @@ public class ShopReviewController {
                     new APIResponse<>(null, "Failed to update ShopReview."));
         }
         return ResponseEntity.ok(
-                new APIResponse<>(review,"ShopReview updated successfully."));
+                new APIResponse<>(review, "ShopReview updated successfully."));
     }
 
     @DeleteMapping("/id/{id}")
@@ -91,7 +91,7 @@ public class ShopReviewController {
 
         shopReviewService.deleteById(id);
         return ResponseEntity.ok(
-                new APIResponse<>(review,"ShopReview deleted successfully."));
+                new APIResponse<>(review, "ShopReview deleted successfully."));
     }
 
     @DeleteMapping
@@ -104,7 +104,7 @@ public class ShopReviewController {
 
         shopReviewService.deleteAll();
         return ResponseEntity.ok(
-                new APIResponse<>(reviews,"All ShopReviews deleted successfully."));
+                new APIResponse<>(reviews, "All ShopReviews deleted successfully."));
     }
 
     @GetMapping("/id/{id}")
