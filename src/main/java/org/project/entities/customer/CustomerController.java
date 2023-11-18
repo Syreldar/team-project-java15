@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/customers")
 public class CustomerController {
@@ -15,117 +17,100 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<APIResponse<Customer>> add(@RequestBody Customer customer) {
-        if (customer == null) {
+        try {
+            Customer addedCustomer = customerService.add(customer);
+            return ResponseEntity.ok(
+                    new APIResponse<>(addedCustomer, "Customer added successfully."));
+        }
+        catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new APIResponse<>(null, "Invalid customer provided."));
+                    new APIResponse<>(null, "Failed to add Customer."));
         }
-
-        Customer createdCustomer = customerService.add(customer);
-        if (createdCustomer == null) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    new APIResponse<>(null, "Failed to add customer."));
-        }
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                new APIResponse<>(createdCustomer, "Customer created successfully."));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<APIResponse<Customer>> update(@PathVariable Long id, @RequestBody CustomerDTO customer) {
-        if (id == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new APIResponse<>(null, "Invalid ID provided."));
+        try {
+            Customer updatedCustomer = customerService.update(id, customer);
+            return ResponseEntity.ok(
+                    new APIResponse<>(updatedCustomer,
+                            String.format("Customer with ID %d updated successfully.", id)));
         }
-
-        if (customer == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new APIResponse<>(null, "Invalid customer provided."));
-        }
-
-        Customer updatedCustomer = customerService.update(id, customer);
-        if (updatedCustomer == null) {
+        catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    new APIResponse<>(null, "Failed to update customer."));
+                    new APIResponse<>(null,
+                            String.format("Failed to update Customer with ID %d.", id)));
         }
-
-        return ResponseEntity.ok(
-                new APIResponse<>(updatedCustomer, "Customer updated successfully."));
     }
 
     @DeleteMapping("/id/{id}")
     public ResponseEntity<APIResponse<Customer>> deleteById(@PathVariable Long id) {
-        if (id == null) {
+        try {
+            customerService.deleteById(id);
+            return ResponseEntity.ok(
+                    new APIResponse<>(null,
+                            String.format("Customer with ID %d deleted successfully.", id)));
+        }
+        catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new APIResponse<>(null, "Invalid ID provided."));
+                    new APIResponse<>(null,
+                            String.format("Failed to delete Customer with ID %d.", id)));
         }
-
-        Customer customer = customerService.findById(id);
-        if (customer == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new APIResponse<>(null, "Failed to retrieve customer."));
-        }
-
-        customerService.deleteById(id);
-        return ResponseEntity.ok(
-                new APIResponse<>(customer, "Customer deleted successfully."));
     }
 
     @DeleteMapping
     public ResponseEntity<APIResponse<Iterable<Customer>>> deleteAll() {
-        Iterable<Customer> customers = customerService.findAll();
-        if (!customers.iterator().hasNext()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new APIResponse<>(null, "No Customers found."));
+        try {
+            customerService.deleteAll();
+            return ResponseEntity.ok(
+                    new APIResponse<>(null, "All Customers deleted successfully."));
         }
-
-        customerService.deleteAll();
-        return ResponseEntity.ok(
-                new APIResponse<>(customers, "All Customers deleted successfully."));
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new APIResponse<>(null, "Failed to delete all Customers."));
+        }
     }
 
     @GetMapping("/id/{id}")
     public ResponseEntity<APIResponse<Customer>> findById(@PathVariable Long id) {
-        if (id == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new APIResponse<>(null, "Invalid ID provided."));
+        try {
+            Customer customer = customerService.findById(id);
+            return ResponseEntity.ok(
+                    new APIResponse<>(customer,
+                            String.format("Customer with ID %d retrieved successfully.", id)));
         }
-
-        Customer customer = customerService.findById(id);
-        if (customer == null) {
+        catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new APIResponse<>(null, "Customer not found."));
+                    new APIResponse<>(null,
+                            String.format("Customer with ID %d not found.", id)));
         }
-
-        return ResponseEntity.ok(
-                new APIResponse<>(customer, "Customer retrieved successfully."));
     }
 
     @GetMapping("/name/{name}")
     public ResponseEntity<APIResponse<Customer>> findByName(@PathVariable String name) {
-        if (name == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new APIResponse<>(null, "Invalid name provided."));
+        try {
+            Customer customer = customerService.findByName(name);
+            return ResponseEntity.ok(
+                    new APIResponse<>(customer,
+                            String.format("Customer with name %s retrieved successfully.", name)));
         }
-
-        Customer customer = customerService.findByName(name);
-        if (customer == null) {
+        catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new APIResponse<>(null, "Customer not found."));
+                    new APIResponse<>(null,
+                            String.format("Customer with name %s not found.", name)));
         }
-
-        return ResponseEntity.ok(
-                new APIResponse<>(customer, "Customer retrieved successfully."));
     }
 
     @GetMapping
     public ResponseEntity<APIResponse<Iterable<Customer>>> findAll() {
-        Iterable<Customer> customers = customerService.findAll();
-        if (!customers.iterator().hasNext()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new APIResponse<>(null, "No Customers found."));
+        try {
+            Iterable<Customer> customers = customerService.findAll();
+            return ResponseEntity.ok(
+                    new APIResponse<>(customers, "All Customers retrieved successfully."));
         }
-
-        return ResponseEntity.ok(
-                new APIResponse<>(customers, "Customers retrieved successfully."));
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new APIResponse<>(null, "Failed to find all Customers."));
+        }
     }
 }

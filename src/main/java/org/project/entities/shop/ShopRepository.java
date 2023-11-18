@@ -7,8 +7,7 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
     Iterable<Shop> findAllByName(String name);
 
     @Transactional
-    void deleteByName(String name);
-
-    @Transactional
     void deleteAllByName(String name);
+
+    boolean existsByName(String name);
 }
