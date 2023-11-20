@@ -72,22 +72,22 @@ public class Cart {
 
     public double calculateTotalAmount() throws RuntimeException, IllegalArgumentException {
         if (items == null) {
-            throw new IllegalArgumentException("La lista dei prodotti è nulla.");
+            throw new IllegalArgumentException("Product list is null");
         }
 
         if (items.isEmpty()) {
-            throw new RuntimeException("Il carrello è vuoto.");
+            throw new RuntimeException("Cart is empty");
         }
 
         double totalAmount = 0.0;
 
         for (Product product : items) {
             if (product == null) {
-                throw new IllegalArgumentException("Il carrello contiene un prodotto nullo.");
+                throw new IllegalArgumentException("Cart contains a null product");
             }
 
             if (product.getPrice() == null) {
-                throw new IllegalArgumentException("Il prezzo di un prodotto nel carrello è nullo.");
+                throw new IllegalArgumentException("Cart contains a product which price is null");
             }
 
             totalAmount += product.getPrice();
@@ -98,7 +98,7 @@ public class Cart {
 
     public void addProductToCart(Product product) {
         if (product == null) {
-            throw new IllegalArgumentException("Il prodotto non può essere nullo.");
+            throw new IllegalArgumentException("Product cannot be null");
         }
         if (items == null) {
             items = new ArrayList<>();
