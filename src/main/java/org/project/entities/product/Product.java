@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.ColumnDefault;
+import org.project.entities.cart.Cart;
 import org.project.entities.review.interfaces.Reviewable;
 import org.project.entities.review.productreview.ProductReview;
 import org.project.entities.shop.Shop;
@@ -35,7 +36,7 @@ public class Product implements Reviewable<ProductReview> {
     @NotNull
     @Column(nullable = false)
     @ColumnDefault("0.10")
-    private double price;
+    private Double price;
 
     @NotNull
     @Column(nullable = false)
@@ -55,9 +56,15 @@ public class Product implements Reviewable<ProductReview> {
     @OneToMany(mappedBy = "reviewedProduct")
     private List<ProductReview> reviews;
 
-    public Product() {}
+    @ManyToMany(mappedBy = "products")
+    @Column(nullable = false)
+    private List<Cart> carts;
 
-    public Product(Category category, String name, double price, int quantity, List<Shop> shops, List<ProductReview> reviews) {
+    public Product() {
+    }
+
+    public Product(Category category, String name, Double price, int quantity, List<Shop> shops, List<ProductReview> reviews,
+                   List<Cart> carts) {
         this.category = category;
         this.name = name;
         this.manufacturer = null;
@@ -65,6 +72,19 @@ public class Product implements Reviewable<ProductReview> {
         this.quantity = quantity;
         this.shops = shops;
         this.reviews = reviews;
+        this.carts = carts;
+    }
+
+    public void setReviews(List<ProductReview> reviews) {
+        this.reviews = reviews;
+    }
+
+    public List<Cart> getCarts() {
+        return carts;
+    }
+
+    public void setCarts(List<Cart> carts) {
+        this.carts = carts;
     }
 
     public Long getId() {
@@ -99,11 +119,11 @@ public class Product implements Reviewable<ProductReview> {
         this.manufacturer = manufacturer;
     }
 
-    public double getPrice() {
+    public Double getPrice() {
         return this.price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Double price) {
         if (price < 0) {
             throw new IllegalArgumentException("You can't set a negative price");
         }

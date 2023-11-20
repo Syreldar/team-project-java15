@@ -14,7 +14,6 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
-
     @PostMapping
     public ResponseEntity<APIResponse<Customer>> add(@RequestBody Customer customer) {
         try {
