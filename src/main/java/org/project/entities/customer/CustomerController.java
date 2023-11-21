@@ -1,5 +1,6 @@
 package org.project.entities.customer;
 
+import org.project.entities.order.OrderDTO;
 import org.project.helpers.APIResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,18 @@ public class CustomerController {
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     new APIResponse<>(null, "Failed to add Customer."));
+        }
+    }
+    @PostMapping("/{customerId}/buy")
+    public ResponseEntity<APIResponse<String>> buyProduct(
+            @PathVariable Long customerId, @RequestBody OrderDTO orderDTO) {
+        try {
+            customerService.buyProduct(customerId, orderDTO);
+            return ResponseEntity.ok(
+                    new APIResponse<>(null, "Purchase successful"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new APIResponse<>(null, "Failed to buy product."));
         }
     }
 

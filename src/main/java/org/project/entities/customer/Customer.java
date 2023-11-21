@@ -41,18 +41,19 @@ public class Customer {
     @Email
     private String email;
 
-    @OneToOne(mappedBy = "customer")
-    @Column(nullable = false)
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @PrimaryKeyJoinColumn
     private Cart cart;
 
     public Customer() {}
 
-    public Customer(String name, String lastName, double balance, String address, String email) {
+    public Customer(String name, String lastName, double balance, String address, String email, Cart cart) {
         this.name = name;
         this.lastName = lastName;
         this.balance = balance;
         this.address = address;
         this.email = email;
+        this.cart=cart;
     }
 
     public Long getId() {

@@ -39,6 +39,10 @@ public class Shop implements Reviewable<ShopReview> {
 
     public Shop() {}
 
+    public void setReviews(List<ShopReview> reviews) {
+        this.reviews = reviews;
+    }
+
     public Shop(String name, String ownerName, List<Product> products, List<Cart> carts) {
         this.name = name;
         this.ownerName = ownerName;

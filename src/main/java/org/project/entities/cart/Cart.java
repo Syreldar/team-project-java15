@@ -20,7 +20,7 @@ public class Cart {
             joinColumns = @JoinColumn(name = "cart_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id")
     )
-    private List<Product> items;
+    private List<Product> products;
     @ManyToOne
     @JoinColumn(name = "shop_id", nullable = false)
     private Shop shop;
@@ -31,9 +31,9 @@ public class Cart {
     public Cart() {
     }
 
-    public Cart(Long id, List<Product> items, Shop shop, Customer customer) {
+    public Cart(Long id, List<Product> products, Shop shop, Customer customer) {
         this.id = id;
-        this.items = items;
+        this.products = products;
         this.shop = shop;
         this.customer = customer;
     }
@@ -46,12 +46,12 @@ public class Cart {
         this.id = id;
     }
 
-    public List<Product> getItems() {
-        return items;
+    public List<Product> getProducts() {
+        return products;
     }
 
-    public void setItems(List<Product> items) {
-        this.items = items;
+    public void setItems(List<Product> products) {
+        this.products = products;
     }
 
     public Shop getShop() {
@@ -71,17 +71,17 @@ public class Cart {
     }
 
     public double calculateTotalAmount() throws RuntimeException, IllegalArgumentException {
-        if (items == null) {
+        if (products == null) {
             throw new IllegalArgumentException("Product list is null");
         }
 
-        if (items.isEmpty()) {
+        if (products.isEmpty()) {
             throw new RuntimeException("Cart is empty");
         }
 
         double totalAmount = 0.0;
 
-        for (Product product : items) {
+        for (Product product : products) {
             if (product == null) {
                 throw new IllegalArgumentException("Cart contains a null product");
             }
@@ -96,19 +96,23 @@ public class Cart {
         return totalAmount;
     }
 
-    public void addProductToCart(Product product) {
+    public void addProducts(Product product) {
         if (product == null) {
             throw new IllegalArgumentException("Product cannot be null");
         }
-        if (items == null) {
-            items = new ArrayList<>();
+        if (product == null) {
+            products = new ArrayList<>();
         }
-        items.add(product);
+        products.add(product);
     }
+    public void clear() {
+        this.products.clear();
+    }
+
 
     public int getTotalProductsInCart() {
         int totalQuantity = 0;
-        for (Product product : this.items) {
+        for (Product product : this.products) {
             totalQuantity += product.getQuantity();
         }
         return totalQuantity;
