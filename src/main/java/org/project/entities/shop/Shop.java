@@ -79,17 +79,13 @@ public class Shop implements Reviewable<ShopReview> {
         return products;
     }
 
-    public List<Cart> getCarts() {
-        return carts;
-    }
-
-    public void setCarts(List<Cart> carts) {
-        this.carts = carts;
-    }
-
     @Override
     public List<ShopReview> getReviews() {
         return reviews;
+    }
+
+    public void setReviews(List<ShopReview> reviews) {
+        this.reviews = reviews;
     }
 
     @Override
@@ -106,6 +102,14 @@ public class Shop implements Reviewable<ShopReview> {
     public double getReviewsAverage() {
         OptionalDouble average = reviews.stream().mapToDouble(ShopReview::getRating).average();
         return average.orElse(0.0);
+    }
+
+    public List<Cart> getCarts() {
+        return carts;
+    }
+
+    public void setCarts(List<Cart> carts) {
+        this.carts = carts;
     }
 
     @Override

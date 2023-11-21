@@ -42,17 +42,17 @@ public class Customer {
     private String email;
 
     @OneToOne(mappedBy = "customer")
-    @Column(nullable = false)
     private Cart cart;
 
     public Customer() {}
 
-    public Customer(String name, String lastName, double balance, String address, String email) {
+    public Customer(String name, String lastName, double balance, String address, String email, Cart cart) {
         this.name = name;
         this.lastName = lastName;
         this.balance = balance;
         this.address = address;
         this.email = email;
+        this.cart = cart;
     }
 
     public Long getId() {
