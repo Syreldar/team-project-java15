@@ -25,7 +25,7 @@ public class Shop implements Reviewable<ShopReview> {
     @Column(name = "owner_name", nullable = false)
     private String ownerName;
 
-    @NotNull
+
     @Column(nullable = false)
     @ManyToMany(mappedBy = "shops")
     private List<Product> products;
