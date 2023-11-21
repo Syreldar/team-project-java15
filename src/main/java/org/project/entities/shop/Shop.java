@@ -3,6 +3,7 @@ package org.project.entities.shop;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.project.entities.cart.Cart;
 import org.project.entities.product.Product;
 import org.project.entities.review.interfaces.Reviewable;
 import org.project.entities.review.shopreview.ShopReview;
@@ -32,13 +33,18 @@ public class Shop implements Reviewable<ShopReview> {
     @OneToMany(mappedBy = "reviewedShop")
     private List<ShopReview> reviews;
 
+    @OneToMany(mappedBy = "shop")
+    @Column(nullable = false)
+    private List<Cart> carts;
+
     public Shop() {}
 
-    public Shop(String name, String ownerName, List<Product> products) {
+    public Shop(String name, String ownerName, List<Product> products, List<Cart> carts) {
         this.name = name;
         this.ownerName = ownerName;
         this.products = products;
         this.reviews = new ArrayList<>();
+        this.carts = carts;
     }
 
     public Long getId() {
@@ -71,6 +77,14 @@ public class Shop implements Reviewable<ShopReview> {
 
     public List<Product> getProducts() {
         return products;
+    }
+
+    public List<Cart> getCarts() {
+        return carts;
+    }
+
+    public void setCarts(List<Cart> carts) {
+        this.carts = carts;
     }
 
     @Override

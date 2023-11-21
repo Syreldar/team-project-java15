@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import org.project.entities.cart.Cart;
 
 import java.util.Objects;
 
@@ -39,6 +40,10 @@ public class Customer {
     @Column(nullable = false)
     @Email
     private String email;
+
+    @OneToOne(mappedBy = "customer")
+    @Column(nullable = false)
+    private Cart cart;
 
     public Customer() {}
 
@@ -96,6 +101,14 @@ public class Customer {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 
     @Override
