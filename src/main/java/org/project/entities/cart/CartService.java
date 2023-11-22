@@ -3,7 +3,6 @@ package org.project.entities.cart;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.hibernate.service.spi.ServiceException;
-import org.project.entities.exceptions.CartNotFoundException;
 import org.project.entities.product.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -30,7 +29,7 @@ public class CartService {
     }
 
     @Transactional
-    public Cart update(Long id, CartDTO cartDTO) throws CartNotFoundException {
+    public Cart update(Long id, CartDTO cartDTO) {
         if (id == null) {
             throw new IllegalArgumentException("id cannot be null");
         }
@@ -38,17 +37,15 @@ public class CartService {
             throw new IllegalArgumentException("cartDTO cannot be null");
         }
 
-        Cart cart = cartRepository.findById(id)
-                .orElseThrow(() -> new CartNotFoundException("Cart not found with ID: " + id));
-
+        Cart cart = this.findById(id);
         if (cartDTO.getItems() != null) {
-            // Update the cart's list of products
             cart.setItems(cartDTO.getItems());
         }
 
         try {
             return cartRepository.save(cart);
-        } catch (DataAccessException e) {
+        }
+        catch (DataAccessException e) {
             throw new ServiceException("Error updating cart", e);
         }
     }
