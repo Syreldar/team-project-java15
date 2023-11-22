@@ -170,6 +170,22 @@ public class Product implements Reviewable<ProductReview> {
         this.shops.add(shop);
     }
 
+    public void removeShop(Shop shop) {
+        this.shops.remove(shop);
+    }
+
+    public void addShops(List<Shop> shops) {
+        this.shops.addAll(shops);
+    }
+
+    public void removeShops(List<Shop> shops) {
+        this.shops.removeAll(shops);
+    }
+
+    public void clearShops() {
+        this.shops.clear();
+    }
+
     @Override
     public List<ProductReview> getReviews() {
         return reviews;
@@ -202,6 +218,26 @@ public class Product implements Reviewable<ProductReview> {
 
     public void setCarts(List<Cart> carts) {
         this.carts = carts;
+    }
+
+    public void addCart(Cart cart) {
+        this.carts.add(cart);
+    }
+
+    public void removeCart(Cart cart) {
+        this.carts.remove(cart);
+    }
+
+    public void addCarts(List<Cart> carts) {
+        this.carts.addAll(carts);
+    }
+
+    public void removeCarts(List<Cart> carts) {
+        this.carts.removeAll(carts);
+    }
+
+    public void clearCarts() {
+        this.carts.clear();
     }
 
     @Override

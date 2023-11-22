@@ -9,7 +9,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.project.entities.cart.Cart;
+import org.project.entities.shop.Shop;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -41,29 +44,45 @@ public class Customer {
     @Email
     private String email;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cart_id", referencedColumnName = "id")
-    private Cart cart;
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Cart> carts = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(
+            name = "customer_shop",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "shop_id")
+    )
+    private List<Shop> shops = new ArrayList<>();
 
 
     @PrePersist
     private void initializeCart() {
-        if (this.cart == null) {
-            this.cart = new Cart();
-            this.cart.setCustomer(this);
+        if (this.carts == null) {
+            this.carts = new ArrayList<>();
+        }
+        if (this.shops == null) {
+            this.shops = new ArrayList<>();
         }
     }
 
-    public Customer() {}
+    public Customer() {
+        initializeCart();
+    }
 
-    public Customer(String name, String lastName, double balance, String address, String email, Cart cart) {
+    public Customer(String name, String lastName, double balance, String address, String email) {
+        this();
         this.name = name;
         this.lastName = lastName;
         this.balance = balance;
         this.address = address;
         this.email = email;
-        this.cart=cart;
+    }
+
+    public Customer(String name, String lastName, double balance, String address, String email, List<Cart> carts, List<Shop> shops) {
+        this(name, lastName, balance, address, email);
+        this.carts = carts != null ? carts : new ArrayList<>();
+        this.shops = shops != null ? shops : new ArrayList<>();
     }
 
     public Long getId() {
@@ -114,12 +133,64 @@ public class Customer {
         this.email = email;
     }
 
-    public Cart getCart() {
-        return cart;
+    public List<Cart> getCarts() {
+        return carts;
     }
 
-    public void setCart(Cart cart) {
-        this.cart = cart;
+    public void setCarts(List<Cart> carts) {
+        this.carts = carts;
+    }
+
+    public void addCart(Cart cart) {
+        cart.setCustomer(this);
+        this.carts.add(cart);
+    }
+
+    public void removeCart(Cart cart) {
+        this.carts.remove(cart);
+    }
+
+    public void addCarts(List<Cart> carts) {
+        for (Cart cart : carts) {
+            cart.setCustomer(this);
+        }
+        this.carts.addAll(carts);
+    }
+
+    public void removeCarts(List<Cart> carts) {
+        this.carts.removeAll(carts);
+    }
+
+    public void clearCarts() {
+        this.carts.clear();
+    }
+
+    public List<Shop> getShops() {
+        return shops;
+    }
+
+    public void setShops(List<Shop> shops) {
+        this.shops = shops;
+    }
+
+    public void addShop(Shop shop) {
+        this.shops.add(shop);
+    }
+
+    public void removeShop(Shop shop) {
+        this.shops.remove(shop);
+    }
+
+    public void addShops(List<Shop> shops) {
+        this.shops.addAll(shops);
+    }
+
+    public void removeShops(List<Shop> shops) {
+        this.shops.removeAll(shops);
+    }
+
+    public void clearShops() {
+        this.shops.clear();
     }
 
     @Override

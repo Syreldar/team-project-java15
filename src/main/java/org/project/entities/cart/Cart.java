@@ -24,17 +24,18 @@ public class Cart {
     private List<Product> products;
 
     @ManyToOne
-    @JoinColumn(name = "shop_id")
-    private Shop shop;
-
-    @OneToOne(mappedBy = "cart")
+    @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
+
+    @ManyToOne
+    @JoinColumn(name = "shop_id", nullable = false)
+    private Shop shop;
 
 
     @PrePersist
     private void initializeCustomer() {
         if (this.customer != null) {
-            this.customer.setCart(this);
+            this.customer.addCart(this);
         }
     }
 
@@ -65,16 +66,28 @@ public class Cart {
         return products;
     }
 
-    public void setItems(List<Product> products) {
+    public void setProducts(List<Product> products) {
         this.products = products;
     }
 
-    public Shop getShop() {
-        return shop;
+    public void addProduct(Product product) {
+        products.add(product);
     }
 
-    public void setShop(Shop shop) {
-        this.shop = shop;
+    public void removeProduct(Product product) {
+        products.remove(product);
+    }
+
+    public void addProducts(List<Product> products) {
+        this.products.addAll(products);
+    }
+
+    public void removeProducts(List<Product> products) {
+        this.products.removeAll(products);
+    }
+
+    public void clearProducts() {
+        products.clear();
     }
 
     public Customer getCustomer() {
@@ -83,6 +96,14 @@ public class Cart {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    public Shop getShop() {
+        return shop;
+    }
+
+    public void setShop(Shop shop) {
+        this.shop = shop;
     }
 
     public double calculateTotalAmount() throws RuntimeException, IllegalArgumentException {
@@ -110,20 +131,6 @@ public class Cart {
 
         return totalAmount;
     }
-
-    public void addProducts(Product product) {
-        if (product == null) {
-            throw new IllegalArgumentException("Product cannot be null");
-        }
-        if (product == null) {
-            products = new ArrayList<>();
-        }
-        products.add(product);
-    }
-    public void clear() {
-        this.products.clear();
-    }
-
 
     public int getTotalProductsInCart() {
         int totalQuantity = 0;

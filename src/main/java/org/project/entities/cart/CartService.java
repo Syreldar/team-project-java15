@@ -53,10 +53,8 @@ public class CartService {
         Cart cart = cartRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException ("Cart not found with ID: " + id));
 
-        if (cartDTO.getItems() != null) {
-
-
-            cart.setItems(cartDTO.getItems());
+        if (cartDTO.getProducts() != null) {
+            cart.setProducts(cartDTO.getProducts());
         }
 
         try {

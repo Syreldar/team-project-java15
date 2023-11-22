@@ -3,6 +3,7 @@ package org.project.entities.shop;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import org.project.entities.cart.Cart;
+import org.project.entities.customer.Customer;
 import org.project.entities.product.Product;
 import org.project.entities.review.interfaces.Reviewable;
 import org.project.entities.review.shopreview.ShopReview;
@@ -30,10 +31,8 @@ public class Shop implements Reviewable<ShopReview> {
     @OneToMany(mappedBy = "reviewedShop")
     private List<ShopReview> reviews;
 
-    @OneToMany(mappedBy = "shop")
-    private List<Cart> carts;
-
-
+    @ManyToMany(mappedBy = "shops")
+    private List<Customer> customers = new ArrayList<>();
 
 
     @PrePersist
@@ -44,8 +43,8 @@ public class Shop implements Reviewable<ShopReview> {
         if (this.reviews == null) {
             this.reviews = new ArrayList<>();
         }
-        if (this.carts == null) {
-            this.carts = new ArrayList<>();
+        if (this.customers == null) {
+            this.customers = new ArrayList<>();
         }
     }
 
@@ -59,13 +58,13 @@ public class Shop implements Reviewable<ShopReview> {
         this.ownerName = ownerName;
     }
 
-    public Shop(String name, String ownerName, List<Product> products, List<ShopReview> reviews, List<Cart> carts) {
+    public Shop(String name, String ownerName, List<Product> products, List<ShopReview> reviews, List<Customer> customers) {
         this();
         this.name = name;
         this.ownerName = ownerName;
         this.products = products != null ? products : new ArrayList<>();
         this.reviews = reviews != null ? reviews : new ArrayList<>();
-        this.carts = carts != null ? carts : new ArrayList<>();
+        this.customers = customers != null ? customers : new ArrayList<>();
     }
 
     public Long getId() {
@@ -92,20 +91,60 @@ public class Shop implements Reviewable<ShopReview> {
         this.ownerName = ownerName;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
-
     public List<Product> getProducts() {
         return products;
     }
 
-    public List<Cart> getCarts() {
-        return carts;
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 
-    public void setCarts(List<Cart> carts) {
-        this.carts = carts;
+    public void addProduct(Product product) {
+        products.add(product);
+    }
+
+    public void removeProduct(Product product) {
+        products.remove(product);
+    }
+
+    public void addProducts(List<Product> products) {
+        this.products.addAll(products);
+    }
+
+    public void removeProducts(List<Product> products) {
+        this.products.removeAll(products);
+    }
+
+    public void clearProducts() {
+        this.products.clear();
+    }
+
+    public List<Customer> getCustomers() {
+        return customers;
+    }
+
+    public void setCustomers(List<Customer> customers) {
+        this.customers = customers;
+    }
+
+    public void addCustomer(Customer customer) {
+        customers.add(customer);
+    }
+
+    public void removeCustomer(Customer customer) {
+        customers.remove(customer);
+    }
+
+    public void addCustomers(List<Customer> customers) {
+        this.customers.addAll(customers);
+    }
+
+    public void removeCustomers(List<Customer> customers) {
+        this.customers.removeAll(customers);
+    }
+
+    public void clearCustomers() {
+        this.customers.clear();
     }
 
     @Override
@@ -115,6 +154,18 @@ public class Shop implements Reviewable<ShopReview> {
 
     public void setReviews(List<ShopReview> reviews) {
         this.reviews = reviews;
+    }
+
+    public void addReviews(List<ShopReview> reviews) {
+        this.reviews.addAll(reviews);
+    }
+
+    public void removeReviews(List<ShopReview> reviews) {
+        this.reviews.removeAll(reviews);
+    }
+
+    public void clearReviews() {
+        this.reviews.clear();
     }
 
     @Override

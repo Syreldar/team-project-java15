@@ -6,7 +6,6 @@ import org.project.entities.product.Product;
 import java.util.List;
 
 public class OrderDTO {
-
     private Long id;
 
     @NotNull
