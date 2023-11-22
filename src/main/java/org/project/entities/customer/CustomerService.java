@@ -3,6 +3,12 @@ package org.project.entities.customer;
 import jakarta.persistence.EntityNotFoundException;
 
 import org.hibernate.service.spi.ServiceException;
+import org.project.entities.cart.Cart;
+import org.project.entities.cart.CartRepository;
+import org.project.entities.order.Order;
+import org.project.entities.order.OrderDTO;
+import org.project.entities.order.OrderService;
+import org.project.entities.product.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -14,6 +20,10 @@ import java.util.List;
 public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
+    private CartRepository cartRepository;
+    @Autowired
+    private OrderService orderService;
 
 
     @Transactional
@@ -22,14 +32,40 @@ public class CustomerService {
             throw new IllegalArgumentException("customer cannot be null");
         }
 
+        Cart cart = new Cart();
+        cart = cartRepository.save(cart);
+
+        customer.setCart(cart);
+        cart.setCustomer(customer);
+
         try {
-            return customerRepository.save(customer);
-        }
-        catch (DataAccessException e) {
+            customer = customerRepository.save(customer);
+            return customer;
+        } catch (DataAccessException e) {
             throw new ServiceException("Error updating customer", e);
         }
     }
+    @Transactional
+    public void buyProduct(Long customerId, OrderDTO orderDTO) {
+        if (customerId == null || orderDTO == null) {
+            throw new IllegalArgumentException("Customer ID and OrderDTO cannot be null");
+        }
 
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
+
+        Cart cart = customer.getCart();
+
+        for (Product product : orderDTO.getProducts()) {
+            cart.addProducts(product);
+        }
+
+        Order order = orderService.createOrder(new OrderDTO(null, customerId, cart.getProducts()));
+
+        cart.clear();
+
+        cartRepository.save(cart);
+    }
     @Transactional
     public Customer update(Long id, CustomerDTO customerDTO) {
         if (id == null) {

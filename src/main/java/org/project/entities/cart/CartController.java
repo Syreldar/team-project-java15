@@ -1,5 +1,6 @@
 package org.project.entities.cart;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.project.helpers.APIResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,15 +13,21 @@ public class CartController {
     @Autowired
     CartService cartService;
 
-    @PostMapping
-    public ResponseEntity<APIResponse<Cart>> add(@RequestBody Cart cart) {
+    @PutMapping("/addProduct")
+    public ResponseEntity<APIResponse<Cart>> addProductToCart(
+            @RequestParam Long cartId,
+            @RequestBody AddToCartDTO addToCartDTO) {
         try {
-            Cart addedCart = cartService.createCart(cart);
+            cartService.addProductToCart(cartId, addToCartDTO.getProductId());
+
             return ResponseEntity.ok(
-                    new APIResponse<>(addedCart, "Cart added successfully."));
-        } catch (Exception e) {
+                    new APIResponse<>(null, "Product added to cart successfully."));
+        } catch (IllegalArgumentException | EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new APIResponse<>(null, "Failed to add Cart."));
+                    new APIResponse<>(null, e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new APIResponse<>(null, "Failed to add product to cart."));
         }
     }
 

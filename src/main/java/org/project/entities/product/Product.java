@@ -9,6 +9,7 @@ import org.project.entities.review.interfaces.Reviewable;
 import org.project.entities.review.productreview.ProductReview;
 import org.project.entities.shop.Shop;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.OptionalDouble;
 import java.util.Objects;
@@ -54,7 +55,7 @@ public class Product implements Reviewable<ProductReview> {
     private List<Shop> shops;
 
     @OneToMany(mappedBy = "reviewedProduct")
-    private List<ProductReview> reviews;
+    private List<ProductReview> reviews = new LinkedList<>();
 
     @ManyToMany(mappedBy = "items")
     @Column(nullable = false)
@@ -63,8 +64,8 @@ public class Product implements Reviewable<ProductReview> {
     public Product() {
     }
 
-    public Product(Category category, String name, Double price, int quantity, List<Shop> shops, List<ProductReview> reviews,
-                   List<Cart> carts) {
+    public Product(Category category, String name, Double price, int quantity, List<Shop> shops,
+                   List<ProductReview> reviews, List<Cart> carts) {
         this.category = category;
         this.name = name;
         this.manufacturer = null;
@@ -72,18 +73,6 @@ public class Product implements Reviewable<ProductReview> {
         this.quantity = quantity;
         this.shops = shops;
         this.reviews = reviews;
-        this.carts = carts;
-    }
-
-    public void setReviews(List<ProductReview> reviews) {
-        this.reviews = reviews;
-    }
-
-    public List<Cart> getCarts() {
-        return carts;
-    }
-
-    public void setCarts(List<Cart> carts) {
         this.carts = carts;
     }
 
@@ -170,6 +159,11 @@ public class Product implements Reviewable<ProductReview> {
         return reviews;
     }
 
+    public void setReviews(List<ProductReview> reviews) {
+        this.reviews = reviews;
+    }
+
+
     @Override
     public void addReview(ProductReview review) {
         reviews.add(review);
@@ -184,6 +178,14 @@ public class Product implements Reviewable<ProductReview> {
     public double getReviewsAverage() {
         OptionalDouble average = reviews.stream().mapToDouble(ProductReview::getRating).average();
         return average.orElse(0.0);
+    }
+
+    public List<Cart> getCarts() {
+        return carts;
+    }
+
+    public void setCarts(List<Cart> carts) {
+        this.carts = carts;
     }
 
     @Override
