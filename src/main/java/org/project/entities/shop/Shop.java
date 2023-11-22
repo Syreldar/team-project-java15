@@ -25,13 +25,14 @@ public class Shop implements Reviewable<ShopReview> {
     @Column(name = "owner_name", nullable = false)
     private String ownerName;
 
-    @NotNull
+
     @Column(nullable = false)
     @ManyToMany(mappedBy = "shops")
     private List<Product> products;
 
     @OneToMany(mappedBy = "reviewedShop")
-    private List<ShopReview> reviews;
+    @Column(nullable = false)
+    private List<ShopReview> reviews = new LinkedList<>();
 
     @OneToMany(mappedBy = "shop")
     @Column(nullable = false)

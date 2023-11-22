@@ -9,6 +9,7 @@ import org.project.entities.review.interfaces.Reviewable;
 import org.project.entities.review.productreview.ProductReview;
 import org.project.entities.shop.Shop;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.OptionalDouble;
 import java.util.Objects;
@@ -54,7 +55,7 @@ public class Product implements Reviewable<ProductReview> {
     private List<Shop> shops;
 
     @OneToMany(mappedBy = "reviewedProduct")
-    private List<ProductReview> reviews;
+    private List<ProductReview> reviews = new LinkedList<>();
 
     @ManyToMany(mappedBy = "products")
     @Column(nullable = false)

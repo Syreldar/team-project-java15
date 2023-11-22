@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.hibernate.service.spi.ServiceException;
 import org.project.entities.product.Product;
+import org.project.entities.product.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -13,12 +14,22 @@ public class CartService {
 
     @Autowired
     CartRepository cartRepository;
+    @Autowired
+    ProductRepository productRepository;
+
 
     @Transactional
-    public Cart createCart(Cart cart) {
-        return cartRepository.save(cart);
-    }
+    public void addProductToCart(Long cartId, Long productId) {
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new EntityNotFoundException("Cart not found with ID: " + cartId));
 
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+
+        cart.getProducts().add(product);
+
+        cartRepository.save(cart);
+    }
     @Transactional
     public void clearCart() {
         cartRepository.deleteAll();
@@ -68,18 +79,7 @@ public class CartService {
         }
     }
 
-    @Transactional
-    public void delete(Cart cart) {
-        if (cart == null) {
-            throw new IllegalArgumentException("Cart cannot be null");
-        }
 
-        try {
-            cartRepository.delete(cart);
-        } catch (DataAccessException e) {
-            throw new ServiceException("Error deleting customer", e);
-        }
-    }
 
     @Transactional
     public void deleteById(Long id) {

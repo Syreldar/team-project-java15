@@ -32,10 +32,16 @@ public class CustomerService {
             throw new IllegalArgumentException("customer cannot be null");
         }
 
+        Cart cart = new Cart();
+        cart = cartRepository.save(cart);
+
+        customer.setCart(cart);
+        cart.setCustomer(customer);
+
         try {
-            return customerRepository.save(customer);
-        }
-        catch (DataAccessException e) {
+            customer = customerRepository.save(customer);
+            return customer;
+        } catch (DataAccessException e) {
             throw new ServiceException("Error updating customer", e);
         }
     }
