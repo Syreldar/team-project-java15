@@ -41,9 +41,18 @@ public class Customer {
     @Email
     private String email;
 
-    @OneToOne(mappedBy = "customer")
-    @Column(nullable = false)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cart_id", referencedColumnName = "id")
     private Cart cart;
+
+
+    @PrePersist
+    public void initializeCart() {
+        if (this.cart == null) {
+            this.cart = new Cart();
+            this.cart.setCustomer(this);
+        }
+    }
 
     public Customer() {}
 

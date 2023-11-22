@@ -14,6 +14,7 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToMany
     @JoinTable(
             name = "cart_product",
@@ -21,11 +22,12 @@ public class Cart {
             inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id")
     )
     private List<Product> items;
+
     @ManyToOne
     @JoinColumn(name = "shop_id", nullable = false)
     private Shop shop;
-    @OneToOne
-    @JoinColumn(name = "customer_id", nullable = false)
+
+    @OneToOne(mappedBy = "cart")
     private Customer customer;
 
     public Cart() {
