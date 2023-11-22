@@ -21,24 +21,36 @@ public class Cart {
             joinColumns = @JoinColumn(name = "cart_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id")
     )
-
     private List<Product> products;
 
     @ManyToOne
-    @JoinColumn(name = "shop_id", nullable = false)
+    @JoinColumn(name = "shop_id")
     private Shop shop;
 
     @OneToOne(mappedBy = "cart")
     private Customer customer;
 
-    public Cart() {
+
+    @PrePersist
+    private void initializeCustomer() {
+        if (this.customer != null) {
+            this.customer.setCart(this);
+        }
     }
 
-    public Cart(Long id, List<Product> products, Shop shop, Customer customer) {
-        this.id = id;
-        this.products = products;
+    public Cart() {
+        this.products = new ArrayList<>();
+    }
+
+    public Cart(Shop shop, Customer customer) {
+        this();
         this.shop = shop;
         this.customer = customer;
+    }
+
+    public Cart(Shop shop, Customer customer, List<Product> products) {
+        this(shop, customer);
+        this.products = products != null ? products : new ArrayList<>();
     }
 
     public long getId() {

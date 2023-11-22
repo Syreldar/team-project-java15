@@ -41,14 +41,14 @@ public class Customer {
     @Email
     private String email;
 
-    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @PrimaryKeyJoinColumn
-
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cart_id", referencedColumnName = "id")
     private Cart cart;
 
 
+
     @PrePersist
-    public void initializeCart() {
+    private void initializeCart() {
         if (this.cart == null) {
             this.cart = new Cart();
             this.cart.setCustomer(this);

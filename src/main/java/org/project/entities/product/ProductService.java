@@ -2,12 +2,15 @@ package org.project.entities.product;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.hibernate.service.spi.ServiceException;
+import org.project.entities.customer.Customer;
+import org.project.entities.customer.CustomerDTO;
 import org.project.entities.shop.Shop;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -17,16 +20,28 @@ public class ProductService {
     private ProductRepository productRepository;
 
     @Transactional
-    public Product add(Product product) {
-        if (product == null) {
+    public Product add(ProductDTO productDTO) {
+        if (productDTO == null) {
             throw new IllegalArgumentException("Product cannot be null");
         }
 
         try {
+            Product product = convertToEntity(productDTO);
             return productRepository.save(product);
-        } catch (DataAccessException e) {
+        }
+        catch (DataAccessException e) {
             throw new ServiceException("Error saving product", e);
         }
+    }
+
+    private Product convertToEntity(ProductDTO productDTO) {
+        return new Product(
+                Category.valueOf(productDTO.getCategoryString().toUpperCase()),
+                productDTO.getName(),
+                productDTO.getManufacturer(),
+                productDTO.getPrice(),
+                productDTO.getQuantity()
+        );
     }
 
     @Transactional

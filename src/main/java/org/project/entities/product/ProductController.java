@@ -1,5 +1,6 @@
 package org.project.entities.product;
 
+import jakarta.validation.Valid;
 import org.project.helpers.APIResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,9 +17,9 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping("/add")
-    public ResponseEntity<APIResponse<Product>> addProduct(@RequestBody Product product) {
+    public ResponseEntity<APIResponse<Product>> addProduct(@Valid @RequestBody ProductDTO productDTO) {
         try {
-            Product addedProduct = productService.add(product);
+            Product addedProduct = productService.add(productDTO);
             return ResponseEntity.ok(
                     new APIResponse<>(addedProduct, "Product added successfully."));
         } catch (Exception e) {
@@ -28,7 +29,10 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<APIResponse<Product>> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
+    public ResponseEntity<APIResponse<Product>> updateProduct(
+            @PathVariable Long id,
+            @Valid @RequestBody ProductDTO productDTO)
+    {
         try {
             Product updatedProduct = productService.update(id, productDTO);
             return ResponseEntity.ok(
@@ -55,7 +59,7 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<APIResponse<Product>> getProductById(@PathVariable Long id) {
         try {
             Product product = productService.findById(id);
@@ -66,18 +70,6 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new APIResponse<>(null,
                             String.format("Product with ID %d not found.", id)));
-        }
-    }
-
-    @GetMapping
-    public ResponseEntity<APIResponse<List<Product>>> getAllProducts() {
-        try {
-            List<Product> products = productService.findAll();
-            return ResponseEntity.ok(
-                    new APIResponse<>(products, "All products retrieved successfully."));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new APIResponse<>(null, "Failed to retrieve products."));
         }
     }
 
@@ -117,6 +109,18 @@ public class ProductController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     new APIResponse<>(null, String.format("Failed to retrieve products from manufacturer %s.", manufacturer)));
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<APIResponse<List<Product>>> getAllProducts() {
+        try {
+            List<Product> products = productService.findAll();
+            return ResponseEntity.ok(
+                    new APIResponse<>(products, "All products retrieved successfully."));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new APIResponse<>(null, "Failed to retrieve products."));
         }
     }
 }

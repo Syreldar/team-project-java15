@@ -16,6 +16,7 @@ public class ProductReview extends Review {
     @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
     private Product reviewedProduct;
 
+
     public ProductReview() {}
 
     public ProductReview(Product reviewedProduct, Customer reviewer, float rating, String comment) {

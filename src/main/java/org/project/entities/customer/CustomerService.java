@@ -27,24 +27,30 @@ public class CustomerService {
 
 
     @Transactional
-    public Customer add(Customer customer) {
-        if (customer == null) {
+    public Customer add(CustomerDTO customerDTO) {
+        if (customerDTO == null) {
             throw new IllegalArgumentException("customer cannot be null");
         }
 
-        Cart cart = new Cart();
-        cart = cartRepository.save(cart);
-
-        customer.setCart(cart);
-        cart.setCustomer(customer);
-
         try {
-            customer = customerRepository.save(customer);
-            return customer;
+            Customer customer = convertToEntity(customerDTO);
+            return customerRepository.save(customer);
         } catch (DataAccessException e) {
             throw new ServiceException("Error updating customer", e);
         }
     }
+
+    private Customer convertToEntity(CustomerDTO customerDTO) {
+        Customer customer = new Customer();
+        customer.setName(customerDTO.getFirstName());
+        customer.setLastName(customerDTO.getLastName());
+        customer.setBalance(customerDTO.getBalance());
+        customer.setAddress(customerDTO.getAddress());
+        customer.setEmail(customerDTO.getEmail());
+
+        return customer;
+    }
+
     @Transactional
     public void buyProduct(Long customerId, OrderDTO orderDTO) {
         if (customerId == null || orderDTO == null) {
@@ -55,17 +61,16 @@ public class CustomerService {
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
 
         Cart cart = customer.getCart();
-
         for (Product product : orderDTO.getProducts()) {
             cart.addProducts(product);
         }
 
-        Order order = orderService.createOrder(new OrderDTO(null, customerId, cart.getProducts()));
-
+        orderService.createOrder(new OrderDTO(null, customerId, cart.getProducts()));
         cart.clear();
 
         cartRepository.save(cart);
     }
+
     @Transactional
     public Customer update(Long id, CustomerDTO customerDTO) {
         if (id == null) {

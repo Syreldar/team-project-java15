@@ -1,5 +1,6 @@
 package org.project.entities.review.productreview;
 
+import jakarta.validation.Valid;
 import org.project.entities.review.ReviewDTO;
 import org.project.helpers.APIResponse;
 import org.project.entities.customer.CustomerService;
@@ -18,8 +19,11 @@ public class ProductReviewController {
     private CustomerService customerService;
 
 
-    @PostMapping
-    public ResponseEntity<APIResponse<ProductReview>> add(@RequestBody ProductReview review, @RequestParam Long customerId) {
+    @PostMapping("/add")
+    public ResponseEntity<APIResponse<ProductReview>> add(
+            @Valid @RequestBody ProductReview review,
+            @RequestParam Long customerId)
+    {
         try {
             review.setReviewer(customerService.findById(customerId));
             ProductReview createdProductReview = productReviewService.add(review);
@@ -33,7 +37,10 @@ public class ProductReviewController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<APIResponse<ProductReview>> update(@PathVariable Long id, @RequestBody ReviewDTO reviewDTO) {
+    public ResponseEntity<APIResponse<ProductReview>> update(
+            @PathVariable Long id,
+            @Valid @RequestBody ReviewDTO reviewDTO)
+    {
         try {
             ProductReview updatedProductReview = productReviewService.update(id, reviewDTO);
             return ResponseEntity.ok(

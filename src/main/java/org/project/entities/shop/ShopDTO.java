@@ -5,29 +5,43 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.project.entities.product.Product;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ShopDTO {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Size(max = 100)
+    @NotBlank(message = "Shop name cannot be blank")
+    @Size(max = 100, message = "Shop name cannot be longer than 100 characters")
     private String name;
 
-    @NotBlank
-    @Size(max = 100)
+    @NotBlank(message = "Shop owner name cannot be blank")
+    @Size(max = 100, message = "Shop owner name cannot be longer than 100 characters")
     private String ownerName;
 
     private List<Product> products;
 
-    public ShopDTO() {}
+
+    public ShopDTO() {
+        initializeCollections();
+    }
+
+    private void initializeCollections() {
+        if (this.products == null) {
+            this.products = new ArrayList<>();
+        }
+    }
+
+    public ShopDTO(String name, String ownerName) {
+        this();
+        this.name = name;
+        this.ownerName = ownerName;
+    }
 
     public ShopDTO(String name, String ownerName, List<Product> products) {
         this.name = name;
         this.ownerName = ownerName;
-        this.products = products;
+        this.products = products != null ? products : new ArrayList<>();
     }
 
     public Long getId() {

@@ -13,8 +13,9 @@ import java.util.Objects;
 public class ShopReview extends Review {
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "shop_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "shop_id", referencedColumnName = "id")
     private Shop reviewedShop;
+
 
     public ShopReview() {}
 

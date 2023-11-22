@@ -34,28 +34,28 @@ VALUES
     (8, 3),
     (9, 3);
 
-    INSERT INTO `carts` (`customer_id`) VALUES
-        (1), -- Associa al cliente con ID 1
-        (2), -- Associa al cliente con ID 2
-        (3); -- Associa al cliente con ID 3
+INSERT INTO `carts` (`customer_id`) VALUES
+    (1), -- Associa al cliente con ID 1
+    (2), -- Associa al cliente con ID 2
+    (3); -- Associa al cliente con ID 3
 
-    -- Inserisci ordini
-    INSERT INTO `orders` (`customer_id`) VALUES
-        (1), -- Associa al cliente con ID 1
-        (2), -- Associa al cliente con ID 2
-        (3); -- Associa al cliente con ID 3
+-- Inserisci ordini
+INSERT INTO `orders` (`customer_id`) VALUES
+    (1), -- Associa al cliente con ID 1
+    (2), -- Associa al cliente con ID 2
+    (3); -- Associa al cliente con ID 3
 
-    -- Inserisci associazioni prodotto-negozio
-    INSERT INTO `product_to_shop` (`product_id`, `shop_id`) VALUES
-        (1, 1),
-        (2, 1),
-        (3, 1),
-        (4, 2),
-        (5, 2),
-        (6, 2),
-        (7, 3),
-        (8, 3),
-        (9, 3);
+-- Inserisci associazioni prodotto-negozio
+INSERT INTO `product_to_shop` (`product_id`, `shop_id`) VALUES
+    (1, 1),
+    (2, 1),
+    (3, 1),
+    (4, 2),
+    (5, 2),
+    (6, 2),
+    (7, 3),
+    (8, 3),
+    (9, 3);
 
 INSERT INTO `product_reviews` (`reviewer_id`, `rating`, `comment`, `creation_date`, `update_date`, `product_id`)
 VALUES

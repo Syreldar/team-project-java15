@@ -2,7 +2,6 @@ package org.project.entities.shop;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import org.project.entities.cart.Cart;
 import org.project.entities.product.Product;
 import org.project.entities.review.interfaces.Reviewable;
@@ -25,31 +24,48 @@ public class Shop implements Reviewable<ShopReview> {
     @Column(name = "owner_name", nullable = false)
     private String ownerName;
 
-
-    @Column(nullable = false)
     @ManyToMany(mappedBy = "shops")
     private List<Product> products;
 
     @OneToMany(mappedBy = "reviewedShop")
-    @Column(nullable = false)
-    private List<ShopReview> reviews = new LinkedList<>();
+    private List<ShopReview> reviews;
 
     @OneToMany(mappedBy = "shop")
-    @Column(nullable = false)
     private List<Cart> carts;
 
-    public Shop() {}
 
-    public void setReviews(List<ShopReview> reviews) {
-        this.reviews = reviews;
+
+
+    @PrePersist
+    private void initializeCollections() {
+        if (this.products == null) {
+            this.products = new ArrayList<>();
+        }
+        if (this.reviews == null) {
+            this.reviews = new ArrayList<>();
+        }
+        if (this.carts == null) {
+            this.carts = new ArrayList<>();
+        }
     }
 
-    public Shop(String name, String ownerName, List<Product> products, List<Cart> carts) {
+    public Shop() {
+        initializeCollections();
+    }
+
+    public Shop(String name, String ownerName) {
+        this();
         this.name = name;
         this.ownerName = ownerName;
-        this.products = products;
-        this.reviews = new ArrayList<>();
-        this.carts = carts;
+    }
+
+    public Shop(String name, String ownerName, List<Product> products, List<ShopReview> reviews, List<Cart> carts) {
+        this();
+        this.name = name;
+        this.ownerName = ownerName;
+        this.products = products != null ? products : new ArrayList<>();
+        this.reviews = reviews != null ? reviews : new ArrayList<>();
+        this.carts = carts != null ? carts : new ArrayList<>();
     }
 
     public Long getId() {
@@ -95,6 +111,10 @@ public class Shop implements Reviewable<ShopReview> {
     @Override
     public List<ShopReview> getReviews() {
         return reviews;
+    }
+
+    public void setReviews(List<ShopReview> reviews) {
+        this.reviews = reviews;
     }
 
     @Override

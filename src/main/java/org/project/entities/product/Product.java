@@ -9,10 +9,7 @@ import org.project.entities.review.interfaces.Reviewable;
 import org.project.entities.review.productreview.ProductReview;
 import org.project.entities.shop.Shop;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.OptionalDouble;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "products")
@@ -45,7 +42,6 @@ public class Product implements Reviewable<ProductReview> {
     private int quantity = 1;
 
     @NotNull
-    @Column(nullable = false)
     @ManyToMany
     @JoinTable(
             name = "product_to_shop",
@@ -55,25 +51,45 @@ public class Product implements Reviewable<ProductReview> {
     private List<Shop> shops;
 
     @OneToMany(mappedBy = "reviewedProduct")
-    private List<ProductReview> reviews = new LinkedList<>();
+    private List<ProductReview> reviews;
 
-    @ManyToMany(mappedBy = "items")
-    @Column(nullable = false)
+    @ManyToMany(mappedBy = "products")
     private List<Cart> carts;
 
-    public Product() {
+
+    @PrePersist
+    private void initializeCollections() {
+        if (this.shops == null) {
+            this.shops = new ArrayList<>();
+        }
+        if (this.reviews == null) {
+            this.reviews = new ArrayList<>();
+        }
+        if (this.carts == null) {
+            this.carts = new ArrayList<>();
+        }
     }
 
-    public Product(Category category, String name, Double price, int quantity, List<Shop> shops,
-                   List<ProductReview> reviews, List<Cart> carts) {
+    public Product() {
+        initializeCollections();
+    }
+
+    public Product(Category category, String name, String manufacturer, Double price, int quantity) {
+        this();
         this.category = category;
         this.name = name;
-        this.manufacturer = null;
+        this.manufacturer = manufacturer;
         this.price = price;
         this.quantity = quantity;
-        this.shops = shops;
-        this.reviews = reviews;
-        this.carts = carts;
+    }
+
+    public Product(Category category, String name, String manufacturer, Double price, int quantity,
+                   List<Shop> shops, List<ProductReview> reviews, List<Cart> carts)
+    {
+        this(category, name, manufacturer, price, quantity);
+        this.shops = shops != null ? shops : new ArrayList<>();
+        this.reviews = reviews != null ? reviews : new ArrayList<>();
+        this.carts = carts != null ? carts : new ArrayList<>();
     }
 
     public Long getId() {

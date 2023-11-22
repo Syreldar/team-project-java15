@@ -39,6 +39,7 @@ public abstract class Review {
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate updateDate;
 
+
     public Review() {}
 
     public Review(Customer customer, float rating, String comment) {

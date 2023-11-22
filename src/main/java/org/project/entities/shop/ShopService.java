@@ -2,7 +2,9 @@ package org.project.entities.shop;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.hibernate.service.spi.ServiceException;
+import org.project.entities.product.Category;
 import org.project.entities.product.Product;
+import org.project.entities.product.ProductDTO;
 import org.springframework.dao.DataAccessException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +19,24 @@ public class ShopService {
     private ShopRepository shopRepository;
 
     @Transactional
-    public Shop add(Shop shop) {
-        if (shop == null) {
+    public Shop add(ShopDTO shopDTO) {
+        if (shopDTO == null) {
             throw new IllegalArgumentException("Shop cannot be null");
         }
         try {
+            Shop shop = convertToEntity(shopDTO);
             return shopRepository.save(shop);
         }
         catch (DataAccessException e) {
             throw new ServiceException("Error saving Shop", e);
         }
+    }
+
+    private Shop convertToEntity(ShopDTO shopDTO) {
+        return new Shop(
+                shopDTO.getName(),
+                shopDTO.getOwnerName()
+        );
     }
 
     @Transactional

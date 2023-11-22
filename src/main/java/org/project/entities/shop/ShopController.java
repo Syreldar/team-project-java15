@@ -1,5 +1,6 @@
 package org.project.entities.shop;
 
+import jakarta.validation.Valid;
 import org.project.helpers.APIResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,9 +16,9 @@ public class ShopController {
     private ShopService shopService;
 
     @PostMapping("/add")
-    public ResponseEntity<APIResponse<Shop>> add(@RequestBody Shop shop) {
+    public ResponseEntity<APIResponse<Shop>> add(@Valid @RequestBody ShopDTO shopDTO) {
         try {
-            Shop addedShop = shopService.add(shop);
+            Shop addedShop = shopService.add(shopDTO);
             return ResponseEntity.ok(
                     new APIResponse<>(addedShop, "Shop added successfully."));
         } catch (Exception e) {
@@ -27,7 +28,10 @@ public class ShopController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<APIResponse<Shop>> update(@PathVariable Long id, @RequestBody ShopDTO shopDTO) {
+    public ResponseEntity<APIResponse<Shop>> update(
+            @PathVariable Long id,
+            @Valid @RequestBody ShopDTO shopDTO)
+    {
         try {
             Shop updatedShop = shopService.update(id, shopDTO);
             return ResponseEntity.ok(

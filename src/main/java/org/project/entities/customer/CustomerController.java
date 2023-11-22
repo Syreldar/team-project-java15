@@ -1,13 +1,12 @@
 package org.project.entities.customer;
 
+import jakarta.validation.Valid;
 import org.project.entities.order.OrderDTO;
 import org.project.helpers.APIResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/customers")
@@ -16,9 +15,9 @@ public class CustomerController {
     private CustomerService customerService;
 
     @PostMapping
-    public ResponseEntity<APIResponse<Customer>> add(@RequestBody Customer customer) {
+    public ResponseEntity<APIResponse<Customer>> add(@Valid @RequestBody CustomerDTO customerDTO) {
         try {
-            Customer addedCustomer = customerService.add(customer);
+            Customer addedCustomer = customerService.add(customerDTO);
             return ResponseEntity.ok(
                     new APIResponse<>(addedCustomer, "Customer added successfully."));
         }
@@ -27,21 +26,12 @@ public class CustomerController {
                     new APIResponse<>(null, "Failed to add Customer."));
         }
     }
-    @PostMapping("/{customerId}/buy")
-    public ResponseEntity<APIResponse<String>> buyProduct(
-            @PathVariable Long customerId, @RequestBody OrderDTO orderDTO) {
-        try {
-            customerService.buyProduct(customerId, orderDTO);
-            return ResponseEntity.ok(
-                    new APIResponse<>(null, "Purchase successful"));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    new APIResponse<>(null, "Failed to buy product."));
-        }
-    }
 
     @PutMapping("/{id}")
-    public ResponseEntity<APIResponse<Customer>> update(@PathVariable Long id, @RequestBody CustomerDTO customer) {
+    public ResponseEntity<APIResponse<Customer>> update(
+            @PathVariable Long id,
+            @Valid @RequestBody CustomerDTO customer)
+    {
         try {
             Customer updatedCustomer = customerService.update(id, customer);
             return ResponseEntity.ok(
@@ -123,6 +113,21 @@ public class CustomerController {
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     new APIResponse<>(null, "Failed to find all Customers."));
+        }
+    }
+
+    @PostMapping("/{customerId}/buy")
+    public ResponseEntity<APIResponse<String>> buyProduct(
+            @PathVariable Long customerId,
+            @Valid @RequestBody OrderDTO orderDTO)
+    {
+        try {
+            customerService.buyProduct(customerId, orderDTO);
+            return ResponseEntity.ok(
+                    new APIResponse<>(null, "Purchase successful"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new APIResponse<>(null, "Failed to buy product."));
         }
     }
 }
