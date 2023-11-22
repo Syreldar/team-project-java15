@@ -40,7 +40,9 @@ public class CartService {
     }
 
     @Transactional
+
     public Cart update(Long id, CartDTO cartDTO) throws EntityNotFoundException  {
+
         if (id == null) {
             throw new IllegalArgumentException("id cannot be null");
         }
@@ -53,12 +55,14 @@ public class CartService {
 
         if (cartDTO.getItems() != null) {
 
+
             cart.setItems(cartDTO.getItems());
         }
 
         try {
             return cartRepository.save(cart);
-        } catch (DataAccessException e) {
+        }
+        catch (DataAccessException e) {
             throw new ServiceException("Error updating cart", e);
         }
     }

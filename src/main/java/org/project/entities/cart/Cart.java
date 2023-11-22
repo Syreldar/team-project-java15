@@ -14,18 +14,21 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToMany
     @JoinTable(
             name = "cart_product",
             joinColumns = @JoinColumn(name = "cart_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id")
     )
+
     private List<Product> products;
+
     @ManyToOne
     @JoinColumn(name = "shop_id", nullable = false)
     private Shop shop;
-    @OneToOne
-    @JoinColumn(name = "customer_id", nullable = false)
+
+    @OneToOne(mappedBy = "cart")
     private Customer customer;
 
     public Cart() {

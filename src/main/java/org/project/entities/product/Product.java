@@ -57,7 +57,7 @@ public class Product implements Reviewable<ProductReview> {
     @OneToMany(mappedBy = "reviewedProduct")
     private List<ProductReview> reviews = new LinkedList<>();
 
-    @ManyToMany(mappedBy = "products")
+    @ManyToMany(mappedBy = "items")
     @Column(nullable = false)
     private List<Cart> carts;
 

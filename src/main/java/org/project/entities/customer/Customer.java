@@ -43,7 +43,17 @@ public class Customer {
 
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
+
     private Cart cart;
+
+
+    @PrePersist
+    public void initializeCart() {
+        if (this.cart == null) {
+            this.cart = new Cart();
+            this.cart.setCustomer(this);
+        }
+    }
 
     public Customer() {}
 
