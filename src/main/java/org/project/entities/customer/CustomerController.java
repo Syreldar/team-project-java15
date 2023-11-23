@@ -18,7 +18,7 @@ public class CustomerController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<APIResponse<Customer>> addCustomer(@Valid @RequestBody CustomerDTO customerDTO) {
+    public ResponseEntity<APIResponse<Customer>> add(@Valid @RequestBody CustomerDTO customerDTO) {
         try {
             Customer addedCustomer = customerService.add(customerDTO);
             return ResponseEntity.ok(

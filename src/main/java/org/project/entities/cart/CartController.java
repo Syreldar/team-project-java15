@@ -16,12 +16,12 @@ public class CartController {
     CartService cartService;
 
     @PutMapping("/add")
-    public ResponseEntity<APIResponse<Cart>> addProductToCart(
+    public ResponseEntity<APIResponse<Cart>> add(
             @RequestParam Long cartId,
             @Valid @RequestBody ProductDTO productDTO)
     {
         try {
-            cartService.addProductToCart(cartId, productDTO.getId());
+            cartService.add(cartId, productDTO.getId());
 
             return ResponseEntity.ok(
                     new APIResponse<>(null, "Product added to cart successfully."));

@@ -18,12 +18,28 @@ public class OrderController {
     @PostMapping("/add")
     public ResponseEntity<APIResponse<Order>> add(@Valid @RequestBody OrderDTO orderDTO) {
         try {
-            Order createdOrder = orderService.createOrder(orderDTO);
+            Order createdOrder = orderService.add(orderDTO);
             return ResponseEntity.ok(
                     new APIResponse<>(createdOrder, "Order created successfully."));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     new APIResponse<>(null, "Failed to create Order."));
+        }
+    }
+    @PutMapping("/{id}/update")
+    public ResponseEntity<APIResponse<Order>> updateOrder(
+            @PathVariable Long id,
+            @Valid @RequestBody OrderDTO orderDTO) {
+        try {
+            Order updatedOrder = orderService.update(id, orderDTO);
+            return ResponseEntity.ok(
+                    new APIResponse<>(updatedOrder, "Order updated successfully."));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new APIResponse<>(null, e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new APIResponse<>(null, "Failed to update order."));
         }
     }
 

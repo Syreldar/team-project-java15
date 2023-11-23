@@ -19,7 +19,7 @@ public class CartService {
 
 
     @Transactional
-    public void addProductToCart(Long cartId, Long productId) {
+    public void add(Long cartId, Long productId) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new EntityNotFoundException("Cart not found with ID: " + cartId));
 
