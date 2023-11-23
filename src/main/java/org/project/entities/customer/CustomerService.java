@@ -94,7 +94,7 @@ public class CustomerService {
         cart.addProducts(productsToBuy);
 
         OrderDTO orderForShop = new OrderDTO(customerId, shopId, cart.getProducts());
-        orderService.createOrder(orderForShop);
+        orderService.add(orderForShop);
 
         cart.clear();
 
