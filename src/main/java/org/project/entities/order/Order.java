@@ -14,12 +14,14 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus = OrderStatus.PENDING;
     @NotNull
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
-
+    @Column(name = "total_cost")
+    private double totalCost;
     @ManyToMany
     @JoinTable(
             name = "order_items",
@@ -34,10 +36,32 @@ public class Order {
     public Order(Customer customer, List<Product> products) {
         this.customer = customer;
         this.products = products;
+        this.totalCost = calculateTotalCost();
+
     }
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public double getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(double totalCost) {
+        this.totalCost = totalCost;
+    }
+
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
     }
 
     public Customer getCustomer() {
@@ -55,7 +79,11 @@ public class Order {
     public void setProducts(List<Product> products) {
         this.products = products;
     }
-
+    private double calculateTotalCost() {
+        return products.stream()
+                .mapToDouble(Product::getPrice)
+                .sum();
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

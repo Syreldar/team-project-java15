@@ -1,7 +1,9 @@
 package org.project.entities.customer;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.project.entities.order.OrderDTO;
+import org.project.entities.shop.ShopService;
 import org.project.helpers.APIResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,14 +16,14 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
-    @PostMapping
+
+    @PostMapping("/add")
     public ResponseEntity<APIResponse<Customer>> add(@Valid @RequestBody CustomerDTO customerDTO) {
         try {
             Customer addedCustomer = customerService.add(customerDTO);
             return ResponseEntity.ok(
                     new APIResponse<>(addedCustomer, "Customer added successfully."));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     new APIResponse<>(null, "Failed to add Customer."));
         }
@@ -116,18 +118,21 @@ public class CustomerController {
         }
     }
 
-    @PostMapping("/{customerId}/buy")
-    public ResponseEntity<APIResponse<String>> buyProduct(
-            @PathVariable Long customerId,
-            @Valid @RequestBody OrderDTO orderDTO)
-    {
+    @PostMapping("/{shopId}/buy")
+    public ResponseEntity<APIResponse<Void>> buyProduct(
+            @PathVariable Long shopId,
+            @RequestParam Long customerId,
+            @Valid @RequestBody OrderDTO orderDTO) {
         try {
-            customerService.buyProduct(customerId, orderDTO);
+            customerService.buyProduct(customerId, shopId, orderDTO);
             return ResponseEntity.ok(
-                    new APIResponse<>(null, "Purchase successful"));
+                    new APIResponse<>(null, "Products bought successfully."));
+        } catch (IllegalArgumentException | EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new APIResponse<>(null, e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    new APIResponse<>(null, "Failed to buy product."));
+                    new APIResponse<>(null, "Failed to buy products."));
         }
     }
 }

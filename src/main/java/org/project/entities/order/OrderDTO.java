@@ -10,7 +10,7 @@ public class OrderDTO {
 
     @NotNull
     private Long customerId;
-
+    private OrderStatus orderStatus;
     @NotNull
     private List<Product> products;
 
@@ -29,6 +29,14 @@ public class OrderDTO {
     }
 
     public OrderDTO() {
+    }
+
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
     }
 
     public Long getId() {

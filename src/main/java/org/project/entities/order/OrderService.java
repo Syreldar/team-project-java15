@@ -26,7 +26,7 @@ public class OrderService {
     private CartRepository cartRepository;
 
     @Transactional
-    public Order createOrder(OrderDTO orderDTO) {
+    public Order add(OrderDTO orderDTO) {
         if (orderDTO == null) {
             throw new IllegalArgumentException("OrderDTO cannot be null");
         }
@@ -99,5 +99,51 @@ public class OrderService {
         } catch (DataAccessException e) {
             throw new ServiceException("Error deleting all orders", e);
         }
+    }
+
+    @Transactional
+    public Order update(Long id, OrderDTO orderDTO) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID cannot be null");
+        }
+        if (orderDTO == null) {
+            throw new IllegalArgumentException("OrderDTO cannot be null");
+        }
+
+        Order order = this.findById(id);
+
+        OrderStatus newOrderStatus = orderDTO.getOrderStatus();
+        if (newOrderStatus != null) {
+            switch (newOrderStatus) {
+                case COMPLETED:
+                    if (order.getOrderStatus() == OrderStatus.COMPLETED) {
+                        throw new IllegalStateException("Order is already completed.");
+                    }
+                    order.setOrderStatus(OrderStatus.COMPLETED);
+                    break;
+
+                case CANCELED:
+                    if (order.getOrderStatus() == OrderStatus.COMPLETED) {
+                        throw new IllegalStateException("Order is already completed.");
+                    }
+                    order.setOrderStatus(OrderStatus.CANCELED);
+                    break;
+
+                case REJECTED:
+                    if (order.getOrderStatus() == OrderStatus.COMPLETED || order.getOrderStatus() == OrderStatus.REJECTED) {
+                        throw new IllegalStateException("Order is already rejected or completed.");
+                    }
+                    if (order.getCustomer().getBalance() < order.getTotalCost()) {
+                        throw new IllegalStateException("Insufficient balance to reject the order.");
+                    }
+                    order.setOrderStatus(OrderStatus.REJECTED);
+                    break;
+
+                default:
+                    throw new IllegalArgumentException("Invalid order status.");
+            }
+        }
+
+        return orderRepository.save(order);
     }
 }

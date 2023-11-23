@@ -17,7 +17,7 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping("/add")
-    public ResponseEntity<APIResponse<Product>> addProduct(@Valid @RequestBody ProductDTO productDTO) {
+    public ResponseEntity<APIResponse<Product>> add(@Valid @RequestBody ProductDTO productDTO) {
         try {
             Product addedProduct = productService.add(productDTO);
             return ResponseEntity.ok(
@@ -29,7 +29,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<APIResponse<Product>> updateProduct(
+    public ResponseEntity<APIResponse<Product>> update(
             @PathVariable Long id,
             @Valid @RequestBody ProductDTO productDTO)
     {
@@ -46,7 +46,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<APIResponse<Void>> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<APIResponse<Void>> deleteById(@PathVariable Long id) {
         try {
             productService.deleteById(id);
             return ResponseEntity.ok(
