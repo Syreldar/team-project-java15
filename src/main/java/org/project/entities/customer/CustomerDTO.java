@@ -5,8 +5,11 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
+
 public class CustomerDTO {
     private Long id;
+    private List<Long> shopId;
 
     @NotBlank
     @Size(max = 100)
@@ -22,12 +25,20 @@ public class CustomerDTO {
     @Size(max = 200)
     private String address;
 
-    @NotBlank
     @Email
     @Size(max = 100)
     private String email;
 
-    public CustomerDTO() {}
+    public CustomerDTO() {
+    }
+
+    public List<Long> getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(List<Long> shopId) {
+        this.shopId = shopId;
+    }
 
     public CustomerDTO(Long id, String firstName, String lastName, double balance, String address, String email) {
         this.id = id;

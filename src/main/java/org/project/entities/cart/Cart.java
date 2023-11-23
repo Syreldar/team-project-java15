@@ -139,4 +139,11 @@ public class Cart {
         }
         return totalQuantity;
     }
+    public void clear() {
+        if (this.products == null || this.products.isEmpty()) {
+            throw new RuntimeException("Cart is already empty");
+        }
+
+        this.products.clear();
+    }
 }

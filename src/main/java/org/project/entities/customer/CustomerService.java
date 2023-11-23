@@ -9,11 +9,14 @@ import org.project.entities.order.Order;
 import org.project.entities.order.OrderDTO;
 import org.project.entities.order.OrderService;
 import org.project.entities.product.Product;
+import org.project.entities.shop.Shop;
+import org.project.entities.shop.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,22 +27,31 @@ public class CustomerService {
     private CartRepository cartRepository;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private ShopRepository shopRepository;
+
 
 
     @Transactional
     public Customer add(CustomerDTO customerDTO) {
         if (customerDTO == null) {
-            throw new IllegalArgumentException("customer cannot be null");
+            throw new IllegalArgumentException("CustomerDTO cannot be null");
         }
 
         try {
             Customer customer = convertToEntity(customerDTO);
-            return customerRepository.save(customer);
+
+            if (customer.getCarts() == null) {
+                customer.setCarts(new ArrayList<>());
+            }
+
+            customer = customerRepository.save(customer);
+
+            return customer;
         } catch (DataAccessException e) {
             throw new ServiceException("Error updating customer", e);
         }
     }
-
     private Customer convertToEntity(CustomerDTO customerDTO) {
         Customer customer = new Customer();
         customer.setName(customerDTO.getFirstName());
@@ -48,24 +60,42 @@ public class CustomerService {
         customer.setAddress(customerDTO.getAddress());
         customer.setEmail(customerDTO.getEmail());
 
+        List<Shop> shops = shopRepository.findAllById(customerDTO.getShopId());
+        customer.setShops(shops);
+
         return customer;
     }
 
     @Transactional
-    public void buyProduct(Long customerId, OrderDTO orderDTO) {
-        if (customerId == null || orderDTO == null) {
-            throw new IllegalArgumentException("Customer ID and OrderDTO cannot be null");
+    public void buyProduct(Long customerId, Long shopId, OrderDTO orderDTO) {
+        if (customerId == null || shopId == null || orderDTO == null) {
+            throw new IllegalArgumentException("Customer ID, Shop ID, and OrderDTO cannot be null");
         }
 
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
 
-        Cart cart = customer.getCart();
-        for (Product product : orderDTO.getProducts()) {
-            cart.addProducts(product);
+        Shop shop = shopRepository.findById(shopId)
+                .orElseThrow(() -> new EntityNotFoundException("Shop not found"));
+
+        List<Product> productsToBuy = orderDTO.getProducts();
+
+        boolean productsBelongToShop = productsToBuy.stream()
+                .allMatch(product -> shop.getProducts().contains(product));
+        if (!productsBelongToShop) {
+            throw new IllegalArgumentException("Not all products belong to the specified shop");
         }
 
-        orderService.createOrder(new OrderDTO(null, customerId, cart.getProducts()));
+        Cart cart = customer.getCarts().stream()
+                .filter(c -> c.getShop().equals(shop))
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("Cart not found for the specified shop"));
+
+        cart.addProducts(productsToBuy);
+
+        OrderDTO orderForShop = new OrderDTO(customerId, shopId, cart.getProducts());
+        orderService.createOrder(orderForShop);
+
         cart.clear();
 
         cartRepository.save(cart);
