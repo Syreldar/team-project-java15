@@ -55,19 +55,7 @@ public class Customer {
     )
     private List<Shop> shops = new ArrayList<>();
 
-
-    @PrePersist
-    private void initializeCart() {
-        if (this.carts == null) {
-            this.carts = new ArrayList<>();
-        }
-        if (this.shops == null) {
-            this.shops = new ArrayList<>();
-        }
-    }
-
     public Customer() {
-        initializeCart();
     }
 
     public Customer(String name, String lastName, double balance, String address, String email) {

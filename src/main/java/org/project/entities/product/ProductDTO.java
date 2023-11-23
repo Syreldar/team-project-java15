@@ -1,13 +1,16 @@
 package org.project.entities.product;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
 
 public class ProductDTO {
 
     private Long id;
 
-    @NotBlank
-    private String category; // Category is an enum and can be represented as a string
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private Category category; // Category is an enum and can be represented as a string
 
     @NotBlank
     @Size(max = 100)
@@ -27,10 +30,10 @@ public class ProductDTO {
 
     public ProductDTO() {}
 
-    public ProductDTO(String category, String name, String manufacturer, double price, int quantity) {
+    public ProductDTO(Category category, String name, String manufacturer, double price, int quantity) {
         this.category = category;
         this.name = name;
-        this.manufacturer = null;
+        this.manufacturer = manufacturer;
         this.price = price;
         this.quantity = quantity;
     }
@@ -43,12 +46,12 @@ public class ProductDTO {
         this.id = id;
     }
 
-    public String getCategoryString() {
+    public Category getCategory() {
         return this.category;
     }
 
-    public void setCategoryString(String categoryString) {
-        this.category = categoryString;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public String getName() {

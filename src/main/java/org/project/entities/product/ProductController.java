@@ -2,6 +2,8 @@ package org.project.entities.product;
 
 import jakarta.validation.Valid;
 import org.project.helpers.APIResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,21 +12,23 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/products")
 public class ProductController {
 
     @Autowired
     private ProductService productService;
 
-    @PostMapping("/add")
-    public ResponseEntity<APIResponse<Product>> add(@Valid @RequestBody ProductDTO productDTO) {
+    @PostMapping("/add/{shopId}")
+    public ResponseEntity<APIResponse<Product>> add(
+            @PathVariable Long shopId,
+            @Valid @RequestBody ProductDTO productDTO) {
         try {
-            Product addedProduct = productService.add(productDTO);
+            Product addedProduct = productService.add(shopId, productDTO);
             return ResponseEntity.ok(
-                    new APIResponse<>(addedProduct, "Product added successfully."));
+                    new APIResponse<>(addedProduct, "Product added to shop successfully."));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new APIResponse<>(null, "Failed to add product."));
+                    new APIResponse<>(null, "Failed to add product to shop."));
         }
     }
 

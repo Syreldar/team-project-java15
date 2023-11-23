@@ -5,6 +5,7 @@ import org.hibernate.service.spi.ServiceException;
 import org.project.entities.customer.Customer;
 import org.project.entities.customer.CustomerDTO;
 import org.project.entities.shop.Shop;
+import org.project.entities.shop.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -18,25 +19,37 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private ShopRepository shopRepository;
 
     @Transactional
-    public Product add(ProductDTO productDTO) {
+    public Product add(Long shopId, ProductDTO productDTO) {
         if (productDTO == null) {
-            throw new IllegalArgumentException("Product cannot be null");
+            throw new IllegalArgumentException("ProductDTO cannot be null");
         }
 
         try {
             Product product = convertToEntity(productDTO);
-            return productRepository.save(product);
-        }
-        catch (DataAccessException e) {
+
+            Shop shop = shopRepository.findById(shopId)
+                    .orElseThrow(() -> new EntityNotFoundException("Shop not found"));
+
+            product.setShop(shop);
+
+            shop.addProduct(product);
+
+            productRepository.save(product);
+            shopRepository.save(shop);
+
+            return product;
+        } catch (DataAccessException e) {
             throw new ServiceException("Error saving product", e);
         }
     }
 
     private Product convertToEntity(ProductDTO productDTO) {
         return new Product(
-                Category.valueOf(productDTO.getCategoryString().toUpperCase()),
+                productDTO.getCategory(),
                 productDTO.getName(),
                 productDTO.getManufacturer(),
                 productDTO.getPrice(),
