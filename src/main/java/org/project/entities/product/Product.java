@@ -1,5 +1,6 @@
 package org.project.entities.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -40,9 +41,14 @@ public class Product implements Reviewable<ProductReview> {
     @Column(nullable = false)
     @ColumnDefault("1")
     private int quantity = 1;
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "shop_id")
+    private Shop shop;
 
     @NotNull
     @ManyToMany
+    @JsonIgnore
     @JoinTable(
             name = "product_to_shop",
             joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"),
@@ -51,9 +57,11 @@ public class Product implements Reviewable<ProductReview> {
     private List<Shop> shops;
 
     @OneToMany(mappedBy = "reviewedProduct")
+    @JsonIgnore
     private List<ProductReview> reviews;
 
     @ManyToMany(mappedBy = "products")
+    @JsonIgnore
     private List<Cart> carts;
 
 
@@ -72,6 +80,14 @@ public class Product implements Reviewable<ProductReview> {
 
     public Product() {
         initializeCollections();
+    }
+
+    public Shop getShop() {
+        return shop;
+    }
+
+    public void setShop(Shop shop) {
+        this.shop = shop;
     }
 
     public Product(Category category, String name, String manufacturer, Double price, int quantity) {

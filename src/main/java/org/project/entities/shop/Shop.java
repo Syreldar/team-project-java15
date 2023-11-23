@@ -25,7 +25,7 @@ public class Shop implements Reviewable<ShopReview> {
     @Column(name = "owner_name", nullable = false)
     private String ownerName;
 
-    @ManyToMany(mappedBy = "shops")
+    @OneToMany(mappedBy = "shop")
     private List<Product> products;
 
     @OneToMany(mappedBy = "reviewedShop")
@@ -100,7 +100,11 @@ public class Shop implements Reviewable<ShopReview> {
     }
 
     public void addProduct(Product product) {
+        if (products == null) {
+            products = new ArrayList<>();
+        }
         products.add(product);
+        product.setShop(this);
     }
 
     public void removeProduct(Product product) {
