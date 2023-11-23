@@ -82,7 +82,7 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<APIResponse<Iterable<Order>>> findAll() {
         try {
-            Iterable<Order> orders = orderService.getAllOrders();
+            Iterable<Order> orders = orderService.findAll();
             return ResponseEntity.ok(
                     new APIResponse<>(orders, "All Orders retrieved successfully."));
         } catch (Exception e) {
