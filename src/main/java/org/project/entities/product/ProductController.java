@@ -60,7 +60,7 @@ public class ProductController {
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<APIResponse<Product>> getProductById(@PathVariable Long id) {
+    public ResponseEntity<APIResponse<Product>> findById(@PathVariable Long id) {
         try {
             Product product = productService.findById(id);
             return ResponseEntity.ok(
@@ -74,7 +74,7 @@ public class ProductController {
     }
 
     @GetMapping("/category/{category}")
-    public ResponseEntity<APIResponse<List<Product>>> getProductsByCategory(@PathVariable String category) {
+    public ResponseEntity<APIResponse<List<Product>>> findAllByCategory(@PathVariable String category) {
         try {
             List<Product> products = productService.findAllByCategory(Category.valueOf(category));
             return ResponseEntity.ok(
@@ -87,7 +87,7 @@ public class ProductController {
     }
 
     @GetMapping("/name/{name}")
-    public ResponseEntity<APIResponse<List<Product>>> getProductsByName(@PathVariable String name) {
+    public ResponseEntity<APIResponse<List<Product>>> findAllByName(@PathVariable String name) {
         try {
             List<Product> products = productService.findAllByName(name);
             return ResponseEntity.ok(
@@ -100,7 +100,7 @@ public class ProductController {
     }
 
     @GetMapping("/manufacturer/{manufacturer}")
-    public ResponseEntity<APIResponse<List<Product>>> getProductsByManufacturer(@PathVariable String manufacturer) {
+    public ResponseEntity<APIResponse<List<Product>>> findAllByManufacturer(@PathVariable String manufacturer) {
         try {
             List<Product> products = productService.findAllByManufacturer(manufacturer);
             return ResponseEntity.ok(
@@ -113,7 +113,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<APIResponse<List<Product>>> getAllProducts() {
+    public ResponseEntity<APIResponse<List<Product>>> findAll() {
         try {
             List<Product> products = productService.findAll();
             return ResponseEntity.ok(

@@ -36,10 +36,10 @@ public class OrderController {
                     new APIResponse<>(updatedOrder, "Order updated successfully."));
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new APIResponse<>(null, e.getMessage()));
+                    new APIResponse<>(null, String.format("Failed to update Order with ID %d (%s).", id, e.getMessage())));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    new APIResponse<>(null, "Failed to update order."));
+                    new APIResponse<>(null, String.format("Failed to update Order with ID %d.", id)));
         }
     }
 

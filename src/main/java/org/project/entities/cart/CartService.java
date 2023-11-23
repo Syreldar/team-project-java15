@@ -1,13 +1,15 @@
 package org.project.entities.cart;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import org.hibernate.service.spi.ServiceException;
 import org.project.entities.product.Product;
 import org.project.entities.product.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class CartService {
@@ -21,28 +23,17 @@ public class CartService {
     @Transactional
     public void add(Long cartId, Long productId) {
         Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new EntityNotFoundException("Cart not found with ID: " + cartId));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Cart not found with ID: %d", cartId)));
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Product not found with ID: %d", productId)));
 
         cart.getProducts().add(product);
-
         cartRepository.save(cart);
     }
-    @Transactional
-    public void clearCart() {
-        cartRepository.deleteAll();
-    }
-
-    public void removeProductFromCart(Long id, Product product) {
-        cartRepository.deleteById(id);
-    }
 
     @Transactional
-
-    public Cart update(Long id, CartDTO cartDTO) throws EntityNotFoundException  {
-
+    public Cart update(Long id, CartDTO cartDTO) {
         if (id == null) {
             throw new IllegalArgumentException("id cannot be null");
         }
@@ -51,7 +42,7 @@ public class CartService {
         }
 
         Cart cart = cartRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException ("Cart not found with ID: " + id));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Cart not found with ID: %d", id)));
 
         if (cartDTO.getProducts() != null) {
             cart.setProducts(cartDTO.getProducts());
@@ -65,7 +56,7 @@ public class CartService {
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Cart findById(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("id cannot be null");
@@ -81,7 +72,15 @@ public class CartService {
         }
     }
 
-
+    @Transactional(readOnly = true)
+    public List<Cart> findAll() {
+        try {
+            return cartRepository.findAll();
+        }
+        catch (DataAccessException e) {
+            throw new ServiceException("Error finding all carts", e);
+        }
+    }
 
     @Transactional
     public void deleteById(Long id) {

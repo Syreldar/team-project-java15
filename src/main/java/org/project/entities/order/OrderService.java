@@ -16,10 +16,8 @@ import java.util.List;
 
 @Service
 public class OrderService {
-
     @Autowired
     private OrderRepository orderRepository;
-
     @Autowired
     private CustomerRepository customerRepository;
     @Autowired
@@ -32,13 +30,12 @@ public class OrderService {
         }
 
         Customer customer = customerRepository.findById(orderDTO.getCustomerId())
-                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Customer with id %d not found", orderDTO.getCustomerId())));
 
         Cart cart = cartRepository.findByCustomerId(orderDTO.getCustomerId())
-                .orElseThrow(() -> new EntityNotFoundException("Cart not found for Customer"));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Cart with id %d not found", orderDTO.getCustomerId())));
 
         List<Product> products = cart.getProducts();
-
         Order order = new Order(customer, products);
 
         try {
@@ -48,8 +45,52 @@ public class OrderService {
         }
     }
 
+    @Transactional
+    public Order update(Long id, OrderDTO orderDTO) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID cannot be null");
+        }
+        if (orderDTO == null) {
+            throw new IllegalArgumentException("OrderDTO cannot be null");
+        }
+
+        OrderStatus newOrderStatus = orderDTO.getOrderStatus();
+        if (newOrderStatus == null) {
+            throw new IllegalArgumentException("Order status cannot be null");
+        }
+
+        Order order = this.findById(id);
+
+        switch (newOrderStatus) {
+            case COMPLETED -> {
+                if (order.getOrderStatus() == OrderStatus.COMPLETED) {
+                    throw new IllegalStateException("Order is already completed.");
+                }
+                order.setOrderStatus(OrderStatus.COMPLETED);
+            }
+            case CANCELED -> {
+                if (order.getOrderStatus() == OrderStatus.COMPLETED) {
+                    throw new IllegalStateException("Order is already completed.");
+                }
+                order.setOrderStatus(OrderStatus.CANCELED);
+            }
+            case REJECTED -> {
+                if (order.getOrderStatus() == OrderStatus.COMPLETED || order.getOrderStatus() == OrderStatus.REJECTED) {
+                    throw new IllegalStateException("Order is already rejected or completed.");
+                }
+                if (order.getCustomer().getBalance() < order.getTotalCost()) {
+                    throw new IllegalStateException("Insufficient balance to reject the order.");
+                }
+                order.setOrderStatus(OrderStatus.REJECTED);
+            }
+            default -> throw new IllegalArgumentException("Invalid order status.");
+        }
+
+        return orderRepository.save(order);
+    }
+
     @Transactional(readOnly = true)
-    public List<Order> getAllOrders() {
+    public List<Order> findAll() {
         try {
             return orderRepository.findAll();
         } catch (DataAccessException e) {
@@ -99,51 +140,5 @@ public class OrderService {
         } catch (DataAccessException e) {
             throw new ServiceException("Error deleting all orders", e);
         }
-    }
-
-    @Transactional
-    public Order update(Long id, OrderDTO orderDTO) {
-        if (id == null) {
-            throw new IllegalArgumentException("ID cannot be null");
-        }
-        if (orderDTO == null) {
-            throw new IllegalArgumentException("OrderDTO cannot be null");
-        }
-
-        Order order = this.findById(id);
-
-        OrderStatus newOrderStatus = orderDTO.getOrderStatus();
-        if (newOrderStatus != null) {
-            switch (newOrderStatus) {
-                case COMPLETED:
-                    if (order.getOrderStatus() == OrderStatus.COMPLETED) {
-                        throw new IllegalStateException("Order is already completed.");
-                    }
-                    order.setOrderStatus(OrderStatus.COMPLETED);
-                    break;
-
-                case CANCELED:
-                    if (order.getOrderStatus() == OrderStatus.COMPLETED) {
-                        throw new IllegalStateException("Order is already completed.");
-                    }
-                    order.setOrderStatus(OrderStatus.CANCELED);
-                    break;
-
-                case REJECTED:
-                    if (order.getOrderStatus() == OrderStatus.COMPLETED || order.getOrderStatus() == OrderStatus.REJECTED) {
-                        throw new IllegalStateException("Order is already rejected or completed.");
-                    }
-                    if (order.getCustomer().getBalance() < order.getTotalCost()) {
-                        throw new IllegalStateException("Insufficient balance to reject the order.");
-                    }
-                    order.setOrderStatus(OrderStatus.REJECTED);
-                    break;
-
-                default:
-                    throw new IllegalArgumentException("Invalid order status.");
-            }
-        }
-
-        return orderRepository.save(order);
     }
 }

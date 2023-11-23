@@ -66,14 +66,10 @@ public class ProductService {
         }
 
         Double price = productDTO.getPrice();
-        if (price != null) {
-            product.setPrice(price);
-        }
+        product.setPrice(price);
 
-        Integer quantity = productDTO.getQuantity();
-        if (quantity != null) {
-            product.setQuantity(quantity);
-        }
+        int quantity = productDTO.getQuantity();
+        product.setQuantity(quantity);
 
         try {
             return productRepository.save(product);

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -30,8 +31,6 @@ public class CustomerService {
     @Autowired
     private ShopRepository shopRepository;
 
-
-
     @Transactional
     public Customer add(CustomerDTO customerDTO) {
         if (customerDTO == null) {
@@ -40,30 +39,19 @@ public class CustomerService {
 
         try {
             Customer customer = convertToEntity(customerDTO);
-
-            if (customer.getCarts() == null) {
-                customer.setCarts(new ArrayList<>());
-            }
-
-            customer = customerRepository.save(customer);
-
-            return customer;
+            return customerRepository.save(customer);
         } catch (DataAccessException e) {
             throw new ServiceException("Error updating customer", e);
         }
     }
     private Customer convertToEntity(CustomerDTO customerDTO) {
-        Customer customer = new Customer();
-        customer.setName(customerDTO.getFirstName());
-        customer.setLastName(customerDTO.getLastName());
-        customer.setBalance(customerDTO.getBalance());
-        customer.setAddress(customerDTO.getAddress());
-        customer.setEmail(customerDTO.getEmail());
-
-        List<Shop> shops = shopRepository.findAllById(customerDTO.getShopId());
-        customer.setShops(shops);
-
-        return customer;
+        return new Customer(
+                customerDTO.getFirstName(),
+                customerDTO.getLastName(),
+                customerDTO.getBalance(),
+                customerDTO.getAddress(),
+                customerDTO.getEmail()
+        );
     }
 
     @Transactional
@@ -80,8 +68,7 @@ public class CustomerService {
 
         List<Product> productsToBuy = orderDTO.getProducts();
 
-        boolean productsBelongToShop = productsToBuy.stream()
-                .allMatch(product -> shop.getProducts().contains(product));
+        boolean productsBelongToShop = new HashSet<>(shop.getProducts()).containsAll(productsToBuy);
         if (!productsBelongToShop) {
             throw new IllegalArgumentException("Not all products belong to the specified shop");
         }
@@ -94,8 +81,7 @@ public class CustomerService {
         cart.addProducts(productsToBuy);
 
         OrderDTO orderForShop = new OrderDTO(customerId, shopId, cart.getProducts());
-        orderService.createOrder(orderForShop);
-
+        orderService.add(orderForShop);
         cart.clear();
 
         cartRepository.save(cart);

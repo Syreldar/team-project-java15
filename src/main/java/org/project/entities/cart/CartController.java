@@ -25,9 +25,6 @@ public class CartController {
 
             return ResponseEntity.ok(
                     new APIResponse<>(null, "Product added to cart successfully."));
-        } catch (IllegalArgumentException | EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new APIResponse<>(null, e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new APIResponse<>(null, "Failed to add product to cart."));
@@ -88,6 +85,18 @@ public class CartController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new APIResponse<>(null,
                             String.format("Cart with ID %d not found.", id)));
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<APIResponse<Iterable<Cart>>> findAll() {
+        try {
+            Iterable<Cart> carts = cartService.findAll();
+            return ResponseEntity.ok(
+                    new APIResponse<>(carts, "All Carts retrieved successfully."));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new APIResponse<>(null, "Failed to find all Carts."));
         }
     }
 }
