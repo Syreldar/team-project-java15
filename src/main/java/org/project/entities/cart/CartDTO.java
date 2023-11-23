@@ -19,8 +19,7 @@ public class CartDTO {
     @NotNull
     private Customer customer;
 
-    public CartDTO() {
-    }
+    public CartDTO() {}
 
     public CartDTO(long id, List<Product> products, Shop shop, Customer customer) {
         this.id = id;

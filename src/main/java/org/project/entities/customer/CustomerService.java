@@ -5,7 +5,6 @@ import jakarta.persistence.EntityNotFoundException;
 import org.hibernate.service.spi.ServiceException;
 import org.project.entities.cart.Cart;
 import org.project.entities.cart.CartRepository;
-import org.project.entities.order.Order;
 import org.project.entities.order.OrderDTO;
 import org.project.entities.order.OrderService;
 import org.project.entities.product.Product;
@@ -16,7 +15,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 

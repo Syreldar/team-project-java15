@@ -54,33 +54,17 @@ public class Product implements Reviewable<ProductReview> {
             joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "shop_id", referencedColumnName = "id")
     )
-    private List<Shop> shops;
+    private List<Shop> shops = new ArrayList<>();
 
     @OneToMany(mappedBy = "reviewedProduct")
     @JsonIgnore
-    private List<ProductReview> reviews;
+    private List<ProductReview> reviews = new ArrayList<>();
 
     @ManyToMany(mappedBy = "products")
     @JsonIgnore
-    private List<Cart> carts;
+    private List<Cart> carts = new ArrayList<>();
 
-
-    @PrePersist
-    private void initializeCollections() {
-        if (this.shops == null) {
-            this.shops = new ArrayList<>();
-        }
-        if (this.reviews == null) {
-            this.reviews = new ArrayList<>();
-        }
-        if (this.carts == null) {
-            this.carts = new ArrayList<>();
-        }
-    }
-
-    public Product() {
-        initializeCollections();
-    }
+    public Product() {}
 
     public Shop getShop() {
         return shop;
@@ -103,9 +87,9 @@ public class Product implements Reviewable<ProductReview> {
                    List<Shop> shops, List<ProductReview> reviews, List<Cart> carts)
     {
         this(category, name, manufacturer, price, quantity);
-        this.shops = shops != null ? shops : new ArrayList<>();
-        this.reviews = reviews != null ? reviews : new ArrayList<>();
-        this.carts = carts != null ? carts : new ArrayList<>();
+        this.shops = shops;
+        this.reviews = reviews;
+        this.carts = carts;
     }
 
     public Long getId() {
@@ -210,7 +194,6 @@ public class Product implements Reviewable<ProductReview> {
     public void setReviews(List<ProductReview> reviews) {
         this.reviews = reviews;
     }
-
 
     @Override
     public void addReview(ProductReview review) {

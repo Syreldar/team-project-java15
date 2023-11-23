@@ -2,7 +2,6 @@ package org.project.entities.cart;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.hibernate.service.spi.ServiceException;
-import org.project.entities.product.Product;
 import org.project.entities.product.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -13,24 +12,10 @@ import java.util.List;
 
 @Service
 public class CartService {
-
     @Autowired
-    CartRepository cartRepository;
+    private CartRepository cartRepository;
     @Autowired
-    ProductRepository productRepository;
-
-
-    @Transactional
-    public void add(Long cartId, Long productId) {
-        Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Cart not found with ID: %d", cartId)));
-
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Product not found with ID: %d", productId)));
-
-        cart.getProducts().add(product);
-        cartRepository.save(cart);
-    }
+    private ProductRepository productRepository;
 
     @Transactional
     public Cart update(Long id, CartDTO cartDTO) {

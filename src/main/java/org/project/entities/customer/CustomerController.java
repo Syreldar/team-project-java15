@@ -3,7 +3,6 @@ package org.project.entities.customer;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.project.entities.order.OrderDTO;
-import org.project.entities.shop.ShopService;
 import org.project.helpers.APIResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

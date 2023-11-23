@@ -4,6 +4,8 @@ public class APIResponse<T> {
     private T data;
     private String message;
 
+    public APIResponse() {}
+
     public APIResponse(T data, String message) {
         this.data = data;
         this.message = message;

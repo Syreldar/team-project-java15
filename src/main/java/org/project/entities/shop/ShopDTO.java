@@ -19,18 +19,9 @@ public class ShopDTO {
     @Size(max = 100, message = "Shop owner name cannot be longer than 100 characters")
     private String ownerName;
 
-    private List<Product> products;
+    private List<Product> products = new ArrayList<>();
 
-
-    public ShopDTO() {
-        initializeCollections();
-    }
-
-    private void initializeCollections() {
-        if (this.products == null) {
-            this.products = new ArrayList<>();
-        }
-    }
+    public ShopDTO() {}
 
     public ShopDTO(String name, String ownerName) {
         this();

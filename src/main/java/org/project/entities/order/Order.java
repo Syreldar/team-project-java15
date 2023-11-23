@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import org.project.entities.customer.Customer;
 import org.project.entities.product.Product;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,30 +15,32 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus = OrderStatus.PENDING;
+
     @NotNull
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
+
     @Column(name = "total_cost")
     private double totalCost;
+
     @ManyToMany
     @JoinTable(
             name = "order_items",
             joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id")
     )
-    private List<Product> products;
+    private List<Product> products = new ArrayList<>();
 
-    public Order() {
-    }
+    public Order() {}
 
     public Order(Customer customer, List<Product> products) {
         this.customer = customer;
         this.products = products;
         this.totalCost = calculateTotalCost();
-
     }
 
     public Long getId() {
@@ -79,11 +82,13 @@ public class Order {
     public void setProducts(List<Product> products) {
         this.products = products;
     }
+
     private double calculateTotalCost() {
         return products.stream()
                 .mapToDouble(Product::getPrice)
                 .sum();
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

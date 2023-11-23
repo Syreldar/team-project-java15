@@ -55,8 +55,7 @@ public class Customer {
     )
     private List<Shop> shops = new ArrayList<>();
 
-    public Customer() {
-    }
+    public Customer() {}
 
     public Customer(String name, String lastName, double balance, String address, String email) {
         this();

@@ -29,8 +29,7 @@ public class CustomerDTO {
     @Size(max = 100)
     private String email;
 
-    public CustomerDTO() {
-    }
+    public CustomerDTO() {}
 
     public List<Long> getShopId() {
         return shopId;

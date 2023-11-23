@@ -1,8 +1,5 @@
 package org.project.entities.product;
 
-import jakarta.persistence.Enumerated;
-
-
 public enum Category {
     ELECTRONICS,
     CLEANING_SUPPLIES,

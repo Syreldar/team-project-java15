@@ -20,16 +20,12 @@ import java.time.LocalDate;
 public class ProductReviewService {
     @Autowired
     private ProductRepository productRepository;
-
     @Autowired
     private ProductReviewRepository productReviewRepository;
-
     @Autowired
     private ShopRepository shopRepository;
-
     @Autowired
     private CustomerRepository customerRepository;
-
 
     @Transactional
     public ProductReview add(ProductReview review) {

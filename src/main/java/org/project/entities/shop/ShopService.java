@@ -2,16 +2,13 @@ package org.project.entities.shop;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.hibernate.service.spi.ServiceException;
-import org.project.entities.product.Category;
 import org.project.entities.product.Product;
-import org.project.entities.product.ProductDTO;
 import org.springframework.dao.DataAccessException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ShopService {

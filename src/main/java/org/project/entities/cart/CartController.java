@@ -1,35 +1,17 @@
 package org.project.entities.cart;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.project.helpers.APIResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.project.entities.product.ProductDTO;
 
 @RestController
 @RequestMapping("/cart")
 public class CartController {
     @Autowired
-    CartService cartService;
-
-    @PutMapping("/add")
-    public ResponseEntity<APIResponse<Cart>> add(
-            @RequestParam Long cartId,
-            @Valid @RequestBody ProductDTO productDTO)
-    {
-        try {
-            cartService.add(cartId, productDTO.getId());
-
-            return ResponseEntity.ok(
-                    new APIResponse<>(null, "Product added to cart successfully."));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    new APIResponse<>(null, "Failed to add product to cart."));
-        }
-    }
+    private CartService cartService;
 
     @PutMapping("/{id}")
     public ResponseEntity<APIResponse<Cart>> update(

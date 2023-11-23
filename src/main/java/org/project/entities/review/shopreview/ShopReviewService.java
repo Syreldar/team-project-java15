@@ -18,13 +18,10 @@ import java.time.LocalDate;
 public class ShopReviewService {
     @Autowired
     private ShopReviewRepository shopReviewRepository;
-
     @Autowired
     private ShopRepository shopRepository;
-
     @Autowired
     private CustomerRepository customerRepository;
-
 
     @Transactional
     public ShopReview add(ShopReview review) {

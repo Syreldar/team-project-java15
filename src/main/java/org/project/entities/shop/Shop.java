@@ -2,7 +2,6 @@ package org.project.entities.shop;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import org.project.entities.cart.Cart;
 import org.project.entities.customer.Customer;
 import org.project.entities.product.Product;
 import org.project.entities.review.interfaces.Reviewable;
@@ -26,31 +25,15 @@ public class Shop implements Reviewable<ShopReview> {
     private String ownerName;
 
     @OneToMany(mappedBy = "shop")
-    private List<Product> products;
+    private List<Product> products = new ArrayList<>();
 
     @OneToMany(mappedBy = "reviewedShop")
-    private List<ShopReview> reviews;
+    private List<ShopReview> reviews = new ArrayList<>();
 
     @ManyToMany(mappedBy = "shops")
     private List<Customer> customers = new ArrayList<>();
 
-
-    @PrePersist
-    private void initializeCollections() {
-        if (this.products == null) {
-            this.products = new ArrayList<>();
-        }
-        if (this.reviews == null) {
-            this.reviews = new ArrayList<>();
-        }
-        if (this.customers == null) {
-            this.customers = new ArrayList<>();
-        }
-    }
-
-    public Shop() {
-        initializeCollections();
-    }
+    public Shop() {}
 
     public Shop(String name, String ownerName) {
         this();
@@ -62,9 +45,9 @@ public class Shop implements Reviewable<ShopReview> {
         this();
         this.name = name;
         this.ownerName = ownerName;
-        this.products = products != null ? products : new ArrayList<>();
-        this.reviews = reviews != null ? reviews : new ArrayList<>();
-        this.customers = customers != null ? customers : new ArrayList<>();
+        this.products = products;
+        this.reviews = reviews;
+        this.customers = customers;
     }
 
     public Long getId() {

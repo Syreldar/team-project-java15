@@ -5,12 +5,11 @@ import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
 
 public class ProductDTO {
-
     private Long id;
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private Category category; // Category is an enum and can be represented as a string
+    private Category category;
 
     @NotBlank
     @Size(max = 100)

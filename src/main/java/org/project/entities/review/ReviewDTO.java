@@ -8,7 +8,6 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public class ReviewDTO {
-
     private Long id;
 
     @NotNull

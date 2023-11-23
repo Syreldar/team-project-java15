@@ -10,9 +10,13 @@ public class OrderDTO {
 
     @NotNull
     private Long customerId;
+
     private OrderStatus orderStatus;
+
     @NotNull
     private List<Product> products;
+
+    public OrderDTO() {}
 
     public OrderDTO(Long id, Long customerId, List<Product> products) {
         this.id = id;
@@ -26,9 +30,6 @@ public class OrderDTO {
 
     public void setProducts(List<Product> products) {
         this.products = products;
-    }
-
-    public OrderDTO() {
     }
 
     public OrderStatus getOrderStatus() {
@@ -54,8 +55,6 @@ public class OrderDTO {
     public void setCustomerId(Long customerId) {
         this.customerId = customerId;
     }
-
-
 
     @Override
     public String toString() {

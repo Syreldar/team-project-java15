@@ -2,8 +2,6 @@ package org.project.entities.product;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.hibernate.service.spi.ServiceException;
-import org.project.entities.customer.Customer;
-import org.project.entities.customer.CustomerDTO;
 import org.project.entities.shop.Shop;
 import org.project.entities.shop.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +9,10 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class ProductService {
-
     @Autowired
     private ProductRepository productRepository;
     @Autowired
@@ -28,20 +24,17 @@ public class ProductService {
             throw new IllegalArgumentException("ProductDTO cannot be null");
         }
 
+        Shop shop = shopRepository.findById(shopId)
+                .orElseThrow(() -> new EntityNotFoundException("Shop not found"));
+
+        Product product = convertToEntity(productDTO);
+        product.setShop(shop);
+        shop.addProduct(product);
+
         try {
-            Product product = convertToEntity(productDTO);
-
-            Shop shop = shopRepository.findById(shopId)
-                    .orElseThrow(() -> new EntityNotFoundException("Shop not found"));
-
-            product.setShop(shop);
-
-            shop.addProduct(product);
-
-            productRepository.save(product);
             shopRepository.save(shop);
+            return productRepository.save(product);
 
-            return product;
         } catch (DataAccessException e) {
             throw new ServiceException("Error saving product", e);
         }

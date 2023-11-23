@@ -21,7 +21,7 @@ public class Cart {
             joinColumns = @JoinColumn(name = "cart_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id")
     )
-    private List<Product> products;
+    private List<Product> products = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
@@ -39,9 +39,7 @@ public class Cart {
         }
     }
 
-    public Cart() {
-        this.products = new ArrayList<>();
-    }
+    public Cart() {}
 
     public Cart(Shop shop, Customer customer) {
         this();
