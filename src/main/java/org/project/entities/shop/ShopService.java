@@ -101,6 +101,24 @@ public class ShopService {
     }
 
     @Transactional(readOnly = true)
+    public Iterable<Shop> findAllById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID cannot be null");
+        }
+
+        if (!shopRepository.existsById(id)) {
+            throw new EntityNotFoundException(
+                    String.format("Shop with ID %d not found", id));
+        }
+
+        try {
+            return shopRepository.findAllById(id);
+        } catch (DataAccessException e) {
+            throw new ServiceException("Error finding Shop", e);
+        }
+    }
+
+    @Transactional(readOnly = true)
     // Should be Iterable cause there can be Multiple shops with the same name.
     public Iterable<Shop> findAllByName(String name) {
         if (name == null || name.isEmpty()) {

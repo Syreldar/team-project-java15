@@ -98,9 +98,14 @@ public class CustomerController {
             return ResponseEntity.ok(
                     new APIResponse<>(products,
                             String.format("Customers with name %s retrieved successfully.", name)));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new APIResponse<>(null,
+                            String.format("No Customers found with name %s.", name)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new APIResponse<>(null, String.format("Failed to retrieve Customers with name %s.", name)));
+                    new APIResponse<>(null,
+                            String.format("Failed to retrieve Customers with name %s.", name)));
         }
     }
 

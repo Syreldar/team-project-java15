@@ -9,9 +9,16 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface ShopReviewRepository extends JpaRepository<ShopReview, Long> {
+    @Transactional(readOnly = true)
     Iterable<ShopReview> findAllByReviewer(Customer reviewer);
+
+    @Transactional(readOnly = true)
     Iterable<ShopReview> findAllByReviewerId(Long id);
+
+    @Transactional(readOnly = true)
     Iterable<ShopReview> findAllByReviewedShop(Shop shop);
+
+    @Transactional(readOnly = true)
     Iterable<ShopReview> findAllByReviewedShop_Id(Long shopId);
 
     @Modifying

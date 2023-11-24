@@ -162,9 +162,14 @@ public class CustomerService {
         }
 
         try {
-            return customerRepository.findAllByName(name);
+            List<Customer> customers = customerRepository.findAllByName(name);
+            if (customers.isEmpty()) {
+                throw new EntityNotFoundException(String.format("No Customers found with name %s", name));
+            }
+
+            return customers;
         } catch (DataAccessException e) {
-            throw new ServiceException("Error finding products by name", e);
+            throw new ServiceException("Error finding customers by name", e);
         }
     }
 

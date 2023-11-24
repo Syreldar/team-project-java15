@@ -1,5 +1,6 @@
 package org.project.entities.product;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.project.helpers.APIResponse;
 import org.slf4j.Logger;
@@ -41,6 +42,10 @@ public class ProductController {
             return ResponseEntity.ok(
                     new APIResponse<>(updatedProduct,
                             String.format("Product with ID %d updated successfully.", id)));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new APIResponse<>(null,
+                            String.format("No Products found with id %d.", id)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new APIResponse<>(null,
@@ -55,6 +60,10 @@ public class ProductController {
             return ResponseEntity.ok(
                     new APIResponse<>(null,
                             String.format("Product with ID %d deleted successfully.", id)));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new APIResponse<>(null,
+                            String.format("No Products found with id %d.", id)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     new APIResponse<>(null,
@@ -69,23 +78,32 @@ public class ProductController {
             return ResponseEntity.ok(
                     new APIResponse<>(product,
                             String.format("Product with ID %d retrieved successfully.", id)));
-        } catch (Exception e) {
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new APIResponse<>(null,
-                            String.format("Product with ID %d not found.", id)));
+                            String.format("No Products found with id %d.", id)));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new APIResponse<>(null,
+                            String.format("Failed to retrieve product with ID %d.", id)));
         }
     }
 
     @GetMapping("/category/{category}")
     public ResponseEntity<APIResponse<List<Product>>> findAllByCategory(@PathVariable String category) {
         try {
-            List<Product> products = productService.findAllByCategory(Category.valueOf(category));
+            List<Product> products = productService.findAllByCategory(category);
             return ResponseEntity.ok(
                     new APIResponse<>(products,
                             String.format("Products in category %s retrieved successfully.", category)));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new APIResponse<>(null,
+                            String.format("No Products found with category %s.", category)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new APIResponse<>(null, String.format("Failed to retrieve products in category %s.", category)));
+                    new APIResponse<>(null,
+                            String.format("Failed to retrieve product with category %s.", category)));
         }
     }
 
@@ -96,9 +114,14 @@ public class ProductController {
             return ResponseEntity.ok(
                     new APIResponse<>(products,
                             String.format("Products with name %s retrieved successfully.", name)));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new APIResponse<>(null,
+                            String.format("No Products found with name %s.", name)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new APIResponse<>(null, String.format("Failed to retrieve products with name %s.", name)));
+                    new APIResponse<>(null,
+                            String.format("Failed to retrieve product with name %s.", name)));
         }
     }
 
@@ -109,9 +132,14 @@ public class ProductController {
             return ResponseEntity.ok(
                     new APIResponse<>(products,
                             String.format("Products from manufacturer %s retrieved successfully.", manufacturer)));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new APIResponse<>(null,
+                            String.format("No Products found with manufacturer %s.", manufacturer)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new APIResponse<>(null, String.format("Failed to retrieve products from manufacturer %s.", manufacturer)));
+                    new APIResponse<>(null,
+                            String.format("Failed to retrieve products from manufacturer %s.", manufacturer)));
         }
     }
 

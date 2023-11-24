@@ -10,15 +10,24 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface ProductReviewRepository extends JpaRepository<ProductReview, Long> {
+    @Transactional(readOnly = true)
     @Query("SELECT pr FROM ProductReview pr WHERE :shop MEMBER OF pr.reviewedProduct.shops")
     Iterable<ProductReview> findAllByShop(@Param("shop") Shop shop);
 
+    @Transactional(readOnly = true)
     @Query("SELECT pr FROM ProductReview pr JOIN pr.reviewedProduct.shops shop WHERE shop.id = :shopId")
     Iterable<ProductReview> findAllByShopId(@Param("shopId") Long shopId);
 
+    @Transactional(readOnly = true)
     Iterable<ProductReview> findAllByReviewer(Customer reviewer);
+
+    @Transactional(readOnly = true)
     Iterable<ProductReview> findAllByReviewerId(Long id);
+
+    @Transactional(readOnly = true)
     Iterable<ProductReview> findAllByReviewedProduct(Product product);
+
+    @Transactional(readOnly = true)
     Iterable<ProductReview> findAllByReviewedProduct_Id(Long id);
 
     @Modifying

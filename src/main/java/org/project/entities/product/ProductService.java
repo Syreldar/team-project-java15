@@ -2,6 +2,7 @@ package org.project.entities.product;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.hibernate.service.spi.ServiceException;
+import org.project.entities.customer.Customer;
 import org.project.entities.shop.Shop;
 import org.project.entities.shop.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -149,15 +150,11 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<Product> findAllByCategory(Category category) {
-        if (category == null) {
-            throw new IllegalArgumentException("Category cannot be null");
-        }
-
+    public List<Product> findAllByCategory(String category) {
         try {
-            return productRepository.findAllByCategory(category);
+            return productRepository.findAllByCategory(Category.valueOf(category.toUpperCase()));
         } catch (DataAccessException e) {
-            throw new ServiceException("Error finding products by category", e);
+            throw new ServiceException("Error finding products by name", e);
         }
     }
 
@@ -168,7 +165,13 @@ public class ProductService {
         }
 
         try {
-            return productRepository.findAllByName(name);
+            List<Product> products = productRepository.findAllByName(name);
+            if (products.isEmpty()) {
+                throw new EntityNotFoundException(
+                        String.format("No Products found with name %s", name));
+            }
+
+            return products;
         } catch (DataAccessException e) {
             throw new ServiceException("Error finding products by name", e);
         }
@@ -181,7 +184,13 @@ public class ProductService {
         }
 
         try {
-            return productRepository.findAllByManufacturer(manufacturer);
+            List<Product> products = productRepository.findAllByManufacturer(manufacturer);
+            if (products.isEmpty()) {
+                throw new EntityNotFoundException(
+                        String.format("No Products found with manufacturer %s", manufacturer));
+            }
+
+            return products;
         } catch (DataAccessException e) {
             throw new ServiceException("Error finding products by manufacturer", e);
         }
