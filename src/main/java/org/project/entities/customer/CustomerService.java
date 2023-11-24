@@ -156,19 +156,15 @@ public class CustomerService {
     }
 
     @Transactional(readOnly = true)
-    public Customer findByName(String name) {
+    public List<Customer> findAllByName(String name) {
         if (name == null || name.isEmpty()) {
-            throw new IllegalArgumentException("name cannot be null or empty");
+            throw new IllegalArgumentException("Name cannot be null or empty");
         }
 
         try {
-            return customerRepository.findByName(name)
-                    .orElseThrow(() -> new EntityNotFoundException(
-                            String.format("Customer with name %s not found", name)));
-        }
-        catch (DataAccessException e) {
-            throw new ServiceException(
-                    String.format("Error finding Customer with name %s", name));
+            return customerRepository.findAllByName(name);
+        } catch (DataAccessException e) {
+            throw new ServiceException("Error finding products by name", e);
         }
     }
 

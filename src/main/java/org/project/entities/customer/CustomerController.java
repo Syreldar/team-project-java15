@@ -3,11 +3,14 @@ package org.project.entities.customer;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.project.entities.order.OrderDTO;
+import org.project.entities.product.Product;
 import org.project.helpers.APIResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/customers")
@@ -89,17 +92,15 @@ public class CustomerController {
     }
 
     @GetMapping("/name/{name}")
-    public ResponseEntity<APIResponse<Customer>> findByName(@PathVariable String name) {
+    public ResponseEntity<APIResponse<List<Customer>>> findAllByName(@PathVariable String name) {
         try {
-            Customer customer = customerService.findByName(name);
+            List<Customer> products = customerService.findAllByName(name);
             return ResponseEntity.ok(
-                    new APIResponse<>(customer,
-                            String.format("Customer with name %s retrieved successfully.", name)));
-        }
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new APIResponse<>(null,
-                            String.format("Customer with name %s not found.", name)));
+                    new APIResponse<>(products,
+                            String.format("Customers with name %s retrieved successfully.", name)));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new APIResponse<>(null, String.format("Failed to retrieve Customers with name %s.", name)));
         }
     }
 
