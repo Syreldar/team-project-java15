@@ -79,15 +79,19 @@ public class ProductController {
     @GetMapping("/category/{category}")
     public ResponseEntity<APIResponse<List<Product>>> findAllByCategory(@PathVariable String category) {
         try {
-            List<Product> products = productService.findAllByCategory(Category.valueOf(category));
+            List<Product> products = productService.findAllByCategory(category);
             return ResponseEntity.ok(
                     new APIResponse<>(products,
                             String.format("Products in category %s retrieved successfully.", category)));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new APIResponse<>(null, e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     new APIResponse<>(null, String.format("Failed to retrieve products in category %s.", category)));
         }
     }
+
 
     @GetMapping("/name/{name}")
     public ResponseEntity<APIResponse<List<Product>>> findAllByName(@PathVariable String name) {

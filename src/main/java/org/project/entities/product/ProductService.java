@@ -149,15 +149,16 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<Product> findAllByCategory(Category category) {
-        if (category == null) {
-            throw new IllegalArgumentException("Category cannot be null");
-        }
+    public List<Product> findAllByCategory(String category) {
+        Category categoryEnum = validateAndConvertToCategory(category);
+        return productRepository.findAllByCategory(categoryEnum);
+    }
 
+    private Category validateAndConvertToCategory(String category) {
         try {
-            return productRepository.findAllByCategory(category);
-        } catch (DataAccessException e) {
-            throw new ServiceException("Error finding products by category", e);
+            return Category.valueOf(category.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid category: " + category, e);
         }
     }
 
