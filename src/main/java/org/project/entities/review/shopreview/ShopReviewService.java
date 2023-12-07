@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Service
 public class ShopReviewService {
@@ -24,21 +24,56 @@ public class ShopReviewService {
     private CustomerRepository customerRepository;
 
     @Transactional
-    public ShopReview add(ShopReview review) {
-        if (review == null) {
-            throw new IllegalArgumentException("Review cannot be null");
+    public ShopReview add(Long customerId, Long shopId, ShopReviewDTO reviewDTO) {
+        if (reviewDTO == null) {
+            throw new IllegalArgumentException("Review DTO cannot be null");
+        }
+        if (customerId == null) {
+            throw new IllegalArgumentException("Customer ID cannot be null");
+        }
+        if (shopId == null) {
+            throw new IllegalArgumentException("Shop ID cannot be null");
         }
 
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Customer with ID %d not found", customerId)));
+        Shop shop = shopRepository.findById(shopId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Shop with ID %d not found", shopId)));
+
+        reviewDTO.setReviewedShop(shop);
+
+        ShopReview shopReview = convertToEntity(shop, customer, reviewDTO);
+        shopReview.setReviewer(customer);
+        shop.addReview(shopReview);
+        //customer.addReview(shopReview);
+
         try {
-            return shopReviewRepository.save(review);
+            return shopReviewRepository.save(shopReview);
         }
         catch (DataAccessException e) {
             throw new ServiceException("Error saving ShopReview", e);
         }
     }
 
+    private ShopReview convertToEntity(
+            Shop reviewedShop,
+            Customer reviewer,
+            ReviewDTO shopReviewDTO)
+    {
+        return new ShopReview(
+                reviewedShop,
+                reviewer,
+                shopReviewDTO.getRating(),
+                shopReviewDTO.getComment(),
+                shopReviewDTO.getCreationDate(),
+                shopReviewDTO.getUpdateDate()
+        );
+    }
+
     @Transactional
-    public ShopReview update(Long id, ReviewDTO reviewDTO) {
+    public ShopReview update(Long id, ShopReviewDTO reviewDTO) {
         if (id == null) {
             throw new IllegalArgumentException("ID cannot be null");
         }
@@ -58,7 +93,7 @@ public class ShopReviewService {
             review.setComment(comment);
         }
 
-        review.setUpdateDate(LocalDate.now());
+        review.setUpdateDate(LocalDateTime.now());
 
         try {
             return shopReviewRepository.save(review);

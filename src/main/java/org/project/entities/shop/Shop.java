@@ -161,17 +161,6 @@ public class Shop implements Reviewable<ShopReview> {
     }
 
     @Override
-    public int getReviewCount() {
-        return reviews.size();
-    }
-
-    @Override
-    public double getReviewsAverage() {
-        OptionalDouble average = reviews.stream().mapToDouble(ShopReview::getRating).average();
-        return average.orElse(0.0);
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

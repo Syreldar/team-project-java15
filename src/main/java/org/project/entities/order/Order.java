@@ -94,7 +94,9 @@ public class Order {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return Objects.equals(id, order.id) && Objects.equals(customer, order.customer) && Objects.equals(products, order.products);
+        return Objects.equals(id, order.id) &&
+                Objects.equals(customer, order.customer) &&
+                Objects.equals(products, order.products);
     }
 
     @Override

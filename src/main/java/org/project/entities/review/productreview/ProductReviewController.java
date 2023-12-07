@@ -1,7 +1,7 @@
 package org.project.entities.review.productreview;
 
 import jakarta.validation.Valid;
-import org.project.entities.review.ReviewDTO;
+import org.project.entities.product.ProductService;
 import org.project.helpers.APIResponse;
 import org.project.entities.customer.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +18,18 @@ public class ProductReviewController {
     @Autowired
     private CustomerService customerService;
 
+    @Autowired
+    private ProductService productService;
 
-    @PostMapping("/add")
+
+    @PostMapping("/add/{customerId}/{productId}")
     public ResponseEntity<APIResponse<ProductReview>> add(
-            @Valid @RequestBody ProductReview review,
-            @RequestParam Long customerId)
+            @Valid @RequestBody ProductReviewDTO reviewDTO,
+            @PathVariable Long customerId,
+            @PathVariable Long productId)
     {
         try {
-            review.setReviewer(customerService.findById(customerId));
-            ProductReview createdProductReview = productReviewService.add(review);
+            ProductReview createdProductReview = productReviewService.add(customerId, productId, reviewDTO);
             return ResponseEntity.ok(
                     new APIResponse<>(createdProductReview, "ProductReview added successfully."));
         }
@@ -39,7 +42,7 @@ public class ProductReviewController {
     @PutMapping("/{id}")
     public ResponseEntity<APIResponse<ProductReview>> update(
             @PathVariable Long id,
-            @Valid @RequestBody ReviewDTO reviewDTO)
+            @Valid @RequestBody ProductReviewDTO reviewDTO)
     {
         try {
             ProductReview updatedProductReview = productReviewService.update(id, reviewDTO);
@@ -59,7 +62,8 @@ public class ProductReviewController {
         try {
             productReviewService.deleteById(id);
             return ResponseEntity.ok(
-                    new APIResponse<>(null, "ProductReview deleted successfully."));
+                    new APIResponse<>(null,
+                            String.format("ProductReview with ID %d deleted successfully.", id)));
         }
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(

@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class ReviewDTO {
     private Long id;
@@ -13,25 +13,25 @@ public class ReviewDTO {
     @NotNull
     @Min(1)
     @Max(5)
-    private float rating;
+    private double rating;
 
     private String comment = "";
 
     @NotNull
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private LocalDate creationDate;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    private LocalDateTime creationDate = LocalDateTime.now();
 
     @NotNull
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private LocalDate updateDate;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    private LocalDateTime updateDate = LocalDateTime.now();
 
     public ReviewDTO() {}
 
-    public ReviewDTO(float rating, String comment) {
+    public ReviewDTO(float rating, String comment, LocalDateTime creationDate, LocalDateTime updateDate) {
         this.rating = rating;
         this.comment = comment;
-        this.creationDate = LocalDate.now();
-        this.updateDate = LocalDate.now();
+        this.creationDate = creationDate;
+        this.updateDate = updateDate;
     }
 
     public Long getId() {
@@ -42,11 +42,11 @@ public class ReviewDTO {
         this.id = id;
     }
 
-    public float getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(float rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 
@@ -58,19 +58,19 @@ public class ReviewDTO {
         this.comment = comment;
     }
 
-    public LocalDate getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDate creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
-    public LocalDate getUpdateDate() {
+    public LocalDateTime getUpdateDate() {
         return updateDate;
     }
 
-    public void setUpdateDate(LocalDate updateDate) {
+    public void setUpdateDate(LocalDateTime updateDate) {
         this.updateDate = updateDate;
     }
 

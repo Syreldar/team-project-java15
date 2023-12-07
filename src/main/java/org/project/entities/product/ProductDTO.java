@@ -21,7 +21,7 @@ public class ProductDTO {
 
     @NotNull
     @PositiveOrZero
-    private double price;
+    private Double price;
 
     @NotNull
     @PositiveOrZero
@@ -29,7 +29,7 @@ public class ProductDTO {
 
     public ProductDTO() {}
 
-    public ProductDTO(Category category, String name, String manufacturer, double price, int quantity) {
+    public ProductDTO(Category category, String name, String manufacturer, Double price, int quantity) {
         this.category = category;
         this.name = name;
         this.manufacturer = manufacturer;
@@ -69,11 +69,11 @@ public class ProductDTO {
         this.manufacturer = manufacturer;
     }
 
-    public double getPrice() {
+    public Double getPrice() {
         return this.price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 

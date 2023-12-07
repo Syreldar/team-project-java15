@@ -5,7 +5,6 @@ import org.hibernate.service.spi.ServiceException;
 import org.project.entities.customer.CustomerRepository;
 import org.project.entities.product.Product;
 import org.project.entities.product.ProductRepository;
-import org.project.entities.review.ReviewDTO;
 import org.project.entities.customer.Customer;
 import org.project.entities.shop.Shop;
 import org.project.entities.shop.ShopRepository;
@@ -14,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Service
 public class ProductReviewService {
@@ -28,26 +27,60 @@ public class ProductReviewService {
     private CustomerRepository customerRepository;
 
     @Transactional
-    public ProductReview add(ProductReview review) {
-        if (review == null) {
-            throw new IllegalArgumentException("Review cannot be null");
+    public ProductReview add(Long customerId, Long productId, ProductReviewDTO reviewDTO) {
+        if (reviewDTO == null) {
+            throw new IllegalArgumentException("Review DTO cannot be null");
+        }
+        if (customerId == null) {
+            throw new IllegalArgumentException("Customer ID cannot be null");
+        }
+        if (productId == null) {
+            throw new IllegalArgumentException("Product ID cannot be null");
         }
 
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Customer with ID %d not found", customerId)));
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Product with ID %d not found", productId)));
+
+        //reviewDTO.setReviewedProduct(product);
+
+        ProductReview productReview = convertToEntity(product, customer, reviewDTO);
+        //productReview.setReviewer(customer);
+        //product.addReview(productReview);
+
         try {
-            return productReviewRepository.save(review);
+            return productReviewRepository.save(productReview);
         }
         catch (DataAccessException e) {
             throw new ServiceException("Error saving ProductReview", e);
         }
     }
 
+    private ProductReview convertToEntity(
+            Product reviewedProduct,
+            Customer reviewer,
+            ProductReviewDTO productReviewDTO)
+    {
+        return new ProductReview(
+                reviewedProduct,
+                reviewer,
+                productReviewDTO.getRating(),
+                productReviewDTO.getComment(),
+                productReviewDTO.getCreationDate(),
+                productReviewDTO.getUpdateDate()
+        );
+    }
+
     @Transactional
-    public ProductReview update(Long id, ReviewDTO reviewDTO) {
+    public ProductReview update(Long id, ProductReviewDTO reviewDTO) {
         if (id == null) {
             throw new IllegalArgumentException("ID cannot be null");
         }
         if (reviewDTO == null) {
-            throw new IllegalArgumentException("ReviewDTO cannot be null");
+            throw new IllegalArgumentException("Review DTO cannot be null");
         }
 
         ProductReview review = this.findById(id);
@@ -62,7 +95,7 @@ public class ProductReviewService {
             review.setComment(comment);
         }
 
-        review.setUpdateDate(LocalDate.now());
+        review.setUpdateDate(LocalDateTime.now());
 
         try {
             return productReviewRepository.save(review);

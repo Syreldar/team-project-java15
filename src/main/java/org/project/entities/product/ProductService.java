@@ -2,7 +2,6 @@ package org.project.entities.product;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.hibernate.service.spi.ServiceException;
-import org.project.entities.customer.Customer;
 import org.project.entities.shop.Shop;
 import org.project.entities.shop.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +60,11 @@ public class ProductService {
         }
 
         Product product = this.findById(id);
+
+        Category category = productDTO.getCategory();
+        if (category != null) {
+            product.setCategory(category);
+        }
 
         String name = productDTO.getName();
         if (name != null && !name.isEmpty()) {

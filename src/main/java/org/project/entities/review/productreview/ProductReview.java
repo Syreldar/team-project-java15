@@ -1,11 +1,13 @@
 package org.project.entities.review.productreview;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.project.entities.customer.Customer;
 import org.project.entities.product.Product;
 import org.project.entities.review.Review;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -13,13 +15,14 @@ import java.util.Objects;
 public class ProductReview extends Review {
     @NotNull
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
     private Product reviewedProduct;
 
     public ProductReview() {}
 
-    public ProductReview(Product reviewedProduct, Customer reviewer, float rating, String comment) {
-        super(reviewer, rating, comment);
+    public ProductReview(Product reviewedProduct, Customer reviewer, double rating, String comment, LocalDateTime creationDate, LocalDateTime updateDate) {
+        super(reviewer, rating, comment, creationDate, updateDate);
         this.reviewedProduct = reviewedProduct;
     }
 

@@ -3,7 +3,6 @@ package org.project.entities.customer;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.project.entities.order.OrderDTO;
-import org.project.entities.product.Product;
 import org.project.helpers.APIResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -126,7 +125,8 @@ public class CustomerController {
     public ResponseEntity<APIResponse<Void>> buyProduct(
             @PathVariable Long shopId,
             @RequestParam Long customerId,
-            @Valid @RequestBody OrderDTO orderDTO) {
+            @Valid @RequestBody OrderDTO orderDTO)
+    {
         try {
             customerService.buyProduct(customerId, shopId, orderDTO);
             return ResponseEntity.ok(

@@ -7,6 +7,4 @@ import org.project.entities.review.Review;
 public interface Reviewable<T extends Review> {
     List<T> getReviews();
     void addReview(T review);
-    int getReviewCount();
-    double getReviewsAverage();
 }

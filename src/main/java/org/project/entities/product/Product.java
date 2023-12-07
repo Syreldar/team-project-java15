@@ -57,7 +57,6 @@ public class Product implements Reviewable<ProductReview> {
     private List<Shop> shops = new ArrayList<>();
 
     @OneToMany(mappedBy = "reviewedProduct")
-    @JsonIgnore
     private List<ProductReview> reviews = new ArrayList<>();
 
     @ManyToMany(mappedBy = "products")
@@ -65,14 +64,6 @@ public class Product implements Reviewable<ProductReview> {
     private List<Cart> carts = new ArrayList<>();
 
     public Product() {}
-
-    public Shop getShop() {
-        return shop;
-    }
-
-    public void setShop(Shop shop) {
-        this.shop = shop;
-    }
 
     public Product(Category category, String name, String manufacturer, Double price, int quantity) {
         this();
@@ -158,6 +149,14 @@ public class Product implements Reviewable<ProductReview> {
         this.quantity -= 1;
     }
 
+    public Shop getShop() {
+        return shop;
+    }
+
+    public void setShop(Shop shop) {
+        this.shop = shop;
+    }
+
     public List<Shop> getShops() {
         return this.shops;
     }
@@ -198,17 +197,6 @@ public class Product implements Reviewable<ProductReview> {
     @Override
     public void addReview(ProductReview review) {
         reviews.add(review);
-    }
-
-    @Override
-    public int getReviewCount() {
-        return reviews.size();
-    }
-
-    @Override
-    public double getReviewsAverage() {
-        OptionalDouble average = reviews.stream().mapToDouble(ProductReview::getRating).average();
-        return average.orElse(0.0);
     }
 
     public List<Cart> getCarts() {

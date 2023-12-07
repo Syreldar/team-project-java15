@@ -1,7 +1,6 @@
 package org.project.entities.review.shopreview;
 
 import jakarta.validation.Valid;
-import org.project.entities.review.ReviewDTO;
 import org.project.helpers.APIResponse;
 import org.project.entities.customer.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +18,14 @@ public class ShopReviewController {
     private CustomerService customerService;
 
 
-    @PostMapping("/add")
+    @PostMapping("/add/{customerId}/{shopId}")
     public ResponseEntity<APIResponse<ShopReview>> add(
-            @Valid @RequestBody ShopReview review,
-            @RequestParam Long customerId)
+            @Valid @RequestBody ShopReviewDTO reviewDTO,
+            @PathVariable Long customerId,
+            @PathVariable Long shopId)
     {
         try {
-            review.setReviewer(customerService.findById(customerId));
-            ShopReview createdShopReview = shopReviewService.add(review);
+            ShopReview createdShopReview = shopReviewService.add(customerId, shopId, reviewDTO);
             return ResponseEntity.ok(
                     new APIResponse<>(createdShopReview, "ShopReview added successfully."));
         }
@@ -39,7 +38,7 @@ public class ShopReviewController {
     @PutMapping("/{id}")
     public ResponseEntity<APIResponse<ShopReview>> update(
             @PathVariable Long id,
-            @Valid @RequestBody ReviewDTO reviewDTO)
+            @Valid @RequestBody ShopReviewDTO reviewDTO)
     {
         try {
             ShopReview updatedShopReview = shopReviewService.update(id, reviewDTO);
@@ -59,7 +58,8 @@ public class ShopReviewController {
         try {
             shopReviewService.deleteById(id);
             return ResponseEntity.ok(
-                    new APIResponse<>(null, "ShopReview deleted successfully."));
+                    new APIResponse<>(null,
+                            String.format("ShopReview with ID %d deleted successfully.", id)));
         }
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(

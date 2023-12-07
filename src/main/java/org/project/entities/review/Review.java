@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import org.project.entities.customer.Customer;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @MappedSuperclass
@@ -31,22 +31,22 @@ public abstract class Review {
 
     @NotNull
     @Column(name = "creation_date", nullable = false)
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private LocalDate creationDate;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    private LocalDateTime creationDate = LocalDateTime.now();
 
     @NotNull
     @Column(name = "update_date", nullable = false)
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private LocalDate updateDate;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    private LocalDateTime updateDate = LocalDateTime.now();
 
     public Review() {}
 
-    public Review(Customer customer, float rating, String comment) {
+    public Review(Customer customer, double rating, String comment, LocalDateTime creationDate, LocalDateTime updateDate) {
         this.reviewer = customer;
         this.rating = rating;
         this.comment = comment;
-        this.creationDate = LocalDate.now();
-        this.updateDate = LocalDate.now();
+        this.creationDate = creationDate;
+        this.updateDate = updateDate;
     }
 
     public Long getId() {
@@ -81,19 +81,19 @@ public abstract class Review {
         this.comment = comment;
     }
 
-    public LocalDate getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDate creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
-    public LocalDate getUpdateDate() {
+    public LocalDateTime getUpdateDate() {
         return updateDate;
     }
 
-    public void setUpdateDate(LocalDate updateDate) {
+    public void setUpdateDate(LocalDateTime updateDate) {
         this.updateDate = updateDate;
     }
 

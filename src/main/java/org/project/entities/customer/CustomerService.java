@@ -106,6 +106,11 @@ public class CustomerService {
             customer.setLastName(lastName);
         }
 
+        double balance = customerDTO.getBalance();
+        if (balance > 0.0) {
+            customer.setBalance(balance);
+        }
+
         String address = customerDTO.getAddress();
         if (address != null && !address.isEmpty()) {
             customer.setAddress(address);
