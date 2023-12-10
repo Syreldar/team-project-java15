@@ -83,7 +83,8 @@ public class Order {
         this.products = products;
     }
 
-    private double calculateTotalCost() {
+
+    public double calculateTotalCost() {
         return products.stream()
                 .mapToDouble(Product::getPrice)
                 .sum();
