@@ -7,6 +7,7 @@ import org.project.entities.shop.Shop;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "carts")
@@ -137,11 +138,25 @@ public class Cart {
         }
         return totalQuantity;
     }
-    public void clear() {
-        if (this.products == null || this.products.isEmpty()) {
-            throw new RuntimeException("Cart is already empty");
-        }
 
-        this.products.clear();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cart cart = (Cart) o;
+        return Objects.equals(id, cart.id) &&
+                Objects.equals(customer, cart.customer) &&
+                Objects.equals(products, cart.products) &&
+                Objects.equals(shop, cart.shop);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, customer, products, shop);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Cart [Id = %d, Customer = %s, Products = %s, Shop = %s]", id, customer, products, shop);
     }
 }

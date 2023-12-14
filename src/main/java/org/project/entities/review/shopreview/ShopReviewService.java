@@ -50,6 +50,7 @@ public class ShopReviewService {
         //customer.addReview(shopReview);
 
         try {
+            shopRepository.save(shop);
             return shopReviewRepository.save(shopReview);
         }
         catch (DataAccessException e) {

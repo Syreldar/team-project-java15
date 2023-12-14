@@ -22,7 +22,7 @@ public class ProductReviewController {
     private ProductService productService;
 
 
-    @PostMapping("/add/{customerId}/{productId}")
+    @PostMapping("/{customerId}/{productId}")
     public ResponseEntity<APIResponse<ProductReview>> add(
             @Valid @RequestBody ProductReviewDTO reviewDTO,
             @PathVariable Long customerId,

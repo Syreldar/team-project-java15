@@ -8,6 +8,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.project.entities.cart.Cart;
 import org.project.entities.review.interfaces.Reviewable;
 import org.project.entities.review.productreview.ProductReview;
+import org.project.entities.review.shopreview.ShopReview;
 import org.project.entities.shop.Shop;
 
 import java.util.*;
@@ -41,10 +42,6 @@ public class Product implements Reviewable<ProductReview> {
     @Column(nullable = false)
     @ColumnDefault("1")
     private int quantity = 1;
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "shop_id")
-    private Shop shop;
 
     @NotNull
     @ManyToMany
@@ -149,14 +146,6 @@ public class Product implements Reviewable<ProductReview> {
         this.quantity -= 1;
     }
 
-    public Shop getShop() {
-        return shop;
-    }
-
-    public void setShop(Shop shop) {
-        this.shop = shop;
-    }
-
     public List<Shop> getShops() {
         return this.shops;
     }
@@ -185,20 +174,6 @@ public class Product implements Reviewable<ProductReview> {
         this.shops.clear();
     }
 
-    @Override
-    public List<ProductReview> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(List<ProductReview> reviews) {
-        this.reviews = reviews;
-    }
-
-    @Override
-    public void addReview(ProductReview review) {
-        reviews.add(review);
-    }
-
     public List<Cart> getCarts() {
         return carts;
     }
@@ -225,6 +200,41 @@ public class Product implements Reviewable<ProductReview> {
 
     public void clearCarts() {
         this.carts.clear();
+    }
+
+    @Override
+    public List<ProductReview> getReviews() {
+        return reviews;
+    }
+
+    @Override
+    public void setReviews(List<ProductReview> reviews) {
+        this.reviews = reviews;
+    }
+
+    @Override
+    public void addReview(ProductReview review) {
+        reviews.add(review);
+    }
+
+    @Override
+    public void removeReview(ProductReview review) {
+        reviews.remove(review);
+    }
+
+    @Override
+    public void addReviews(List<ProductReview> reviews) {
+        this.reviews.addAll(reviews);
+    }
+
+    @Override
+    public void removeReviews(List<ProductReview> reviews) {
+        this.reviews.removeAll(reviews);
+    }
+
+    @Override
+    public void clearReviews() {
+        this.reviews.clear();
     }
 
     @Override

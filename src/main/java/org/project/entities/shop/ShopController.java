@@ -13,7 +13,7 @@ public class ShopController {
     @Autowired
     private ShopService shopService;
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<APIResponse<Shop>> add(@Valid @RequestBody ShopDTO shopDTO) {
         try {
             Shop addedShop = shopService.add(shopDTO);

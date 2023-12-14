@@ -45,13 +45,14 @@ public class ProductReviewService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format("Product with ID %d not found", productId)));
 
-        //reviewDTO.setReviewedProduct(product);
+        reviewDTO.setReviewedProduct(product);
 
         ProductReview productReview = convertToEntity(product, customer, reviewDTO);
-        //productReview.setReviewer(customer);
-        //product.addReview(productReview);
+        productReview.setReviewer(customer);
+        product.addReview(productReview);
 
         try {
+            productRepository.save(product);
             return productReviewRepository.save(productReview);
         }
         catch (DataAccessException e) {

@@ -18,7 +18,7 @@ public class ShopReviewController {
     private CustomerService customerService;
 
 
-    @PostMapping("/add/{customerId}/{shopId}")
+    @PostMapping("/{customerId}/{shopId}")
     public ResponseEntity<APIResponse<ShopReview>> add(
             @Valid @RequestBody ShopReviewDTO reviewDTO,
             @PathVariable Long customerId,

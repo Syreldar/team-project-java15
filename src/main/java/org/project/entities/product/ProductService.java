@@ -28,8 +28,7 @@ public class ProductService {
                 .orElseThrow(() -> new EntityNotFoundException("Shop not found"));
 
         Product product = convertToEntity(productDTO);
-        product.setShop(shop);
-        shop.addProduct(product);
+        product.addShop(shop);
 
         try {
             shopRepository.save(shop);

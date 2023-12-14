@@ -2,6 +2,7 @@ package org.project.entities.shop;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import org.project.entities.cart.Cart;
 import org.project.entities.customer.Customer;
 import org.project.entities.product.Product;
 import org.project.entities.review.interfaces.Reviewable;
@@ -24,14 +25,14 @@ public class Shop implements Reviewable<ShopReview> {
     @Column(name = "owner_name", nullable = false)
     private String ownerName;
 
-    @OneToMany(mappedBy = "shop")
+    @ManyToMany(mappedBy = "shops")
     private List<Product> products = new ArrayList<>();
 
     @OneToMany(mappedBy = "reviewedShop")
     private List<ShopReview> reviews = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "shops")
-    private List<Customer> customers = new ArrayList<>();
+    @OneToMany(mappedBy = "shop")
+    private List<Cart> carts = new ArrayList<>();
 
     public Shop() {}
 
@@ -41,13 +42,13 @@ public class Shop implements Reviewable<ShopReview> {
         this.ownerName = ownerName;
     }
 
-    public Shop(String name, String ownerName, List<Product> products, List<ShopReview> reviews, List<Customer> customers) {
+    public Shop(String name, String ownerName, List<Product> products, List<ShopReview> reviews, List<Cart> carts) {
         this();
         this.name = name;
         this.ownerName = ownerName;
         this.products = products;
         this.reviews = reviews;
-        this.customers = customers;
+        this.carts = carts;
     }
 
     public Long getId() {
@@ -83,11 +84,7 @@ public class Shop implements Reviewable<ShopReview> {
     }
 
     public void addProduct(Product product) {
-        if (products == null) {
-            products = new ArrayList<>();
-        }
         products.add(product);
-        product.setShop(this);
     }
 
     public void removeProduct(Product product) {
@@ -106,32 +103,32 @@ public class Shop implements Reviewable<ShopReview> {
         this.products.clear();
     }
 
-    public List<Customer> getCustomers() {
-        return customers;
+    public List<Cart> getCarts() {
+        return carts;
     }
 
-    public void setCustomers(List<Customer> customers) {
-        this.customers = customers;
+    public void setCarts(List<Cart> carts) {
+        this.carts = carts;
     }
 
-    public void addCustomer(Customer customer) {
-        customers.add(customer);
+    public void addCart(Cart cart) {
+        carts.add(cart);
     }
 
-    public void removeCustomer(Customer customer) {
-        customers.remove(customer);
+    public void removeCart(Cart cart) {
+        carts.remove(cart);
     }
 
-    public void addCustomers(List<Customer> customers) {
-        this.customers.addAll(customers);
+    public void addCarts(List<Cart> carts) {
+        this.carts.addAll(carts);
     }
 
-    public void removeCustomers(List<Customer> customers) {
-        this.customers.removeAll(customers);
+    public void removeCarts(List<Cart> carts) {
+        this.carts.removeAll(carts);
     }
 
-    public void clearCustomers() {
-        this.customers.clear();
+    public void clearCarts() {
+        this.carts.clear();
     }
 
     @Override
@@ -139,25 +136,34 @@ public class Shop implements Reviewable<ShopReview> {
         return reviews;
     }
 
+    @Override
     public void setReviews(List<ShopReview> reviews) {
         this.reviews = reviews;
-    }
-
-    public void addReviews(List<ShopReview> reviews) {
-        this.reviews.addAll(reviews);
-    }
-
-    public void removeReviews(List<ShopReview> reviews) {
-        this.reviews.removeAll(reviews);
-    }
-
-    public void clearReviews() {
-        this.reviews.clear();
     }
 
     @Override
     public void addReview(ShopReview review) {
         reviews.add(review);
+    }
+
+    @Override
+    public void removeReview(ShopReview review) {
+        reviews.remove(review);
+    }
+
+    @Override
+    public void addReviews(List<ShopReview> reviews) {
+        this.reviews.addAll(reviews);
+    }
+
+    @Override
+    public void removeReviews(List<ShopReview> reviews) {
+        this.reviews.removeAll(reviews);
+    }
+
+    @Override
+    public void clearReviews() {
+        this.reviews.clear();
     }
 
     @Override

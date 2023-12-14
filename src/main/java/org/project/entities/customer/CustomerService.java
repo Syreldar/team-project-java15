@@ -80,7 +80,7 @@ public class CustomerService {
 
         OrderDTO orderForShop = new OrderDTO(customerId, shopId, cart.getProducts());
         orderService.add(orderForShop);
-        cart.clear();
+        cart.clearProducts();
 
         cartRepository.save(cart);
     }

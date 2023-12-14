@@ -16,7 +16,7 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @PostMapping("/add/{shopId}")
+    @PostMapping("/{shopId}")
     public ResponseEntity<APIResponse<Product>> add(
             @PathVariable Long shopId,
             @Valid @RequestBody ProductDTO productDTO) {
@@ -24,6 +24,9 @@ public class ProductController {
             Product addedProduct = productService.add(shopId, productDTO);
             return ResponseEntity.ok(
                     new APIResponse<>(addedProduct, "Product added to shop successfully."));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new APIResponse<>(null, "Shop not found."));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     new APIResponse<>(null, "Failed to add product to shop."));

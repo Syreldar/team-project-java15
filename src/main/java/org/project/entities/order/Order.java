@@ -83,6 +83,25 @@ public class Order {
         this.products = products;
     }
 
+    public void addProduct(Product product) {
+        this.products.add(product);
+    }
+
+    public void removeProduct(Product product) {
+        this.products.remove(product);
+    }
+
+    public void addProducts(List<Product> products) {
+        this.products.addAll(products);
+    }
+
+    public void removeProducts(List<Product> products) {
+        this.products.removeAll(products);
+    }
+
+    public void clearProducts() {
+        this.products.clear();
+    }
 
     public double calculateTotalCost() {
         return products.stream()

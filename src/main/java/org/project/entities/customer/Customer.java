@@ -68,8 +68,8 @@ public class Customer {
 
     public Customer(String name, String lastName, double balance, String address, String email, List<Cart> carts, List<Shop> shops) {
         this(name, lastName, balance, address, email);
-        this.carts = carts != null ? carts : new ArrayList<>();
-        this.shops = shops != null ? shops : new ArrayList<>();
+        this.carts = carts;
+        this.shops = shops;
     }
 
     public Long getId() {
@@ -129,7 +129,6 @@ public class Customer {
     }
 
     public void addCart(Cart cart) {
-        cart.setCustomer(this);
         this.carts.add(cart);
     }
 
@@ -138,9 +137,6 @@ public class Customer {
     }
 
     public void addCarts(List<Cart> carts) {
-        for (Cart cart : carts) {
-            cart.setCustomer(this);
-        }
         this.carts.addAll(carts);
     }
 

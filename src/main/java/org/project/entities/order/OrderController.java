@@ -13,7 +13,7 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<APIResponse<Order>> add(@Valid @RequestBody OrderDTO orderDTO) {
         try {
             Order createdOrder = orderService.add(orderDTO);
